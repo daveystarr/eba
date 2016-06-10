@@ -16,6 +16,8 @@ body { font-family: "neuzeit-grotesk", sans-serif; letter-spacing: 0.5px; }
 
 .logo-container { padding: 46px 46px 0 !important; }
 
+.logo-container .logo-image img { height: auto; }
+
 .vmenu-container .menu-accordion ul ul { padding: 8px 0 8px 6px; }
 
 .menu-accordion .menu-smart a { padding: 5px 46px; }
