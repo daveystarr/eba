@@ -1,0 +1,19 @@
+/*
+Theme Name: Edgewater Beach Apartments
+Description: Custom theme work for the EBA.
+Author: Brandon Trumfio
+Author URI: http://www.trumfiodesigns.com
+Template: uncode
+Version: 1.0.0
+*/  
+
+@import 'variables';
+@import 'mixins';
+@import 'base';
+
+// Element Import
+@import 'header';
+@import 'footer';
+@import 'menu';
+
+// Specific Page Imports

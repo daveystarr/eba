@@ -1,7 +1,23 @@
 /*
 Theme Name: Edgewater Beach Apartments
-Description: Custom theme for the EBA
-Author: Brandon Trumfio 
-Author URI: http://www.trumfiodeisgns.com
+Description: Custom theme work for the EBA.
+Author: Brandon Trumfio
+Author URI: http://www.trumfiodesigns.com
+Template: uncode
 Version: 1.0.0
 */
+body { font-family: "neuzeit-grotesk", sans-serif; letter-spacing: 0.5px; }
+
+.vmenu-footer p { font-size: 10px; }
+
+.fa.fa-angle-right.fa-dropdown { display: none; }
+
+.vmenu-left .menu-smart a i.fa-dropdown { float: none; top: 0; }
+
+.logo-container { padding: 46px 46px 0 !important; }
+
+.vmenu-container .menu-accordion ul ul { padding: 8px 0 8px 6px; }
+
+.menu-accordion .menu-smart a { padding: 5px 46px; }
+
+.vmenu-container a { letter-spacing: .5px !important; }

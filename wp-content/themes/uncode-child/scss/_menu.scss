@@ -1,0 +1,29 @@
+// dropdown arrow overrides
+.fa.fa-angle-right.fa-dropdown {
+  display: none;
+}
+
+.vmenu-left .menu-smart a i.fa-dropdown {
+  float: none;
+  top: 0;
+}
+
+//Logo
+.logo-container {
+  padding: 46px 46px 0 !important;
+}
+
+//Sub-menu items
+.vmenu-container .menu-accordion ul ul {
+  padding: 8px 0 8px 6px;
+}
+
+//main-main items
+.menu-accordion .menu-smart a {
+  padding: 5px 46px;
+}
+
+.vmenu-container a {
+   letter-spacing: .5px !important;
+}
+
