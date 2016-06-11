@@ -8,6 +8,15 @@ Version: 1.0.0
 */
 body { font-family: "neuzeit-grotesk", sans-serif; letter-spacing: 0.5px; }
 
+.style-light h1 { border: 3px solid white; color: white; font-weight: 400; margin: 0 auto; padding: 10px; width: 50%; }
+.style-light h2 { font-weight: 300; }
+
+@media screen and (max-width: 959px) { .logo-image { background-image: url("/wp-content/uploads/2016/06/eba-logo-horizontal.png"); background-size: 250px; background-repeat: no-repeat; }
+  .logo-image img { display: none; } }
+@media screen and (max-width: 400px) { .logo-image { background-size: 225px; } }
+
+@media screen and (max-width: 400px) { .menu-container .logo-container { padding: 25px 20px 20px !important; }
+  .mobile-menu-button { padding: 25px 20px 20px !important; } }
 .vmenu-footer p { font-size: 10px; }
 
 .fa.fa-angle-right.fa-dropdown { display: none; }
@@ -23,3 +32,6 @@ body { font-family: "neuzeit-grotesk", sans-serif; letter-spacing: 0.5px; }
 .menu-accordion .menu-smart a { padding: 5px 46px; }
 
 .vmenu-container a { letter-spacing: .5px !important; }
+
+@media screen and (max-width: 959px) { .menu-container ul.menu-smart > li > a, .menu-container ul.menu-smart li.dropdown > a { font-weight: 400; }
+  .menu-smart a { text-transform: none; padding: 7px 46px; } }

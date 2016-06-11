@@ -31,3 +31,14 @@
    letter-spacing: .5px !important;
 }
 
+@media screen and (max-width: 959px) {
+  .menu-container ul.menu-smart > li > a,
+  .menu-container ul.menu-smart li.dropdown > a {
+    font-weight: 400;
+  }
+
+  .menu-smart a {
+    text-transform: none;
+    padding: 7px 46px;
+  }
+}
