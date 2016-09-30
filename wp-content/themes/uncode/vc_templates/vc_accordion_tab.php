@@ -7,7 +7,7 @@ extract(shortcode_atts(array(
 	'active' => ''
 ), $atts));
 
-$create_id = preg_replace('/[^A-Za-z0-9\-]/', '', sanitize_title($title));
+$create_id = preg_replace('/[^A-Za-z0-9\-]/', '', sanitize_title($title)) . '-' . big_rand();
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'panel panel-default', $this->settings['base'], $atts );
 $output .= '<div class="'.esc_attr(trim($css_class)).'">';
 $output .= '<div class="panel-heading" role="tab">';
@@ -20,4 +20,4 @@ $output .= '</div>';
 $output .= '</div>';
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

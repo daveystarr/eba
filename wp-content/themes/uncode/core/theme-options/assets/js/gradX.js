@@ -132,7 +132,7 @@ var gradX = function(id, _options) {
             while (len > 0) {
                 len--;
                 ele.css("background", values[len]);
-                css += "background: " + values[len] + ";\n";
+                css += "background: " + values[len] + ";";
             }
 
             //call the userdefined change function

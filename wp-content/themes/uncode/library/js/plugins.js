@@ -6130,10 +6130,14 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 				// }
 				if ($sub.hasClass('mega-menu-inner')) {
 					$sub.css({ width: containerW});
-					if ($sub.closest('.row-menu-inner').find('.logo-container').length > 0) {
-						leftPos = - (parseFloat($sub.closest('.row-menu-inner').find('.logo-container').css('paddingRight')) + ($sub.closest('.row-menu-inner').find('.logo-container').width())) + 'px';
+					if ($('body.hmenu-center-split').length > 0) {
+						leftPos = - ($sub.closest('#menu-main-menu')[0].offsetLeft) + 'px';
 					} else {
-						leftPos = '0px';
+						if ($sub.closest('.row-menu-inner').find('.logo-container').length > 0) {
+							leftPos = - (parseFloat($sub.closest('.row-menu-inner').find('.logo-container').css('paddingRight')) + ($sub.closest('.row-menu-inner').find('.logo-container').width())) + 'px';
+						} else {
+							leftPos = '0px';
+						}
 					}
 				} else {
 					leftPos = (level > 2 ? $li.position().left - parseFloat($li.closest('ul').css('paddingLeft')) : $li.position().left ) + 'px';
@@ -6989,8 +6993,8 @@ jQuery.extend( jQuery.easing,
 
 			if (iL.options.controls.arrows) {
 				$.extend(iL.options.styles, {
-					nextOffsetX: 36,
-					prevOffsetX: 36,
+					nextOffsetX: ($(window).width() > UNCODE.mediaQuery) ? 36 : 4,
+					prevOffsetX: ($(window).width() > UNCODE.mediaQuery) ? 36 : 4,
 					nextOpacity: 0,
 					prevOpacity: 0
 				});
@@ -7074,6 +7078,8 @@ jQuery.extend( jQuery.easing,
 
 				if (!iL.instant) itemsObject.push(t);
 			});
+
+			if (iL.vars != undefined) iL.vars.total = items.length;
 
 			iL.items = items,
 				iL.itemsObject = itemsObject;
@@ -7207,10 +7213,11 @@ jQuery.extend( jQuery.easing,
 			vars.BODY[vars.isMobile ? 'addClass' : 'removeClass']('isMobile');
 
 			if (!opts.infinite) {
-				vars.prevButton.add(vars.prevButton).add(vars.innerPrevButton).add(vars.innerNextButton).removeClass('disabled');
+				vars.prevButton.add(vars.prevButton).add(vars.innerPrevButton).add(vars.nextButton).add(vars.innerNextButton).removeClass('disabled');
 
 				if (vars.current == 0)
 					vars.prevButton.add(vars.innerPrevButton).addClass('disabled');
+
 				if (vars.current >= vars.total - 1)
 					vars.nextButton.add(vars.innerNextButton).addClass('disabled');
 			}
@@ -7905,7 +7912,6 @@ jQuery.extend( jQuery.easing,
 
 			if (iL.context && iL.selector) {
 				var $items = $(iL.selector, iL.context);
-
 				$(iL.context).on(clickEvent, iL.selector, function() {
 
 					var $this = $(this),
@@ -8782,6 +8788,8 @@ jQuery.extend( jQuery.easing,
 				winWidth = viewport.width,
 				winHeight = viewport.height;
 
+			if (viewport.width < UNCODE.mediaQuery) opts.styles.nextOffsetX = 0;
+
 			var thumbsOffsetW = (vars.isInFullScreen && opts.fullAlone || vars.isMobile) ? 0 : ((path == 'horizontal') ? 0 : vars.thumbnails.outerWidth()),
 				thumbsOffsetH = vars.isMobile ? vars.toolbar.outerHeight() : ((vars.isInFullScreen && opts.fullAlone) ? 0 : ((path == 'horizontal') ? vars.thumbnails.outerHeight() : 0)),
 				width = (vars.isInFullScreen && opts.fullAlone) ? winWidth : (winWidth - (opts.styles.pageOffsetX)),
@@ -8803,12 +8811,11 @@ jQuery.extend( jQuery.easing,
 			};
 
 			iL.repositionEl(elObject);
-
 			if (iL.items[vars.next]) {
 				elObject = $.extend(elObject, {
 					type: 'next',
 					item: iL.items[vars.next],
-					offsetX: opts.styles.nextOffsetX,
+					offsetX: (viewport.width > UNCODE.mediaQuery) ? opts.styles.nextOffsetX : 0,
 					offsetY: opts.styles.nextOffsetY,
 					holder: vars.nextPhoto
 				});
@@ -8820,7 +8827,7 @@ jQuery.extend( jQuery.easing,
 				elObject = $.extend(elObject, {
 					type: 'prev',
 					item: iL.items[vars.prev],
-					offsetX: opts.styles.prevOffsetX,
+					offsetX: (viewport.width > UNCODE.mediaQuery) ? opts.styles.prevOffsetX : 0,
 					offsetY: opts.styles.prevOffsetY,
 					holder: vars.prevPhoto
 				});
@@ -9797,9 +9804,9 @@ jQuery.extend( jQuery.easing,
 			};
 
 			// jQuery < 1.8
-			if ($.attrFn) {
-				$.attrFn[name] = true;
-			}
+			// if ($.attrFn) {
+			// 	$.attrFn[name] = true;
+			// }
 		});
 
 		var tapSettings = {
@@ -11346,7 +11353,7 @@ jQuery.extend( jQuery.easing,
 			item = this.prepare(item, index);
 			this.$stage.append(item);
 			this._items.push(item);
-			this._mergers.push(item.find('[data-merge]').andSelf('[data-merge]').attr('data-merge') * 1 || 1);
+			this._mergers.push(item.find('[data-merge]').addBack('[data-merge]').attr('data-merge') * 1 || 1);
 		}, this));
 
 		this.reset($.isNumeric(this.settings.startPosition) ? this.settings.startPosition : 0);
@@ -13067,7 +13074,7 @@ jQuery.extend( jQuery.easing,
 			}, this),
 			'prepared.owl.carousel': $.proxy(function(e) {
 				if (e.namespace) {
-					var hash = $(e.content).find('[data-hash]').andSelf('[data-hash]').attr('data-hash');
+					var hash = $(e.content).find('[data-hash]').addBack('[data-hash]').attr('data-hash');
 
 					if (!hash) {
 						return;
@@ -13752,7 +13759,8 @@ uncode_progress_bar();
 			var counterUpper = function() {
 				var nums = [];
 				var divisions = $settings.time / $settings.delay;
-				var num = $this.text();
+				var numReal = $this.text(),
+				num = numReal;
 				var isComma = /[0-9]+,[0-9]+/.test(num);
 				num = num.replace(/,/g, '');
 				var isInt = /^[0-9]+$/.test(num);
@@ -13774,7 +13782,7 @@ uncode_progress_bar();
 					}
 					nums.unshift(newNum);
 				}
-				nums.push(num);
+				nums.push(numReal);
 				$this.data('counterup-nums', nums);
 				$this.text('0');
 				// Updates the number until we're done

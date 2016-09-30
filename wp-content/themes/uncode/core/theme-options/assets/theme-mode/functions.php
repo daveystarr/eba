@@ -107,6 +107,10 @@ function uncode_type_background_size_choices()
 		array(
 			'label' => 'contain',
 			'value' => 'contain'
+		) ,
+		array(
+			'label' => 'initial',
+			'value' => 'initial'
 		)
 	);
 }
@@ -750,55 +754,64 @@ if (!function_exists('uncode_create_dynamic_css')) {
 
 		$css = ob_get_clean(); // Get generated CSS (output buffering)
 
+		if ($css === 'exit') return;
+
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 			require_once (ABSPATH . '/wp-admin/includes/file.php');
-			WP_Filesystem();
 		}
-		$access_type = get_filesystem_method();
-
-		if ($access_type === 'direct') {
-		  /* you can safely run request_filesystem_credentials() without any issues and don't need to worry about passing in a URL */
-			$creds = request_filesystem_credentials($css_dir, '', false, false, array());
-			/* initialize the API */
-			if ( ! WP_Filesystem($creds) ) {
-				/* any problems and we exit */
-				return false;
-			}
-			$ot_id = is_multisite() ? get_current_blog_id() : '';
-			/* do our file manipulations below */
-			$wp_filesystem->put_contents( $css_dir . 'style-custom'.$ot_id.'.css', $css, FS_CHMOD_FILE );
-			$wp_filesystem->put_contents( get_template_directory() . '/core/assets/css/admin-custom'.$ot_id.'.css', $admin_css, FS_CHMOD_FILE );
-		} else {
+		if (false === ($creds = request_filesystem_credentials($css_dir, '', false, false))) {
 			return array(
 				'custom' => $css,
 				'admin' => $admin_css,
 			);
 		}
+		/* initialize the API */
+		if ( ! WP_Filesystem($creds) ) {
+			/* any problems and we exit */
+			return array(
+				'custom' => $css,
+				'admin' => $admin_css,
+			);
+		}
+		$ot_id = is_multisite() ? get_current_blog_id() : '';
+		/* do our file manipulations below */
+		$mod_file = (defined('FS_CHMOD_FILE')) ? FS_CHMOD_FILE : false;
+		if (!$wp_filesystem->put_contents( $css_dir . 'style-custom'.$ot_id.'.css', $css, $mod_file ) || !$wp_filesystem->put_contents( get_template_directory() . '/core/assets/css/admin-custom'.$ot_id.'.css', $admin_css, $mod_file ))
+			return array(
+				'custom' => $css,
+				'admin' => $admin_css,
+			);
 	}
 }
 
 add_filter('ot_after_theme_options_save', 'uncode_create_dynamic_css');
 
-if (is_admin() && isset($_GET['first'] )) {
-	global $front_background_colors;
-	$front_background_colors = array(
-		'transparent' => 'transparent',
-    'color-jevc' => '#000000',
-    'color-nhtu' => '#101213',
-    'color-wayh' => '#141618',
-    'color-rgdb' => '#1b1d1f',
-    'color-prif' => '#303133',
-    'color-xsdn' => '#ffffff',
-    'color-lxmt' => '#f7f7f7',
-    'color-gyho' => '#eaeaea',
-    'color-uydo' => '#dddddd',
-    'color-wvjs' => '#777',
-    'color-vyce' => '#0cb4ce',
-    'color-dfgh' => '#FF590A',
-    'color-iopl' => '#0CCE50',
-    'color-zsdf' => '#FFC42E',
-    'accent' => '#0cb4ce',
-	);
-	uncode_create_dynamic_css();
+function uncode_init_color() {
+	if (is_admin() && isset($_GET['first'] )) {
+		global $front_background_colors;
+		$front_background_colors = array(
+			'transparent' => 'transparent',
+	    'color-jevc' => '#000000',
+	    'color-nhtu' => '#101213',
+	    'color-wayh' => '#141618',
+	    'color-rgdb' => '#1b1d1f',
+	    'color-prif' => '#303133',
+	    'color-xsdn' => '#ffffff',
+	    'color-lxmt' => '#f7f7f7',
+	    'color-gyho' => '#eaeaea',
+	    'color-uydo' => '#dddddd',
+	    'color-wvjs' => '#777',
+	    'color-vyce' => '#0cb4ce',
+	    'color-dfgh' => '#FF590A',
+	    'color-iopl' => '#0CCE50',
+	    'color-zsdf' => '#FFC42E',
+	    'accent' => '#0cb4ce',
+		);
+		uncode_create_dynamic_css();
+	}
 }
+
+add_action('admin_init', 'uncode_init_color');
+
+

@@ -217,7 +217,8 @@ mark,
 .mejs-controls .mejs-time-rail .mejs-time-loaded,
 .woocommerce span.onsale,
 .widget_price_filter .ui-slider .ui-slider-range,
-.uncode-cart .badge {
+.uncode-cart .badge,
+.mobile-shopping-cart .badge {
   background-color: <?php echo esc_html($color_primary); ?>;
 }
 .color-accent-color,
@@ -558,6 +559,7 @@ button[type="submit"],
 /* #Button-weight */
 .buttons-weight,
 .woocommerce span.onsale,
+.woocommerce span.soldout,
 .woocommerce .quantity .plus,
 .woocommerce #content .quantity .plus,
 .woocommerce .quantity .minus,
@@ -765,6 +767,9 @@ button[type="submit"],
 .style-dark .woocommerce .order_details li,
 .style-dark.style-override .woocommerce .order_details li,
 .style-light .style-dark .woocommerce .order_details li,
+.style-dark .woocommerce .woocommerce-MyAccount-navigation li,
+.style-dark.style-override .woocommerce .woocommerce-MyAccount-navigation li,
+.style-light .style-dark .woocommerce .woocommerce-MyAccount-navigation li,
 .style-dark .woocommerce .addresses,
 .style-dark.style-override .woocommerce .addresses,
 .style-light .style-dark .woocommerce .addresses,
@@ -968,6 +973,9 @@ button[type="submit"],
 .style-light .woocommerce .order_details li,
 .style-light.style-override .woocommerce .order_details li,
 .style-dark .style-light .woocommerce .order_details li,
+.style-light .woocommerce .woocommerce-MyAccount-navigation li,
+.style-light.style-override .woocommerce .woocommerce-MyAccount-navigation li,
+.style-dark .style-light .woocommerce .woocommerce-MyAccount-navigation li,
 .style-light .woocommerce .addresses,
 .style-light.style-override .woocommerce .addresses,
 .style-dark .style-light .woocommerce .addresses,
@@ -1650,24 +1658,24 @@ button,
 select,
 textarea,
 .img-thumbnail {
-  -webkit-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -moz-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -o-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -moz-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -o-transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 /*  */
 .ui-transition-slow {
-  -webkit-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -moz-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -o-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -moz-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -o-transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 .ui-transition-fast,
 .main-wrapper a {
-  -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -moz-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  -o-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -moz-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -o-transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 /* #Cart dropdown */
 .submenu-light ul.uncode-cart-dropdown a,
@@ -1951,6 +1959,9 @@ textarea,
 .isotope-filters .menu-light .menu-smart a:focus {
   color: <?php echo esc_html($color_menu_text_hover_static); ?>;
 }
+.menu-light .mobile-shopping-cart {
+  color: <?php echo esc_html($color_logo); ?>;
+}
 .menu-dark p {
   color: <?php echo esc_html($color_menu_text_inverted); ?>;
 }
@@ -1965,6 +1976,9 @@ textarea,
 .isotope-filters .menu-dark .menu-smart a:focus {
   color: <?php echo esc_html($color_menu_text_inverted_hover_static); ?>;
 }
+.menu-dark .mobile-shopping-cart {
+  color: <?php echo esc_html($color_logo_inverted); ?>;
+}
 @media (min-width: 960px) {
   .style-light-override:not(.is_stuck).menu-transparent .menu-horizontal-inner > .nav > .menu-smart > li > a {
     color: <?php echo esc_html($color_menu_text); ?> !important;
@@ -1973,12 +1987,18 @@ textarea,
   .style-light-override:not(.is_stuck).menu-transparent .menu-horizontal-inner > .nav > .menu-smart > li > a:focus {
     color: <?php echo esc_html($color_menu_text_hover); ?> !important;
   }
+  .style-light-override:not(.is_stuck).menu-transparent .mobile-shopping-cart {
+    color: <?php echo esc_html($color_menu_text); ?> !important;
+  }
   .style-dark-override:not(.is_stuck).menu-transparent .menu-horizontal-inner > .nav > .menu-smart > li > a {
     color: <?php echo esc_html($color_menu_text_inverted); ?> !important;
   }
   .style-dark-override:not(.is_stuck).menu-transparent .menu-horizontal-inner > .nav > .menu-smart > li > a:hover,
   .style-dark-override:not(.is_stuck).menu-transparent .menu-horizontal-inner > .nav > .menu-smart > li > a:focus {
     color: <?php echo esc_html($color_menu_text_inverted_hover); ?> !important;
+  }
+  .style-dark-override:not(.is_stuck).menu-transparent .mobile-shopping-cart {
+    color: <?php echo esc_html($color_menu_text_inverted); ?> !important;
   }
 }
 /* Menu colors active */
@@ -2201,28 +2221,30 @@ textarea,
 /* Menu backgrounds colors */
 .main-header .style-light-bg,
 .menu-wrapper .style-light-bg {
-  background-color: <?php echo esc_html($color_menu_background_light); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_light, 'background') === false) ? $color_menu_background_light : 'initial; ' . substr($color_menu_background_light, 0, -1))); ?>;
 }
 .main-header .style-dark-bg,
 .menu-wrapper .style-dark-bg {
-  background-color: <?php echo esc_html($color_menu_background_dark); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_dark, 'background') === false) ? $color_menu_background_dark : 'initial; ' . substr($color_menu_background_dark, 0, -1))); ?>;
 }
 /* Menu submenu backgrounds colors */
 .submenu-light .menu-horizontal .menu-smart ul {
-  background-color: <?php echo esc_html($color_submenu_background_light); ?>;
+  background-color: <?php echo esc_html(((strpos($color_submenu_background_light, 'background') === false) ? $color_submenu_background_light : 'initial; ' . $color_submenu_background_light)); ?>;
 }
 .submenu-dark .menu-horizontal .menu-smart ul {
-  background-color: <?php echo esc_html($color_submenu_background_dark); ?>;
+  background-color: <?php echo esc_html(((strpos($color_submenu_background_dark, 'background') === false) ? $color_submenu_background_dark : 'initial; ' . $color_submenu_background_dark)); ?>;
 }
 /* Menu submenu mobile backgrounds colors */
 @media (max-width: 959px) {
   .submenu-light .menu-smart,
-  .submenu-dark .menu-sidebar-inner {
-    background-color: <?php echo esc_html($color_submenu_background_light); ?>;
+  .submenu-light .menu-sidebar-inner,
+  .submenu-light .main-menu-container {
+    background-color: <?php echo esc_html(((strpos($color_submenu_background_light, 'background') === false) ? $color_submenu_background_light : 'initial; ' . $color_submenu_background_light)); ?>;
   }
   .submenu-dark .menu-smart,
-  .submenu-dark .menu-sidebar-inner {
-    background-color: <?php echo esc_html($color_submenu_background_dark); ?>;
+  .submenu-dark .menu-sidebar-inner,
+  .submenu-dark .main-menu-container {
+    background-color: <?php echo esc_html(((strpos($color_submenu_background_dark, 'background') === false) ? $color_submenu_background_dark : 'initial; ' . $color_submenu_background_dark)); ?>;
   }
 }
 /* Menu transparent backgrounds colors */
@@ -2231,12 +2253,14 @@ textarea,
     opacity: 0;
   }
   .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-light-original > * {
+    background: transparent;
     background-color: <?php echo esc_html($color_menu_background_alpha_light); ?>;
   }
   body:not(.menu-overlay) .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-dark-original {
     opacity: 0;
   }
   .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-dark-original > * {
+    background: transparent;
     background-color: <?php echo esc_html($color_menu_background_alpha_dark); ?>;
   }
 }
@@ -2251,12 +2275,12 @@ textarea,
 .submenu-light .menu-smart span.scroll-up,
 .submenu-light .menu-smart span.scroll-down {
   border-color: <?php echo esc_html($color_menu_border_light); ?>;
-  background-color: <?php echo esc_html($color_menu_background_light); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_light, 'background') === false) ? $color_menu_background_light : 'initial; ' . substr($color_menu_background_light, 0, -1))); ?>;
 }
 .submenu-dark .menu-smart span.scroll-up,
 .submenu-dark .menu-smart span.scroll-down {
   border-color: <?php echo esc_html($color_menu_border_dark); ?>;
-  background-color: <?php echo esc_html($color_menu_background_dark); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_dark, 'background') === false) ? $color_menu_background_dark : 'initial; ' . substr($color_menu_background_dark, 0, -1))); ?>;
 }
 .submenu-light .menu-smart span.scroll-up-arrow,
 .submenu-light .menu-smart span.scroll-down-arrow {
@@ -2344,10 +2368,10 @@ textarea,
 /* #Menu-mobile-colors */
 /* Menu Accordion */
 .submenu-light .menu-accordion .menu-smart ul {
-  background-color: <?php echo esc_html($color_menu_background_light); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_light, 'background') === false) ? $color_menu_background_light : 'initial; ' . substr($color_menu_background_light, 0, -1))); ?>;
 }
 .submenu-dark .menu-accordion .menu-smart ul {
-  background-color: <?php echo esc_html($color_menu_background_dark); ?>;
+  background-color: <?php echo esc_html(((strpos($color_menu_background_dark, 'background') === false) ? $color_menu_background_dark : 'initial; ' . substr($color_menu_background_dark, 0, -1))); ?>;
 }
 /* Menu Overlay */
 .menu-overlay .menu-accordion .menu-smart ul {

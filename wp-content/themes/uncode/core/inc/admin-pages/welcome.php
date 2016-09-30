@@ -27,7 +27,7 @@ function uncode_let_to_num( $size ) {
 
 ?>
 
-<div class="wrap about-wrap uncode-wrap">
+<div class="wrap uncode-wrap">
 
 	<h1><?php echo esc_html__( "Welcome to ", "uncode" ) . '<span class="uncode-name">'.UNCODE_NAME.'</span>'; ?><span class="uncode-version"><?php echo UNCODE_VERSION; ?></span></h1>
 
@@ -58,19 +58,30 @@ function uncode_let_to_num( $size ) {
 				<td><?php
 					global $wp_filesystem;
 					if (empty($wp_filesystem)) {
-					    require_once (ABSPATH . '/wp-admin/includes/file.php');
-					    WP_Filesystem();
+						require_once (ABSPATH . '/wp-admin/includes/file.php');
 					}
-					$access_type = get_filesystem_method();
-					$front_css = get_template_directory() . '/library/css/style-custom.css';
-					if ($access_type === 'direct') {
-						if ( @fopen( $front_css, 'a' ) ) {
-							echo '<mark class="yes">' . '&#10004; <code>' . $front_css .'</code></mark> ';
-						} else {
-							printf( '<mark class="error">' . '<i class="fa fa-cross"></i> - ' . wp_kses(__( 'To allow the correct style to work, make <code>%s</code> writable.', 'uncode' ), array( 'code' => '' )) . '</mark>', $front_css );
+					$mod_file = (defined('FS_CHMOD_FILE')) ? FS_CHMOD_FILE : false;
+					$front_css = get_template_directory() . '/library/css/';
+					$creds = request_filesystem_credentials($front_css, '', false, false, array());
+					$can_write_front = true;
+					if (!!$creds) {
+						/* initialize the API */
+						if ( ! WP_Filesystem($creds) ) {
+							/* any problems and we exit */
+							$can_write_front = false;
 						}
+					}
+					$filename = trailingslashit($front_css).'test.txt';
+					if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', $mod_file) ) {
+						$can_write_front = false;
 					} else {
-						printf( '<div style="color:#0073aa;">' . '&#10004; - ' . wp_kses(__( 'WordPress doesn\'t have direct access to this file <code>%s</code> due to a confict in the Uncode folder permission or your configuration of WordPress file access is not the direct method. The custom css will be output inline.', 'uncode' ), array( 'code' => '' )) . '</div>', $front_css  );
+						$wp_filesystem->delete( $filename );
+					}
+					$front_css = '..' . substr($front_css, strpos($front_css,"/wp-content"));
+					if ($can_write_front) {
+						echo '<mark class="yes">' . '&#10004; <code>' . $front_css .'</code></mark> ';
+					} else {
+						printf( '<div style="color:#0073aa;">' . '&#10004; - ' . wp_kses(__( 'WordPress doesn\'t have direct access to this folder <code>%s</code> due to a confict in the Uncode folder permission or your configuration of WordPress file access is not the direct method. The custom css will be output inline.', 'uncode' ), array( 'code' => '' )) . '</div>', $front_css  );
 					}
 				?></td>
 			</tr>
@@ -78,15 +89,28 @@ function uncode_let_to_num( $size ) {
 				<td data-export-label="Font stylesheet"><?php esc_html_e( 'Backend stylesheet', 'uncode' ); ?>:</td>
 				<td class="help"><?php echo '<a href="#" class="help_tip" data-tip="' . esc_attr__( 'Uncode is generating a stylesheet when the options are saved. The file must be writtable.', 'uncode' ) . '">[?]</a>'; ?></td>
 				<td><?php
-				$back_css = get_template_directory() . '/core/assets/css/admin-custom.css';
-					if ($access_type === 'direct') {
-						if ( @fopen( $back_css, 'a' ) ) {
-							echo '<mark class="yes">' . '&#10004; <code>' . $back_css .'</code></mark> ';
-						} else {
-							printf( '<mark class="error">' . '<i class="fa fa-cross"></i> - ' . wp_kses(__( 'To allow the correct style to work, make <code>%s</code> writable.', 'uncode' ), array( 'code' => '' )) . '</mark>', $back_css );
+					$mod_file = (defined('FS_CHMOD_FILE')) ? FS_CHMOD_FILE : false;
+					$back_css = get_template_directory() . '/core/assets/css/';
+					$creds = request_filesystem_credentials($back_css, '', false, false, array());
+					$can_write_back = true;
+					if (!!$creds) {
+						/* initialize the API */
+						if ( ! WP_Filesystem($creds) ) {
+							/* any problems and we exit */
+							$can_write_back = false;
 						}
+					}
+					$filename = trailingslashit($back_css).'test.txt';
+					if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', $mod_file) ) {
+						$can_write_back = false;
 					} else {
-						printf( '<div style="color:#0073aa;">' . '&#10004; - ' . wp_kses(__( 'WordPress doesn\'t have direct access to this file <code>%s</code> due to a confict in the Uncode folder permission or your configuration of WordPress file access is not the direct method. The custom css will be output inline.', 'uncode' ), array( 'code' => '' )) . '</div>', $back_css  );
+						$wp_filesystem->delete( $filename );
+					}
+					$back_css = '..' . substr($back_css, strpos($back_css,"/wp-content"));
+					if ($can_write_back) {
+						echo '<mark class="yes">' . '&#10004; <code>' . $back_css .'</code></mark> ';
+					} else {
+						printf( '<div style="color:#0073aa;">' . '&#10004; - ' . wp_kses(__( 'WordPress doesn\'t have direct access to this folder <code>%s</code> due to a confict in the Uncode folder permission or your configuration of WordPress file access is not the direct method. The custom css will be output inline.', 'uncode' ), array( 'code' => '' )) . '</div>', $back_css  );
 					}
 				?></td>
 			</tr>

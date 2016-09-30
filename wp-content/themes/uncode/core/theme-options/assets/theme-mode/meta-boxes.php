@@ -17,6 +17,7 @@ function uncode_page_options()
 	if ($portfolio_cpt_name == '') $portfolio_cpt_name = 'portfolio';
 
 	$post_type = uncode_get_current_post_type();
+	$uncode_post_types = uncode_get_post_types(true);
 
 	$fields = array();
 
@@ -44,7 +45,7 @@ function uncode_page_options()
 		'id' => '_uncode_page_scroll',
 		'label' => esc_html__('Section scroller', 'uncode') ,
 		'type' => 'on-off',
-		'desc' => esc_html__('Activate the create a section scroller navigation. NB. Every row must have a unique name.','uncode'),
+		'desc' => esc_html__('Activate to create a section scroller navigation. NB. Every row must have a unique name.','uncode'),
 		'std' => 'off',
 	);
 
@@ -123,6 +124,14 @@ function uncode_page_options()
 		'std' => 'off',
 	);
 
+	$menu_no_padding = array(
+		'id' => '_uncode_specific_menu_no_padding',
+		'label' => esc_html__('Remove menu content padding', 'uncode') ,
+		'type' => 'on-off',
+		'desc' => esc_html__('Remove the additional menu padding in the header.', 'uncode') ,
+		'std' => 'off',
+	);
+
 	$menu_fields = array(
 		array(
 			'label' => '<i class="fa fa-menu fa-fw"></i> ' . esc_html__('Menu', 'uncode') ,
@@ -152,11 +161,12 @@ function uncode_page_options()
 		$uncodeblocks = array();
 		if ($ubq)
 		{
-			foreach ($ubq as $slider)
+			foreach ($ubq as $block)
 			{
 				$uncodeblocks[] = array(
-					'value' => $slider->id,
-					'label' => $slider->post_title
+					'value' => $block->id,
+					'label' => $block->post_title,
+					'postlink' => get_edit_post_link($block->id),
 				);
 			}
 		}
@@ -168,8 +178,20 @@ function uncode_page_options()
 			);
 		}
 
+		$uncodeblocks_extended = array_merge(
+			array(
+				array(
+					'value' => '','label' => esc_html__('Inherit', 'uncode')
+				),
+				array(
+					'value' => 'none','label' => esc_html__('None', 'uncode')
+				)
+			),
+		$uncodeblocks);
+
 	} else {
 		$uncodeblock = '';
+		$uncodeblocks_extended = '';
 	}
 
 	if (is_plugin_active('revslider/revslider.php'))
@@ -188,7 +210,8 @@ function uncode_page_options()
 			{
 				$revsliders[] = array(
 					'value' => $slider->alias,
-					'label' => $slider->title
+					'label' => $slider->title,
+					'postlink' => admin_url( 'admin.php?page=revslider&view=slider&id=' . $slider->id  ),
 				);
 			}
 		}
@@ -218,7 +241,8 @@ function uncode_page_options()
 			{
 				$layersliders[] = array(
 					'value' => $slider->id,
-					'label' => $slider->name
+					'label' => $slider->name,
+					'postlink' => admin_url( 'admin.php?page=layerslider&action=edit&id=' . $slider->id  ),
 				);
 			}
 		}
@@ -979,6 +1003,7 @@ function uncode_page_options()
 		run_array_mb($header_scroll_opacity, '_uncode_header_type:is(header_basic),_uncode_header_type:is(header_uncodeblock)') ,
 		run_array_mb($header_scrolldown, '_uncode_header_type:not(),_uncode_header_type:not(none)') ,
 		run_array_mb($header_name, '_uncode_header_type:is(header_basic)') ,
+		run_array_mb($menu_no_padding) ,
 	);
 
 	$fields = array_merge($fields, $header_fields);
@@ -1066,15 +1091,15 @@ function uncode_page_options()
 		'choices' => array(
 			array(
 				'value' => '',
-				'label' => esc_html__('Left', 'uncode') ,
+				'label' => esc_html__('Right', 'uncode') ,
 			) ,
 			array(
 				'value' => 'center',
 				'label' => esc_html__('Center', 'uncode') ,
 			) ,
 			array(
-				'value' => 'right',
-				'label' => esc_html__('Right', 'uncode') ,
+				'value' => 'left',
+				'label' => esc_html__('Left', 'uncode') ,
 			) ,
 		) ,
 		'operator' => 'or',
@@ -1190,6 +1215,22 @@ function uncode_page_options()
 		),
 	);
 
+	$specific_content_block_before = array(
+		'id' => '_uncode_specific_content_block_before',
+		'label' => esc_html__('Content Block - Before Content', 'uncode') ,
+		'desc' => esc_html__('Specify the Content Block.', 'uncode') ,
+		'type' => 'select',
+		'choices' => $uncodeblocks_extended
+	);
+
+	$specific_content_block_after = array(
+		'id' => '_uncode_specific_content_block_after',
+		'label' => esc_html__('Content Block - After Content', 'uncode') ,
+		'desc' => esc_html__('Specify the Content Block.', 'uncode') ,
+		'type' => 'select',
+		'choices' => $uncodeblocks_extended
+	);
+
 	$specific_bg_color = array(
 		'id' => '_uncode_specific_bg_color',
 		'label' => esc_html__('Background color', 'uncode') ,
@@ -1209,6 +1250,7 @@ function uncode_page_options()
 		run_array_mb($specific_layout_width_custom, '_uncode_specific_layout_width:is(limit)') ,
 		run_array_mb($specific_breadcrumb) ,
 		run_array_mb($specific_breadcrumb_align, '_uncode_specific_breadcrumb:is(on)') ,
+		//run_array_mb($specific_content_block_before) ,
 		run_array_mb($specific_title) ,
 		run_array_mb($specific_media) ,
 		run_array_mb($specific_share) ,
@@ -1218,6 +1260,8 @@ function uncode_page_options()
 		$body_fields[] = run_array_mb($specific_tags);
 		$body_fields[] = run_array_mb($specific_tags_align, '_uncode_specific_tags:is(on)');
 	}
+
+	$body_fields[] = run_array_mb($specific_content_block_after);
 
 	$fields = array_merge($fields, $body_fields);
 
@@ -1519,28 +1563,18 @@ function uncode_page_options()
 
 	if (is_plugin_active('uncode-core/uncode-core.php')) {
 
-		$uncodeblocks = array_merge(
-			array(
-				array(
-					'value' => '','label' => esc_html__('Inherit', 'uncode')
-				),
-				array(
-					'value' => 'none','label' => esc_html__('None', 'uncode')
-				)
-			),
-		$uncodeblocks);
-
 		$specific_footer_blocks_list = array(
 			'id' => '_uncode_specific_footer_block',
 			'label' => esc_html__('Content Block', 'uncode') ,
 			'desc' => esc_html__('Specify the Content Block.', 'uncode') ,
 			'type' => 'select',
 			'operator' => 'or',
-			'choices' => $uncodeblocks
+			'choices' => $uncodeblocks_extended
 		);
 
 	} else {
 		$specific_footer_blocks_list = null;
+		$uncodeblocks_extended = null;
 	}
 
 	$specific_footer_width = array(
@@ -1576,16 +1610,34 @@ function uncode_page_options()
 
 	$fields = array_merge($fields, $footer_fields);
 
+	$get_custom_fields = ot_get_option('_uncode_'.$post_type.'_custom_fields');
+	if (isset($get_custom_fields) && !empty($get_custom_fields))
+	{
+		foreach ($get_custom_fields as $key => $value)
+		{
+			$get_custom_fields[$key]['id'] = $value['_uncode_cf_unique_id'];
+			$get_custom_fields[$key]['label'] = $value['title'];
+			$get_custom_fields[$key]['type'] = 'text';
+		}
+	}
+
+	$custom_fields = array(
+		array(
+			'label' => '<i class="fa fa-pencil3 fa-fw"></i> ' . esc_html__('Custom fields', 'uncode') ,
+			'id' => '_uncode_cf_tab',
+			'type' => 'tab',
+		) ,
+	);
+
+	if (!empty($get_custom_fields)) $custom_fields = array_merge($custom_fields, $get_custom_fields);
+
+	$fields = array_merge($fields, $custom_fields);
+
 	$uncode_page_array = array(
 		'id' => '_uncode_page_options',
 		'title' => esc_html__('Page Options', 'uncode') ,
 		'desc' => '',
-		'pages' => array(
-			'post',
-			'page',
-			'portfolio',
-			'product'
-		) ,
+		'pages' => $uncode_post_types,
 		'context' => 'normal',
 		'priority' => 'default',
 		'fields' => $fields

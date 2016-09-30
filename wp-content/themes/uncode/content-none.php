@@ -10,10 +10,10 @@
 ?>
 
 <div class="row-container">
-	<section class="no-results not-found row row-parent limit-width double-top-padding double-bottom-padding">
-		<header class="page-header">
-			<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'uncode' ); ?></h1>
-		</header><!-- .page-header -->
+	<section class="no-results not-found row row-parent limit-width no-top-padding no-bottom-padding no-h-padding">
+		<div class="page-header">
+			<h1 class="post-title"><?php esc_html_e( 'Nothing Found', 'uncode' ); ?></h1>
+		</div><!-- .page-header -->
 
 		<div class="page-content">
 			<?php if ( is_home() && current_user_can( 'publish_posts' ) ) : ?>

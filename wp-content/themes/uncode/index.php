@@ -49,11 +49,15 @@ if ($boxed !== 'on') {
 	} else {
 		if ($generic_content_full === 'limit') {
 			$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
-			if ($generic_custom_width[1] === 'px') {
-				$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
-			}
-			if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
-				$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
+			if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
+				if ($generic_custom_width[1] === 'px') {
+					$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
+				}
+				if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
+					$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
+				}
+			} else {
+				$limit_content_width = ' limit-width';
 			}
 		}
 	}
@@ -123,7 +127,7 @@ if ($page_header_type !== '' && $page_header_type !== 'none')
 	$header_html = $page_header->html;
 	if ($header_html !== '') {
 		echo '<div id="page-header">';
-		echo do_shortcode( shortcode_unautop( $page_header->html ) );
+		echo uncode_remove_wpautop( $page_header->html );
 		echo '</div>';
 	}
 }
@@ -165,7 +169,9 @@ if (have_posts()):
 
 	} else {
 
+		$content_id = apply_filters( 'wpml_object_id', $content_id, 'post' );
 		$uncode_block = get_post_field('post_content', $content_id);
+		if (has_shortcode($uncode_block, 'vc_row')) $with_builder = true;
 		$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:date|post_type:post"';
 		$regex = '/\[uncode_index(.*?)\]/';
 		$regex_attr = '/(.*?)=\"(.*?)\"/';
@@ -304,7 +310,7 @@ if (have_posts()):
 	} else {
 
 		/** Create html without sidebar **/
-		$the_content = '<div class="post-content"' . $page_custom_width . '>' . uncode_get_row_template($the_content, $limit_width, $limit_content_width, $style, '', 'double', true, 'double') . '</div>';
+		$the_content = '<div class="post-content"' . $page_custom_width . '>' . uncode_get_row_template($the_content, $limit_width, $limit_content_width, $style, '', ($with_builder ? '' : 'double'), true, ($with_builder ? '' : 'double')) . '</div>';
 
 	}
 

@@ -321,7 +321,7 @@ jQuery(document).ready(function($) {
 			link.attr({
 				type: 'text/css',
 				rel: 'stylesheet',
-				href: 'http://fonts.googleapis.com/css?family=' + encodeURIComponent(family)
+				href: '//fonts.googleapis.com/css?family=' + encodeURIComponent(family)
 			});
 			$('head').append(link);
 			source = 'Google Web Fonts';

@@ -70,6 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 <?php
 	global $limit_content_width;
+	ob_start();
 	woocommerce_output_product_data_tabs();
 	woocommerce_upsell_display();
 	$the_content = ob_get_clean();

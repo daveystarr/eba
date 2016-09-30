@@ -31,7 +31,7 @@ if ( post_password_required() ) {
 		</h5>
 
 		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // are there comments to navigate through ?>
-		<nav id="comment-nav-above" class="comment-navigation" role="navigation">
+		<nav id="comment-nav-above" class="comment-navigation">
 			<h1 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'uncode' ); ?></h1>
 			<ul class="navigation">
 				<li class="page-prev"><span class="btn-container"><?php previous_comments_link( '<i class="fa fa-angle-left"></i><span>' . esc_html__( 'Older Comments', 'uncode' ) . '</span>' ); ?></span></li>
@@ -51,7 +51,7 @@ if ( post_password_required() ) {
 		</div><!-- .comment-list -->
 
 		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // are there comments to navigate through ?>
-		<nav id="comment-nav-below" class="comment-navigation" role="navigation">
+		<nav id="comment-nav-below" class="comment-navigation">
 			<h1 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'uncode' ); ?></h1>
 			<ul class="navigation">
 				<li class="page-prev"><span class="btn-container"><?php previous_comments_link( '<i class="fa fa-angle-left"></i><span>' . esc_html__( 'Older Comments', 'uncode' ) . '</span>' ); ?></span></li>

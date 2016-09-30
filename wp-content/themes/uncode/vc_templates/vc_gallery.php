@@ -1,6 +1,6 @@
 <?php
 
-$el_id = $isotope_mode = $gallery_back_color = $items = $medias = $style_preset = $images_size = $thumb_size = $gutter_size = $inner_padding = $single_width = $single_height = $single_back_color = $single_shape = $single_elements_click = $single_text = $single_text_visible = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_family = $single_title_dimension = $single_title_weight = $single_title_height = $single_title_space = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_fluid = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_dots = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $carousel_textual = $carousel_height = $carousel_v_align = $screen_lg = $screen_md = $screen_sm = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $nested = $media_items = $output = $title = $type = $el_class = '';
+$el_id = $isotope_mode = $gallery_back_color = $items = $random = $medias = $filtering = $filter_style = $filter_background = $filter_back_color = $filtering_full_width = $filtering_position = $filtering_uppercase = $filter_all_opposite = $filter_mobile = $filter_scroll = $filter_sticky = $style_preset = $images_size = $thumb_size = $gutter_size = $inner_padding = $single_width = $single_height = $single_back_color = $single_shape = $single_elements_click = $single_text = $single_text_visible = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_family = $single_title_dimension = $single_title_weight = $single_title_height = $single_title_space = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_fluid = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_dots = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $carousel_textual = $carousel_height = $carousel_v_align = $screen_lg = $screen_md = $screen_sm = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $nested = $media_items = $output = $title = $type = $el_class = '';
 extract( shortcode_atts( array(
     'title' => '',
     'el_id' => '',
@@ -8,7 +8,18 @@ extract( shortcode_atts( array(
     'isotope_mode' => 'masonry',
     'gallery_back_color' => '',
     'items' => '',
+    'random' => '',
     'medias' => '',
+    'filtering' => '',
+    'filter_style' => 'light',
+    'filter_back_color' => '',
+    'filtering_full_width' => '',
+    'filtering_position' => 'left',
+    'filtering_uppercase' => '',
+    'filter_all_opposite' => '',
+    'filter_mobile' => '',
+    'filter_scroll' => '',
+    'filter_sticky' => '',
     'style_preset' => 'masonry',
     'images_size' => '',
     'thumb_size' => '',
@@ -153,8 +164,28 @@ $general_animation_speed = $single_animation_speed;
 $items = json_decode( base64_decode( strip_tags( $items ) ), true);
 
 $medias = explode( ',', $medias );
+if ($random === 'yes') shuffle($medias);
 
 $posts_counter = count( $medias );
+
+$posts = array();
+$categories = array();
+$categories_array = get_terms('media-category' , array('orderby' => 'name', 'hide_empty' => true));
+
+if ($posts_counter && $filtering === 'yes') {
+  if ( ! empty( $categories_array ) ) {
+    if ( ! is_wp_error( $categories_array ) ) {
+      foreach ( $categories_array as $cat ) {
+        foreach ($medias as $item_thumb_id) {
+          if (has_term( $cat->term_id, 'media-category', $item_thumb_id )) {
+            if (!isset($categories[$cat->term_id][$cat->name])) $categories[$cat->term_id][$cat->name] = array($item_thumb_id);
+            else array_push($categories[$cat->term_id][$cat->name],$item_thumb_id);
+          }
+        }
+      }
+    }
+  }
+}
 
 /*** init classes ***/
 
@@ -227,24 +258,56 @@ switch ($type) {
       else $div_data['data-navmobile'] = 'false';
       if ($carousel_nav === 'yes' || $carousel_nav_mobile === 'yes') $div_data['data-navskin'] = $carousel_nav_skin;
       if ($carousel_navspeed !== '') {
-      	$div_data['data-navspeed'] = $carousel_navspeed;
+        $div_data['data-navspeed'] = $carousel_navspeed;
       }
       if ((int)$carousel_interval === 0 || $carousel_interval === '') {
-      	$div_data['data-autoplay'] = 'false';
+        $div_data['data-autoplay'] = 'false';
       } else {
-      	$div_data['data-autoplay'] = 'true';
-      	$div_data['data-timeout'] = $carousel_interval;
+        $div_data['data-autoplay'] = 'true';
+        $div_data['data-timeout'] = $carousel_interval;
       }
       if ($carousel_autoh === 'yes') $div_data['data-autoheight'] = 'true';
       $div_data['data-lg'] = $carousel_lg;
       $div_data['data-md'] = $carousel_md;
       $div_data['data-sm'] = $carousel_sm;
-	break;
+  break;
 }
 
 ?>
 <div<?php if ($type === 'isotope') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php echo esc_attr(trim(implode(' ', $main_container_classes))); ?>">
-	<div class="<?php echo esc_attr(trim(implode(' ', $parent_container_classes))); ?>">
+  <?php if ( $posts_counter > 0 && $type === 'isotope'):  ?>
+    <?php if ( $filtering === 'yes' ) :
+      if (count($categories) > 1) :
+        if ($filter_back_color !== '') {
+          $filter_background .= ' style-'.$filter_back_color.'-bg with-bg';
+        } ?>
+        <div class="isotope-filters menu-container <?php echo esc_attr($gutter_size) . esc_attr($filter_background); if ($filter_mobile === 'yes') echo ' mobile-hidden table-hidden'; if ($filter_scroll === 'yes') echo ' filter-scroll'; if ($inner_padding === 'yes') echo ' filters-inner-padding'; if ($filter_sticky === 'yes') echo ' sticky-element';?>">
+          <div class="menu-horizontal<?php if ($filtering_full_width !== 'yes') echo ' limit-width'; ?> menu-<?php echo esc_attr($filter_style); ?> text-<?php echo esc_attr($filtering_position); ?>">
+            <ul class="menu-smart<?php  if ($filtering_uppercase === 'yes') echo ' text-uppercase'; ?>">
+              <?php
+                $show_all_class = 'filter-show-all';
+                if ($filter_all_opposite === 'yes') {
+                  if ($filtering_position === 'left') $show_all_class = ' float-right';
+                  if ($filtering_position === 'right') $show_all_class = ' float-left';
+                } ?>
+              <li class="<?php echo esc_attr($show_all_class); ?>">
+                <span>
+                  <a href="#" data-filter="*" class="active">
+                    <?php esc_html_e( 'Show all', 'uncode' ) ?></a>
+                  </a>
+                </span>
+              </li>
+              <?php
+              foreach ( $categories as $key => $cat ): ?>
+                <li class="filter-cat-<?php echo esc_attr($key); ?>"><span><a href="#" data-filter="grid-cat-<?php echo esc_attr($key); ?>" class="<?php if (isset($_GET['ucat']) && $_GET['ucat'] == $key) echo 'active'; ?>"><?php echo esc_attr( key($cat) ) ?></a></span></li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        </div>
+      <?php endif; ?>
+    <?php endif; ?>
+  <?php endif; ?>
+  <div class="<?php echo esc_attr(trim(implode(' ', $parent_container_classes))); ?>">
     <div<?php if ($type === 'carousel') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php echo esc_attr(trim(implode(' ', $container_classes))); ?>" <?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
 <?php
 /**
@@ -253,16 +316,29 @@ switch ($type) {
 
 if (count($medias) > 0) {
 
-	foreach ($medias as $item_thumb_id) {
+  foreach ($medias as $item_thumb_id) {
+
+    $categories_css = '';
+    $categories_name = array();
+    $categories_id = array();
+    if ( count($categories) > 1 ) {
+      foreach ($categories as $key => $cat) {
+        if (in_array($item_thumb_id, $cat[key($cat)])) {
+          $categories_css.= ' grid-cat-' . $key;
+          $categories_name[] = $cat;
+          $categories_id[] = $key;
+        }
+      }
+    }
 
     $block_data = array();
     $tmb_data = array();
 
-		$item_prop = (isset($items[$item_thumb_id . '_i'])) ? $items[$item_thumb_id . '_i'] : '';
+    $item_prop = (isset($items[$item_thumb_id . '_i'])) ? $items[$item_thumb_id . '_i'] : '';
 
-		$typeLayout = $media_blocks;
+    $typeLayout = $media_blocks;
 
-		if (isset($item_prop['single_layout'])) {
+    if (isset($item_prop['single_layout'])) {
       if (function_exists('uncode_flatArray')) {
         $typeLayout = uncode_flatArray(vc_sorted_list_parse_value($item_prop['single_layout']));
       } else {
@@ -270,63 +346,63 @@ if (count($medias) > 0) {
       }
     }
 
-		if (!isset($typeLayout['media'][0]) || $typeLayout['media'][0] === '') $typeLayout['media'][0] = 'lightbox';
+    if (!isset($typeLayout['media'][0]) || $typeLayout['media'][0] === '') $typeLayout['media'][0] = 'lightbox';
 
-		$single_text = (isset($item_prop['single_text'])) ? $item_prop['single_text'] : $general_text;
+    $single_text = (isset($item_prop['single_text'])) ? $item_prop['single_text'] : $general_text;
 
-		if ($type === 'carousel') {
-			if ($nested) $block_classes = array('tmb-carousel');
-			else $block_classes = array('tmb tmb-carousel');
-		} else $block_classes = array('tmb');
+    if ($type === 'carousel') {
+      if ($nested) $block_classes = array('tmb-carousel');
+      else $block_classes = array('tmb tmb-carousel');
+    } else $block_classes = array('tmb');
 
     if ($no_double_tap === 'yes') $block_classes[] = 'tmb-no-double-tap';
 
-		$title_classes = array();
-		$lightbox_classes = array();
+    $title_classes = array();
+    $lightbox_classes = array();
 
-		if ($type !== 'carousel') {
-			$single_width = (isset($item_prop['single_width'])) ? $item_prop['single_width'] : $general_width;
-			$block_classes[] = 'tmb-iso-w' . $single_width;
-		} else {
-			if (!$nested) $single_width = 12 / $carousel_lg;
-		}
+    if ($type !== 'carousel') {
+      $single_width = (isset($item_prop['single_width'])) ? $item_prop['single_width'] : $general_width;
+      $block_classes[] = 'tmb-iso-w' . $single_width;
+    } else {
+      if (!$nested) $single_width = 12 / $carousel_lg;
+    }
 
-		$single_height = (isset($item_prop['single_height'])) ? $item_prop['single_height'] : $general_height;
-		$block_classes[] = 'tmb-iso-h' . $single_height;
+    $single_height = (isset($item_prop['single_height'])) ? $item_prop['single_height'] : $general_height;
+    $block_classes[] = 'tmb-iso-h' . $single_height;
 
-		$images_size = (isset($item_prop['images_size'])) ? $item_prop['images_size'] : $general_images_size;
+    $images_size = (isset($item_prop['images_size'])) ? $item_prop['images_size'] : $general_images_size;
 
-		$single_back_color = (isset($item_prop['single_back_color'])) ? $item_prop['single_back_color'] : $general_back_color;
+    $single_back_color = (isset($item_prop['single_back_color'])) ? $item_prop['single_back_color'] : $general_back_color;
 
-		$single_shape = (isset($item_prop['single_shape'])) ? $item_prop['single_shape'] : $general_shape;
-		if ($single_shape !== '') $block_classes[] = ($single_back_color === '' || (count($typeLayout) === 1 && array_key_exists('media',$typeLayout))) ? 'img-' . $single_shape : 'tmb-' . $single_shape;
+    $single_shape = (isset($item_prop['single_shape'])) ? $item_prop['single_shape'] : $general_shape;
+    if ($single_shape !== '') $block_classes[] = ($single_back_color === '' || (count($typeLayout) === 1 && array_key_exists('media',$typeLayout))) ? 'img-' . $single_shape : 'tmb-' . $single_shape;
 
-		$single_style = (isset($item_prop['single_style'])) ? $item_prop['single_style'] : $general_iso_style;
-		$block_classes[] = 'tmb-' . $single_style;
+    $single_style = (isset($item_prop['single_style'])) ? $item_prop['single_style'] : $general_iso_style;
+    $block_classes[] = 'tmb-' . $single_style;
 
-		$single_overlay_color = (isset($item_prop['single_overlay_color']) && $item_prop['single_overlay_color'] !== '') ? $item_prop['single_overlay_color'] : $general_overlay_color;
-		$overlay_style = $stylesArray[!array_search($single_style, $stylesArray) ];
+    $single_overlay_color = (isset($item_prop['single_overlay_color']) && $item_prop['single_overlay_color'] !== '') ? $item_prop['single_overlay_color'] : $general_overlay_color;
+    $overlay_style = $stylesArray[!array_search($single_style, $stylesArray) ];
 
     if ($single_overlay_color === '') {
-			if ($overlay_style === 'light') $single_overlay_color = 'light';
+      if ($overlay_style === 'light') $single_overlay_color = 'light';
       else $single_overlay_color = 'dark';
     }
 
-		$single_overlay_color = 'style-' . $single_overlay_color .'-bg';
+    $single_overlay_color = 'style-' . $single_overlay_color .'-bg';
 
-		$single_overlay_coloration = (isset($item_prop['single_overlay_coloration'])) ? $item_prop['single_overlay_coloration'] : $general_overlay_coloration;
-		switch ($single_overlay_coloration) {
-			case 'top_gradient':
-				$block_classes[] = 'tmb-overlay-gradient-top';
-				$single_overlay_color = '';
-			break;
-			case 'bottom_gradient':
-				$block_classes[] = 'tmb-overlay-gradient-bottom';
-				$single_overlay_color = '';
-			break;
-		}
+    $single_overlay_coloration = (isset($item_prop['single_overlay_coloration'])) ? $item_prop['single_overlay_coloration'] : $general_overlay_coloration;
+    switch ($single_overlay_coloration) {
+      case 'top_gradient':
+        $block_classes[] = 'tmb-overlay-gradient-top';
+        $single_overlay_color = '';
+      break;
+      case 'bottom_gradient':
+        $block_classes[] = 'tmb-overlay-gradient-bottom';
+        $single_overlay_color = '';
+      break;
+    }
 
-		$single_overlay_opacity = (isset($item_prop['single_overlay_opacity'])) ? $item_prop['single_overlay_opacity'] : $general_overlay_opacity;
+    $single_overlay_opacity = (isset($item_prop['single_overlay_opacity'])) ? $item_prop['single_overlay_opacity'] : $general_overlay_opacity;
 
     $single_elements_click = (isset($item_prop['single_elements_click'])) ? $item_prop['single_elements_click'] : $general_elements_click;
 
@@ -355,11 +431,11 @@ if (count($medias) > 0) {
       if ($single_reduced !== '') {
         switch ($single_reduced) {
           case 'three_quarter':
-						$block_classes[] = 'tmb-overlay-text-reduced';
-					break;
+            $block_classes[] = 'tmb-overlay-text-reduced';
+          break;
           case 'half':
-						$block_classes[] = 'tmb-overlay-text-reduced-2';
-					break;
+            $block_classes[] = 'tmb-overlay-text-reduced-2';
+          break;
         }
         if ($single_h_position !== '') $block_classes[] = 'tmb-overlay-' . $single_h_position;
       }
@@ -375,10 +451,10 @@ if (count($medias) > 0) {
     if ($single_text_reduced === 'yes') $block_classes[] = 'tmb-text-space-reduced';
 
     $single_image_coloration = (isset($item_prop['single_image_coloration'])) ? $item_prop['single_image_coloration'] : $general_image_coloration;
-		if ($single_image_coloration === 'desaturated') $block_classes[] = 'tmb-desaturated';
+    if ($single_image_coloration === 'desaturated') $block_classes[] = 'tmb-desaturated';
 
-		$single_image_color_anim = (isset($item_prop['single_image_color_anim'])) ? $item_prop['single_image_color_anim'] : $general_image_color_anim;
-		if ($single_image_color_anim === 'yes') $block_classes[] = 'tmb-image-color-anim';
+    $single_image_color_anim = (isset($item_prop['single_image_color_anim'])) ? $item_prop['single_image_color_anim'] : $general_image_color_anim;
+    if ($single_image_color_anim === 'yes') $block_classes[] = 'tmb-image-color-anim';
 
     $single_image_anim = (isset($item_prop['single_image_anim'])) ? $item_prop['single_image_anim'] : $general_image_anim;
     if ($single_image_anim === 'yes' && $carousel_textual !== 'yes') $block_classes[] = 'tmb-image-anim';
@@ -387,8 +463,8 @@ if (count($medias) > 0) {
 
     $single_shadow = (isset($item_prop['single_shadow'])) ? $item_prop['single_shadow'] : $general_shadow;
     if ($single_shadow === 'yes') {
-			$block_classes[] = 'tmb-shadowed';
-		}
+      $block_classes[] = 'tmb-shadowed';
+    }
 
     $single_border = (isset($item_prop['single_border'])) ? $item_prop['single_border'] : $general_border;
     if ($single_border !== 'yes' && $carousel_textual !== 'yes') $block_classes[] = 'tmb-bordered';
@@ -399,7 +475,7 @@ if (count($medias) > 0) {
     $single_title_family = (isset($item_prop['single_title_family'])) ? $item_prop['single_title_family'] : $general_title_family;
     if ($single_title_family !== '') $title_classes[] = $single_title_family;
 
-	$single_title_dimension = (isset($item_prop['single_title_dimension'])) ? $item_prop['single_title_dimension'] : $general_title_dimension;
+  $single_title_dimension = (isset($item_prop['single_title_dimension'])) ? $item_prop['single_title_dimension'] : $general_title_dimension;
 
     if ($single_title_dimension !== '') $title_classes[] = $single_title_dimension;
     else {
@@ -410,23 +486,23 @@ if (count($medias) > 0) {
             $title_classes[] = 'h6';
           break;
           case 3:
-						$title_classes[] = 'h5';
+            $title_classes[] = 'h5';
           break;
           case 4:
-						$title_classes[] = 'h4';
+            $title_classes[] = 'h4';
           break;
           case 6:
           case 7:
           case 8:
-						$title_classes[] = 'h3';
+            $title_classes[] = 'h3';
           break;
           case 9:
           case 10:
-						$title_classes[] = 'h2';
+            $title_classes[] = 'h2';
           break;
           case 11:
           case 12:
-						$title_classes[] = 'h1';
+            $title_classes[] = 'h1';
           break;
         }
       } else {
@@ -434,8 +510,8 @@ if (count($medias) > 0) {
       }
     }
 
-		$single_title_weight = (isset($item_prop['single_title_weight'])) ? $item_prop['single_title_weight'] : $general_title_weight;
-		if ($single_title_weight !== '') $title_classes[] = 'font-weight-' . $single_title_weight;
+    $single_title_weight = (isset($item_prop['single_title_weight'])) ? $item_prop['single_title_weight'] : $general_title_weight;
+    if ($single_title_weight !== '') $title_classes[] = 'font-weight-' . $single_title_weight;
 
     $single_title_height = (isset($item_prop['single_title_height'])) ? $item_prop['single_title_height'] : $general_title_height;
     if ($single_title_height !== '') $title_classes[] = $single_title_height;
@@ -443,85 +519,87 @@ if (count($medias) > 0) {
     $single_title_space = (isset($item_prop['single_title_space'])) ? $item_prop['single_title_space'] : $general_title_space;
     if ($single_title_space !== '') $title_classes[] = $single_title_space;
 
-   	$single_animation_delay = (isset($item_prop['single_animation_delay'])) ? $item_prop['single_animation_delay'] : $general_animation_delay;
+    $single_animation_delay = (isset($item_prop['single_animation_delay'])) ? $item_prop['single_animation_delay'] : $general_animation_delay;
 
-   	$single_animation_speed = (isset($item_prop['single_animation_speed'])) ? $item_prop['single_animation_speed'] : $general_animation_speed;
+    $single_animation_speed = (isset($item_prop['single_animation_speed'])) ? $item_prop['single_animation_speed'] : $general_animation_speed;
 
-   	$single_css_animation = (isset($item_prop['single_css_animation'])) ? $item_prop['single_css_animation'] : $general_css_animation;
+    $single_css_animation = (isset($item_prop['single_css_animation'])) ? $item_prop['single_css_animation'] : $general_css_animation;
     if ($single_css_animation !== '') {
       $block_data['animation'] = ' animate_when_almost_visible ' . $single_css_animation;
       if ($single_animation_delay !== '') $tmb_data['data-delay'] = $single_animation_delay;
       if ($single_animation_speed !== '') $tmb_data['data-speed'] = $single_animation_speed;
     }
 
-		$block_data['classes'] = $block_classes;
-		$block_data['tmb_data'] = $tmb_data;
-		$block_data['media_id'] = $item_thumb_id;
-		$block_data['images_size'] = $images_size;
-		$block_data['single_style'] = $single_style;
-		$block_data['single_text'] = $single_text;
-		$block_data['single_elements_click'] = $single_elements_click;
-		$block_data['overlay_opacity'] = $single_overlay_opacity;
-		$block_data['overlay_color'] = $single_overlay_color;
-		$block_data['single_width'] = $single_width;
-		$block_data['single_height'] = $single_height;
-		$block_data['single_back_color'] = $single_back_color;
-		$block_data['single_icon'] = $single_icon;
-		$block_data['title_classes'] = $title_classes;
+    $block_classes[] = $categories_css;
+    $block_data['classes'] = $block_classes;
+    $block_data['tmb_data'] = $tmb_data;
+    $block_data['media_id'] = $item_thumb_id;
+    $block_data['images_size'] = $images_size;
+    $block_data['single_style'] = $single_style;
+    $block_data['single_text'] = $single_text;
+    $block_data['single_elements_click'] = $single_elements_click;
+    $block_data['overlay_opacity'] = $single_overlay_opacity;
+    $block_data['overlay_color'] = $single_overlay_color;
+    $block_data['single_width'] = $single_width;
+    $block_data['single_height'] = $single_height;
+    $block_data['single_back_color'] = $single_back_color;
+    $block_data['single_icon'] = $single_icon;
+    $block_data['title_classes'] = $title_classes;
+    $block_data['single_categories_id'] = $categories_id;
 
-		$single_padding = (isset($item_prop['single_padding'])) ? $item_prop['single_padding'] : $general_padding;
+    $single_padding = (isset($item_prop['single_padding'])) ? $item_prop['single_padding'] : $general_padding;
 
-		switch ($single_padding) {
-		  case 0:
-				$block_data['text_padding'] = 'no-block-padding';
-		  break;
-			case 1:
-				$block_data['text_padding'] = 'half-block-padding';
-			break;
-			case 2:
-			default:
-				$block_data['text_padding'] = 'single-block-padding';
-			break;
-			case 3:
-				$block_data['text_padding'] = 'double-block-padding';
-			break;
-			case 4:
-				$block_data['text_padding'] = 'triple-block-padding';
-			break;
-			case 5:
-				$block_data['text_padding'] = 'quad-block-padding';
-			break;
-		}
+    switch ($single_padding) {
+      case 0:
+        $block_data['text_padding'] = 'no-block-padding';
+      break;
+      case 1:
+        $block_data['text_padding'] = 'half-block-padding';
+      break;
+      case 2:
+      default:
+        $block_data['text_padding'] = 'single-block-padding';
+      break;
+      case 3:
+        $block_data['text_padding'] = 'double-block-padding';
+      break;
+      case 4:
+        $block_data['text_padding'] = 'triple-block-padding';
+      break;
+      case 5:
+        $block_data['text_padding'] = 'quad-block-padding';
+      break;
+    }
 
-		if (isset($typeLayout['media'][0]) && $typeLayout['media'][0] === 'custom_link')
-		{
-			if (isset($item_prop['single_link']) && $item_prop['single_link'] != '')
-			{
-				$block_data['link'] = vc_build_link($item_prop['single_link']);
-			}
-		}
-		else if (isset($typeLayout['media'][0]) && $typeLayout['media'][0] === 'nolink')
-		{
-			$block_data['link_class'] = 'inactive-link';
-			$block_data['link'] = '#';
-		}
-		else
-		{
-			if ($lbox_skin !== '') $lightbox_classes['data-skin'] = $lbox_skin;
-			if ($lbox_title !== '') $lightbox_classes['data-title'] = true;
-			if ($lbox_caption !== '') $lightbox_classes['data-caption'] = true;
-			if ($lbox_dir !== '') $lightbox_classes['data-dir'] = $lbox_dir;
-			if ($lbox_social !== '') $lightbox_classes['data-social'] = true;
-			if ($lbox_deep !== '') $lightbox_classes['data-deep'] = $el_id;
-			if ($lbox_no_tmb !== '') $lightbox_classes['data-notmb'] = true;
-			if ($lbox_no_arrows !== '') $lightbox_classes['data-noarr'] = true;
-			if (count($lightbox_classes) === 0) $lightbox_classes['data-active'] = true;
-		}
+    if (isset($typeLayout['media'][0]) && $typeLayout['media'][0] === 'custom_link')
+    {
+      if (isset($item_prop['single_link']) && $item_prop['single_link'] != '')
+      {
+        $block_data['link'] = vc_build_link($item_prop['single_link']);
+      }
+    }
+    else if (isset($typeLayout['media'][0]) && $typeLayout['media'][0] === 'nolink')
+    {
+      $block_data['link_class'] = 'inactive-link';
+      $block_data['link'] = '#';
+    }
+    else
+    {
+      if ($lbox_skin !== '') $lightbox_classes['data-skin'] = $lbox_skin;
+      if ($lbox_title !== '') $lightbox_classes['data-title'] = true;
+      if ($lbox_caption !== '') $lightbox_classes['data-caption'] = true;
+      if ($lbox_dir !== '') $lightbox_classes['data-dir'] = $lbox_dir;
+      if ($lbox_social !== '') $lightbox_classes['data-social'] = true;
+      if ($lbox_deep !== '') $lightbox_classes['data-deep'] = $el_id;
+      if ($lbox_no_tmb !== '') $lightbox_classes['data-notmb'] = true;
+      if ($lbox_no_arrows !== '') $lightbox_classes['data-noarr'] = true;
+      if (count($lightbox_classes) === 0) $lightbox_classes['data-active'] = true;
+    }
 
-		if (isset($typeLayout['media'][1]) && $typeLayout['media'][1] === 'poster') $block_data['poster'] = true;
+    if (isset($typeLayout['media'][1]) && $typeLayout['media'][1] === 'poster') $block_data['poster'] = true;
 
-		echo uncode_create_single_block($block_data, $el_id, $style_preset, $typeLayout, $lightbox_classes, $carousel_textual);
-	}
+    echo uncode_create_single_block($block_data, $el_id, $style_preset, $typeLayout, $lightbox_classes, $carousel_textual);
+  }
 } ?>
         </div>
     </div>

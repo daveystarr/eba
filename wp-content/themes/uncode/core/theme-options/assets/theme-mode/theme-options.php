@@ -11,8 +11,9 @@ add_action('admin_init', 'custom_theme_options');
 function custom_theme_options()
 {
 
-	global $wpdb, $uncode_colors, $portfolio_ctp_name_check;
+	global $wpdb, $uncode_colors, $uncode_post_types;
 
+	if (!isset($uncode_post_types)) $uncode_post_types = uncode_get_post_types();
 	/**
 	 * Get a copy of the saved settings array.
 	 */
@@ -90,7 +91,8 @@ function custom_theme_options()
 		foreach ($blocks_query->posts as $block) {
 			$uncodeblocks[] = array(
 				'value' => $block->ID,
-				'label' => $block->post_title
+				'label' => $block->post_title,
+				'postlink' => get_edit_post_link($block->ID),
 			);
 		}
 
@@ -152,7 +154,8 @@ function custom_theme_options()
 			{
 				$revsliders[] = array(
 					'value' => $slider->alias,
-					'label' => $slider->title
+					'label' => $slider->title,
+					'postlink' => admin_url( 'admin.php?page=revslider&view=slider&id=' . $slider->id  ),
 				);
 			}
 		}
@@ -182,7 +185,8 @@ function custom_theme_options()
 			{
 				$layersliders[] = array(
 					'value' => $slider->id,
-					'label' => $slider->name
+					'label' => $slider->name,
+					'postlink' => admin_url( 'admin.php?page=layerslider&action=edit&id=' . $slider->id  ),
 				);
 			}
 		}
@@ -1125,15 +1129,15 @@ function custom_theme_options()
 		'choices' => array(
 			array(
 				'value' => '',
-				'label' => esc_html__('Left', 'uncode') ,
+				'label' => esc_html__('Right', 'uncode') ,
 			) ,
 			array(
 				'value' => 'center',
 				'label' => esc_html__('Center', 'uncode') ,
 			) ,
 			array(
-				'value' => 'right',
-				'label' => esc_html__('Right', 'uncode') ,
+				'value' => 'left',
+				'label' => esc_html__('Left', 'uncode') ,
 			) ,
 		) ,
 		'section' => 'uncode_%section%_section',
@@ -1228,6 +1232,24 @@ function custom_theme_options()
 		'desc' => esc_html__('Define the content block to use.', 'uncode') ,
 		'type' => 'select',
 		'choices' => $uncodeblocks,
+		'section' => 'uncode_%section%_section',
+	);
+
+	$body_uncode_block_before = array(
+		'id' => '_uncode_%section%_content_block_before',
+		'label' => esc_html__('Content Block - Before Content', 'uncode') ,
+		'desc' => esc_html__('Define the content block to use.', 'uncode') ,
+		'type' => 'custom-post-type-select',
+		'post_type' => 'uncodeblock',
+		'section' => 'uncode_%section%_section',
+	);
+
+	$body_uncode_block_after = array(
+		'id' => '_uncode_%section%_content_block_after',
+		'label' => esc_html__('Content Block - After Content', 'uncode') ,
+		'desc' => esc_html__('Define the content block to use.', 'uncode') ,
+		'type' => 'custom-post-type-select',
+		'post_type' => 'uncodeblock',
 		'section' => 'uncode_%section%_section',
 	);
 
@@ -1539,2186 +1561,2489 @@ function custom_theme_options()
 		'section' => 'uncode_%section%_section',
 	);
 
+	$custom_fields_section_title = array(
+		'id' => '_uncode_%section%_cf_title',
+		'label' => '<i class="fa fa-pencil3"></i> ' . esc_html__('Custom fields', 'uncode') ,
+		'desc' => '' ,
+		'type' => 'textblock-titled',
+		'class' => 'section-title',
+		'section' => 'uncode_%section%_section',
+	);
+
+	$custom_fields_list = array(
+		'id' => '_uncode_%section%_custom_fields',
+		'label' => esc_html__('Custom fields', 'uncode') ,
+		'desc' => esc_html__('Create here all the custom fields that can be used inside the posts module.', 'uncode') ,
+		'type' => 'list-item',
+		'section' => 'uncode_%section%_section',
+		'settings' => array(
+			array(
+				'id' => '_uncode_cf_unique_id',
+				'class' => 'unique_id',
+				'std' => 'detail-',
+				'type' => 'text',
+				'label' => esc_html__('Unique custom field ID','uncode') ,
+				'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+			),
+		)
+	);
+
 	$portfolio_cpt_name = ot_get_option('_uncode_portfolio_cpt');
 	if ($portfolio_cpt_name == '') $portfolio_cpt_name = 'portfolio';
 
-	$custom_settings = array(
-		'sections' => array(
-			array(
-				'id' => 'uncode_logo_section',
-				'title' => '<i class="fa fa-heart3"></i> ' . esc_html__('Logo', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_header_section',
-				'title' => '<i class="fa fa-menu"></i> ' . esc_html__('Menu', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_main_section',
-				'title' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_page_section',
-				'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . esc_html__('Page', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_post_section',
-				'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . esc_html__('Post', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_portfolio_section',
-				'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . ucfirst($portfolio_cpt_name) . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_post_index_section',
-				'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Posts', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_page_index_section',
-				'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Pages', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_portfolio_index_section',
-				'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . ucfirst($portfolio_cpt_name) . 's</span>'
-			) ,
-			array(
-				'id' => 'uncode_search_index_section',
-				'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Search', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_404_section',
-				'title' => '<span class="smaller"><i class="fa fa-help"></i> ' . esc_html__('404', 'uncode') . '</span>'
-			) ,
-			array(
-				'id' => 'uncode_footer_section',
-				'title' => '<i class="fa fa-ellipsis"></i> ' . esc_html__('Footer', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_colors_section',
-				'title' => '<i class="fa fa-drop"></i> ' . esc_html__('Palette', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_typography_section',
-				'title' => '<i class="fa fa-font"></i> ' . esc_html__('Typography', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_customize_section',
-				'title' => '<i class="fa fa-box"></i> ' . esc_html__('Customize', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_sidebars_section',
-				'title' => '<i class="fa fa-content-right"></i> ' . esc_html__('Sidebars', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_connections_section',
-				'title' => '<i class="fa fa-share2"></i> ' . esc_html__('Connections', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_redirect_section',
-				'title' => '<i class="fa fa-reply2"></i> ' . esc_html__('Redirect', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_cssjs_section',
-				'title' => '<i class="fa fa-code"></i> ' . esc_html__('CSS & JS', 'uncode')
-			) ,
-			array(
-				'id' => 'uncode_performance_section',
-				'title' => '<i class="fa fa-loader"></i> ' . esc_html__('Performance', 'uncode')
-			) ,
+	$cpt_single_sections = array();
+	$cpt_index_sections = array();
+	$cpt_single_options = array();
+	$cpt_index_options = array();
+
+	if (count($uncode_post_types) > 0) {
+		foreach ($uncode_post_types as $key => $value) {
+			if ($value !== 'portfolio' && $value !== 'product') {
+				$cpt_single_sections[] = array(
+					'id' => 'uncode_'.$value.'_section',
+					'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . ucfirst($value) . '</span>'
+				);
+				$cpt_index_sections[] = array(
+					'id' => 'uncode_'.$value.'_index_section',
+					'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . ucfirst($value) . '</span>'
+				);
+			}
+		}
+		foreach ($uncode_post_types as $key => $value) {
+			if ($value !== 'portfolio' && $value !== 'product') {
+				$cpt_single_options[] = str_replace('%section%', $value, $menu_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $menu);
+				$cpt_single_options[] = str_replace('%section%', $value, $menu_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $menu_opaque);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_type);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_uncode_block);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_revslider);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_layerslider);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_height);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_min_height);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_style);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_content_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_custom_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_align);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_position);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_font);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_size);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_height);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_spacing);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_weight);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_transform);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_title_italic);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_text_animation);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_animation_speed);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_animation_delay);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_featured);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_background);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_parallax);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_overlay_color);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_overlay_color_alpha);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_scroll_opacity);
+				$cpt_single_options[] = str_replace('%section%', $value, $header_scrolldown);
+				$cpt_single_options[] = str_replace('%section%', $value, $body_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $body_layout_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $body_layout_width_custom);
+				$cpt_single_options[] = str_replace('%section%', $value, run_array_to($show_breadcrumb, 'std', 'on'));
+				$cpt_single_options[] = str_replace('%section%', $value, $breadcrumb_align);
+				$cpt_single_options[] = str_replace('%section%', $value, run_array_to($show_title, 'std', 'on'));
+				$cpt_single_options[] = str_replace('%section%', $value, $show_media);
+				$cpt_single_options[] = str_replace('%section%', $value, $show_comments);
+				$cpt_single_options[] = str_replace('%section%', $value, $body_uncode_block_after);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_activate);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_widget);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_position);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_size);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_sticky);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_style);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_bgcolor);
+				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_fill);
+				$cpt_single_options[] = str_replace('%section%', $value, $footer_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $footer_uncode_block);
+				$cpt_single_options[] = str_replace('%section%', $value, $footer_width);
+				$cpt_single_options[] = str_replace('%section%', $value, $custom_fields_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $custom_fields_list);
+			}
+		}
+		foreach ($uncode_post_types as $key => $value) {
+			if ($value !== 'portfolio' && $value !== 'product') {
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $menu_section_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $menu);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $menu_width);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $menu_opaque);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_section_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', run_array_to($header_type, 'std', 'header_basic'));
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_uncode_block);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_revslider);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_layerslider);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_width);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_height);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_min_height);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_style);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_content_width);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_custom_width);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_align);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_position);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_font);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_size);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_height);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_spacing);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_weight);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_transform);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_title_italic);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_text_animation);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_animation_speed);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_animation_delay);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_featured);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_background);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_parallax);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_overlay_color);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_overlay_color_alpha);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_scroll_opacity);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $header_scrolldown);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $body_section_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $show_breadcrumb);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $breadcrumb_align);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $body_uncode_block);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)'));
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $body_single_post_width);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $body_single_text_lenght);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $show_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_section_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', run_array_to($sidebar_activate, 'std', 'on'));
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_widget);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_position);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_size);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_sticky);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_style);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_bgcolor);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $sidebar_fill);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $footer_section_title);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $footer_uncode_block);
+				$cpt_index_options[] = str_replace('%section%', $value . '_index', $footer_width);
+			}
+		}
+	}
+
+	$custom_settings_section_one = array(
+		array(
+			'id' => 'uncode_logo_section',
+			'title' => '<i class="fa fa-heart3"></i> ' . esc_html__('Logo', 'uncode')
 		) ,
-		'settings' => array(
-			array(
-				'id' => '_uncode_general_block_title',
-				'label' => '<i class="fa fa-globe3"></i> ' . esc_html__('General', 'uncode') ,
-				'desc' => '',
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_main_section',
+		array(
+			'id' => 'uncode_header_section',
+			'title' => '<i class="fa fa-menu"></i> ' . esc_html__('Menu', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_main_section',
+			'title' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_post_section',
+			'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . esc_html__('Post', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_page_section',
+			'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . esc_html__('Page', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_portfolio_section',
+			'title' => '<span class="smaller"><i class="fa fa-paper"></i> ' . ucfirst($portfolio_cpt_name) . '</span>'
+		) ,
+	);
+
+	$custom_settings_section_one = array_merge( $custom_settings_section_one, $cpt_single_sections );
+
+	$custom_settings_section_two = array(
+		array(
+			'id' => 'uncode_post_index_section',
+			'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Posts', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_page_index_section',
+			'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Pages', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_portfolio_index_section',
+			'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . ucfirst($portfolio_cpt_name) . 's</span>'
+		) ,
+	);
+
+	$custom_settings_section_one = array_merge( $custom_settings_section_one, $custom_settings_section_two );
+	$custom_settings_section_one = array_merge( $custom_settings_section_one, $cpt_index_sections );
+
+	$custom_settings_section_three = array(
+		array(
+			'id' => 'uncode_search_index_section',
+			'title' => '<span class="smaller"><i class="fa fa-archive2"></i> ' . esc_html__('Search', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_404_section',
+			'title' => '<span class="smaller"><i class="fa fa-help"></i> ' . esc_html__('404', 'uncode') . '</span>'
+		) ,
+		array(
+			'id' => 'uncode_footer_section',
+			'title' => '<i class="fa fa-ellipsis"></i> ' . esc_html__('Footer', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_colors_section',
+			'title' => '<i class="fa fa-drop"></i> ' . esc_html__('Palette', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_typography_section',
+			'title' => '<i class="fa fa-font"></i> ' . esc_html__('Typography', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_customize_section',
+			'title' => '<i class="fa fa-box"></i> ' . esc_html__('Customize', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_sidebars_section',
+			'title' => '<i class="fa fa-content-right"></i> ' . esc_html__('Sidebars', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_connections_section',
+			'title' => '<i class="fa fa-share2"></i> ' . esc_html__('Connections', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_gmaps_section',
+			'title' => '<i class="fa fa-map-o"></i> ' . esc_html__('Google Maps', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_redirect_section',
+			'title' => '<i class="fa fa-reply2"></i> ' . esc_html__('Redirect', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_cssjs_section',
+			'title' => '<i class="fa fa-code"></i> ' . esc_html__('CSS & JS', 'uncode')
+		) ,
+		array(
+			'id' => 'uncode_performance_section',
+			'title' => '<i class="fa fa-loader"></i> ' . esc_html__('Performance', 'uncode')
+		) ,
+	);
+
+	$custom_settings_section_one = array_merge( $custom_settings_section_one, $custom_settings_section_three );
+
+	$custom_settings_one = array(
+		array(
+			'id' => '_uncode_general_block_title',
+			'label' => '<i class="fa fa-globe3"></i> ' . esc_html__('General', 'uncode') ,
+			'desc' => '',
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_main_section',
+		) ,
+		array(
+			'id' => '_uncode_main_width',
+			'label' => esc_html__('Site width', 'uncode') ,
+			'desc' => esc_html__('Enter the width of your site.', 'uncode') ,
+			'std' => array(
+				'1200',
+				'px'
 			) ,
-			array(
-				'id' => '_uncode_main_width',
-				'label' => esc_html__('Site width', 'uncode') ,
-				'desc' => esc_html__('Enter the width of your site.', 'uncode') ,
-				'std' => array(
-					'1200',
-					'px'
+			'type' => 'measurement',
+			'section' => 'uncode_main_section',
+		) ,
+		array(
+			'id' => '_uncode_main_align',
+			'label' => esc_html__('Site layout align', 'uncode') ,
+			'desc' => esc_html__('Specify the alignment of the content area when is less then 100% width.', 'uncode') ,
+			'std' => 'center',
+			'type' => 'select',
+			'section' => 'uncode_main_section',
+			'choices' => array(
+				array(
+					'value' => 'left',
+					'label' => esc_html__('Left align', 'uncode') ,
+					'src' => ''
 				) ,
-				'type' => 'measurement',
-				'section' => 'uncode_main_section',
-			) ,
-			array(
-				'id' => '_uncode_main_align',
-				'label' => esc_html__('Site layout align', 'uncode') ,
-				'desc' => esc_html__('Specify the alignment of the content area when is less then 100% width.', 'uncode') ,
-				'std' => 'center',
-				'type' => 'select',
-				'section' => 'uncode_main_section',
-				'choices' => array(
-					array(
-						'value' => 'left',
-						'label' => esc_html__('Left align', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'center',
-						'label' => esc_html__('Center align', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'right',
-						'label' => esc_html__('Right align', 'uncode') ,
-						'src' => ''
-					)
+				array(
+					'value' => 'center',
+					'label' => esc_html__('Center align', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'right',
+					'label' => esc_html__('Right align', 'uncode') ,
+					'src' => ''
 				)
-			) ,
-			array(
-				'id' => '_uncode_boxed',
-				'label' => esc_html__('Boxed', 'uncode') ,
-				'desc' => esc_html__('Activate for the boxed layout.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_main_section',
-			) ,
-			str_replace('%section%', 'main', run_array_to($header_section_title, 'condition', '_uncode_boxed:is(off)')),
-			array(
-				'id' => '_uncode_header_full',
-				'label' => esc_html__('Container full width', 'uncode') ,
-				'desc' => esc_html__('Activate to expand the header container to full width.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_main_section',
-				'condition' => '_uncode_boxed:is(off)',
-				'operator' => 'and'
-			) ,
-			str_replace('%section%', 'main', run_array_to($body_section_title, 'condition', '_uncode_boxed:is(off)')),
-			array(
-				'id' => '_uncode_body_full',
-				'label' => esc_html__('Content area full width', 'uncode') ,
-				'desc' => esc_html__('Activate to expand the content area to full width.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_main_section',
-				'condition' => '_uncode_boxed:is(off)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_logo_switch',
-				'label' => esc_html__('Switchable logo', 'uncode') ,
-				'desc' => esc_html__('Activate to upload different logo for each skin.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_logo_section',
-			) ,
-			array(
-				'id' => '_uncode_logo',
-				'label' => esc_html__('Logo', 'uncode') ,
-				'desc' => esc_html__('Upload a logo. You can use Images, SVG code or HTML code.', 'uncode') ,
-				'type' => 'upload',
-				'section' => 'uncode_logo_section',
-				'condition' => '_uncode_logo_switch:is(off)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_logo_light',
-				'label' => esc_html__('Logo - Light', 'uncode') ,
-				'desc' => esc_html__('Upload a logo for the light skin.', 'uncode') ,
-				'type' => 'upload',
-				'section' => 'uncode_logo_section',
-				'condition' => '_uncode_logo_switch:is(on)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_logo_dark',
-				'label' => esc_html__('Logo - Dark', 'uncode') ,
-				'desc' => esc_html__('Upload a logo for the dark skin.', 'uncode') ,
-				'type' => 'upload',
-				'section' => 'uncode_logo_section',
-				'condition' => '_uncode_logo_switch:is(on)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_logo_height',
-				'label' => esc_html__('Logo height', 'uncode'),
-				'desc' => esc_html__('Enter the height of the logo in px.', 'uncode') ,
-				'std' => '20',
-				'type' => 'text',
-				'section' => 'uncode_logo_section',
-			) ,
-			array(
-				'id' => '_uncode_logo_height_mobile',
-				'label' => esc_html__('Logo height mobile', 'uncode'),
-				'desc' => esc_html__('Enter the height of the logo in px for mobile version.', 'uncode') ,
-				'type' => 'text',
-				'section' => 'uncode_logo_section',
-			) ,
-			array(
-				'id' => '_uncode_headers_block_title',
-				'label' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_headers',
-				'desc' => esc_html__('Specify the menu layout.', 'uncode') ,
-				'label' => '' ,
-				'std' => 'hmenu-right',
-				'type' => 'radio-image',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_vmenu_position',
-				'label' => esc_html__('Menu horizontal position', 'uncode') ,
-				'desc' => esc_html__('Specify the horizontal position of the menu.', 'uncode') ,
-				'std' => 'left',
-				'type' => 'select',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay)',
-				'operator' => 'or',
-				'choices' => array(
-					array(
-						'value' => 'left',
-						'label' => esc_html__('Left', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'right',
-						'label' => esc_html__('Right', 'uncode') ,
-						'src' => ''
-					)
+			)
+		) ,
+		array(
+			'id' => '_uncode_boxed',
+			'label' => esc_html__('Boxed', 'uncode') ,
+			'desc' => esc_html__('Activate for the boxed layout.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_main_section',
+		) ,
+		array(
+			'id' => '_uncode_body_border',
+			'label' => esc_html__('Body frame', 'uncode') ,
+			'desc' => esc_html__('Specify the thickness of the frame around the body', 'uncode') ,
+			'std' => '0',
+			'type' => 'numeric-slider',
+			'min_max_step'=> '0,36,9',
+			'section' => 'uncode_main_section',
+			'condition' => '_uncode_boxed:is(off)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_body_border_color',
+			'label' => esc_html__('Body frame color', 'uncode') ,
+			'desc' => esc_html__('Specify the body frame color.', 'uncode') ,
+			'type' => 'uncode_color',
+			'section' => 'uncode_main_section',
+			'condition' => '_uncode_boxed:is(off),_uncode_body_border:not(0)',
+			'operator' => 'and'
+		) ,
+		str_replace('%section%', 'main', run_array_to($header_section_title, 'condition', '_uncode_boxed:is(off)')),
+		array(
+			'id' => '_uncode_header_full',
+			'label' => esc_html__('Container full width', 'uncode') ,
+			'desc' => esc_html__('Activate to expand the header container to full width.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_main_section',
+			'condition' => '_uncode_boxed:is(off)',
+			'operator' => 'and'
+		) ,
+		str_replace('%section%', 'main', run_array_to($body_section_title, 'condition', '_uncode_boxed:is(off)')),
+		array(
+			'id' => '_uncode_body_full',
+			'label' => esc_html__('Content area full width', 'uncode') ,
+			'desc' => esc_html__('Activate to expand the content area to full width.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_main_section',
+			'condition' => '_uncode_boxed:is(off)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_logo_switch',
+			'label' => esc_html__('Switchable logo', 'uncode') ,
+			'desc' => esc_html__('Activate to upload different logo for each skin.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_logo_section',
+		) ,
+		array(
+			'id' => '_uncode_logo',
+			'label' => esc_html__('Logo', 'uncode') ,
+			'desc' => esc_html__('Upload a logo. You can use Images, SVG code or HTML code.', 'uncode') ,
+			'type' => 'upload',
+			'section' => 'uncode_logo_section',
+			'condition' => '_uncode_logo_switch:is(off)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_logo_light',
+			'label' => esc_html__('Logo - Light', 'uncode') ,
+			'desc' => esc_html__('Upload a logo for the light skin.', 'uncode') ,
+			'type' => 'upload',
+			'section' => 'uncode_logo_section',
+			'condition' => '_uncode_logo_switch:is(on)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_logo_dark',
+			'label' => esc_html__('Logo - Dark', 'uncode') ,
+			'desc' => esc_html__('Upload a logo for the dark skin.', 'uncode') ,
+			'type' => 'upload',
+			'section' => 'uncode_logo_section',
+			'condition' => '_uncode_logo_switch:is(on)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_logo_height',
+			'label' => esc_html__('Logo height', 'uncode'),
+			'desc' => esc_html__('Enter the height of the logo in px.', 'uncode') ,
+			'std' => '20',
+			'type' => 'text',
+			'section' => 'uncode_logo_section',
+		) ,
+		array(
+			'id' => '_uncode_logo_height_mobile',
+			'label' => esc_html__('Logo height mobile', 'uncode'),
+			'desc' => esc_html__('Enter the height of the logo in px for mobile version.', 'uncode') ,
+			'type' => 'text',
+			'section' => 'uncode_logo_section',
+		) ,
+		array(
+			'id' => '_uncode_headers_block_title',
+			'label' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_headers',
+			'desc' => esc_html__('Specify the menu layout.', 'uncode') ,
+			'label' => '' ,
+			'std' => 'hmenu-right',
+			'type' => 'radio-image',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_vmenu_position',
+			'label' => esc_html__('Menu horizontal position', 'uncode') ,
+			'desc' => esc_html__('Specify the horizontal position of the menu.', 'uncode') ,
+			'std' => 'left',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'or',
+			'choices' => array(
+				array(
+					'value' => 'left',
+					'label' => esc_html__('Left', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'right',
+					'label' => esc_html__('Right', 'uncode') ,
+					'src' => ''
 				)
-			) ,
-			array(
-				'id' => '_uncode_vmenu_v_position',
-				'label' => esc_html__('Menu vertical alignment', 'uncode') ,
-				'desc' => esc_html__('Specify the vertical alignment of the menu.', 'uncode') ,
-				'std' => 'middle',
-				'type' => 'select',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay)',
-				'operator' => 'or',
-				'choices' => array(
-					array(
-						'value' => 'top',
-						'label' => esc_html__('Top', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'middle',
-						'label' => esc_html__('Middle', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'bottom',
-						'label' => esc_html__('Bottom', 'uncode') ,
-						'src' => ''
-					) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_vmenu_v_position',
+			'label' => esc_html__('Menu vertical alignment', 'uncode') ,
+			'desc' => esc_html__('Specify the vertical alignment of the menu.', 'uncode') ,
+			'std' => 'middle',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'or',
+			'choices' => array(
+				array(
+					'value' => 'top',
+					'label' => esc_html__('Top', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'middle',
+					'label' => esc_html__('Middle', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'bottom',
+					'label' => esc_html__('Bottom', 'uncode') ,
+					'src' => ''
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_vmenu_align',
+			'label' => esc_html__('Menu horizontal alignment', 'uncode') ,
+			'desc' => esc_html__('Specify the horizontal alignment of the menu.', 'uncode') ,
+			'std' => 'left',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'or',
+			'choices' => array(
+				array(
+					'value' => 'left',
+					'label' => esc_html__('Left Align', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'center',
+					'label' => esc_html__('Center Align', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'right',
+					'label' => esc_html__('Right Align', 'uncode') ,
+					'src' => ''
 				)
+			)
+		) ,
+		array(
+			'id' => '_uncode_vmenu_width',
+			'label' => esc_html__('Vertical menu width','uncode') ,
+			'desc' => esc_html__('Vertical menu width in px', 'uncode') ,
+			'std' => '252',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_header_section',
+			'rows' => '',
+			'post_type' => '',
+			'taxonomy' => '',
+			'min_max_step' => '108,504,12',
+			'class' => '',
+			'condition' => '_uncode_headers:contains(vmenu)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_full',
+			'label' => esc_html__('Menu full width', 'uncode') ,
+			'desc' => esc_html__('Activate to expand the menu to full width. (Only for the horizontal menus).', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_boxed:is(off)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_menu_visuals_block_title',
+			'label' => '<i class="fa fa-eye2"></i> ' . esc_html__('Visuals', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_shadows',
+			'label' => esc_html__('Menu shadows', 'uncode') ,
+			'desc' => esc_html__('Activate to show the menu shadows.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_borders',
+			'label' => esc_html__('Menu borders', 'uncode') ,
+			'desc' => esc_html__('Activate to show the menu borders.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_no_arrows',
+			'label' => esc_html__('Hide dropdown arrows', 'uncode') ,
+			'desc' => esc_html__('Activate to hide the dropdow arrows.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_animation_block_title',
+			'label' => '<i class="fa fa-fast-forward2"></i> ' . esc_html__('Animation', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_header_section',
+			// 'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(vmenu-offcanvas),_uncode_headers:is(menu-overlay)',
+			// 'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_sticky',
+			'label' => esc_html__('Menu sticky', 'uncode') ,
+			'desc' => esc_html__('Activate the sticky menu. This is a menu that is locked into place so that it does not disappear when the user scrolls down the page.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(vmenu-offcanvas),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_sticky_mobile',
+			'label' => esc_html__('Menu sticky mobile', 'uncode') ,
+			'desc' => esc_html__('Activate the sticky menu on mobile devices. This is a menu that is locked into place so that it does not disappear when the user scrolls down the page.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_hide',
+			'label' => esc_html__('Menu hide', 'uncode') ,
+			'desc' => esc_html__('Activate the autohide menu. This is a menu that is hiding after the user have scrolled down the page.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center),_uncode_headers:is(vmenu-offcanvas)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_hide_mobile',
+			'label' => esc_html__('Menu hide mobile', 'uncode') ,
+			'desc' => esc_html__('Activate the sticky menu on mobile devices. This is a menu that is locked into place so that it does not disappear when the user scrolls down the page.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_shrink',
+			'label' => esc_html__('Menu shrink', 'uncode') ,
+			'desc' => esc_html__('Activate the shrink menu. This is a menu where the logo shrinks after the user have scrolled down the page.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center),_uncode_headers:is(vmenu-offcanvas)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_mobile_animation',
+			'label' => esc_html__('Menu open items animation', 'uncode') ,
+			'desc' => esc_html__('Specify the menu items animation when opening.', 'uncode') ,
+			'std' => 'none',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_menu_sticky_mobile:is(on),_uncode_menu_hide_mobile:is(on)',
+			'operator' => 'or',
+			'choices' => array(
+				array(
+					'value' => 'none',
+					'label' => esc_html__('None', 'uncode') ,
+				) ,
+				array(
+					'value' => 'scale',
+					'label' => esc_html__('Scale', 'uncode') ,
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_menu_overlay_animation',
+			'label' => esc_html__('Menu overlay animation', 'uncode') ,
+			'desc' => esc_html__('Specify the overlay menu animation when opening and closing.', 'uncode') ,
+			'std' => 'sequential',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'and',
+			'choices' => array(
+				array(
+					'value' => '3d',
+					'label' => esc_html__('3D', 'uncode') ,
+				) ,
+				array(
+					'value' => 'sequential',
+					'label' => esc_html__('Flat', 'uncode') ,
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_min_logo',
+			'label' => esc_html__('Minimum logo height', 'uncode'),
+			'desc' => esc_html__('Enter the minimal height of the shrinked logo in <b>px</b>.', 'uncode') ,
+			'type' => 'text',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_menu_shrink:is(on),_uncode_headers:not(vmenu)',
+			'operator' => 'and',
+		) ,
+		array(
+			'id' => '_uncode_menu_typo_block_title',
+			'label' => '<i class="fa fa-font"></i> ' . esc_html__('Typography', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_first_uppercase',
+			'label' => esc_html__('Menu first level uppercase', 'uncode') ,
+			'desc' => esc_html__('Activate to transform the first menu level to uppercase.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_other_uppercase',
+			'label' => esc_html__('Menu other levels uppercase', 'uncode') ,
+			'desc' => esc_html__('Activate to transform all the others menu level to uppercase.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_add_block_title',
+			'label' => '<i class="fa fa-square-plus"></i> ' . esc_html__('Additionals', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_no_secondary',
+			'label' => esc_html__('Hide secondary menu', 'uncode') ,
+			'desc' => esc_html__('Activate to hide the secondary menu.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_socials',
+			'label' => esc_html__('Social icons', 'uncode') ,
+			'desc' => esc_html__('Activate to show the social connection icons in the menu bar.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_menu_search',
+			'label' => esc_html__('Search icon', 'uncode') ,
+			'desc' => esc_html__('Activate to show the search icon in the menu bar.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_menu_search_animation',
+			'label' => esc_html__('Search overlay animation', 'uncode') ,
+			'desc' => esc_html__('Specify the search overlay animation when opening and closing.', 'uncode') ,
+			'std' => 'sequential',
+			'type' => 'select',
+			'section' => 'uncode_header_section',
+			'choices' => array(
+				array(
+					'value' => '3d',
+					'label' => esc_html__('3D', 'uncode') ,
+				) ,
+				array(
+					'value' => 'sequential',
+					'label' => esc_html__('Flat', 'uncode') ,
+				) ,
 			) ,
-			array(
-				'id' => '_uncode_vmenu_align',
-				'label' => esc_html__('Menu horizontal alignment', 'uncode') ,
-				'desc' => esc_html__('Specify the horizontal alignment of the menu.', 'uncode') ,
-				'std' => 'left',
-				'type' => 'select',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(vmenu),_uncode_headers:is(menu-overlay)',
-				'operator' => 'or',
-				'choices' => array(
-					array(
-						'value' => 'left',
-						'label' => esc_html__('Left Align', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'center',
-						'label' => esc_html__('Center Align', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'right',
-						'label' => esc_html__('Right Align', 'uncode') ,
-						'src' => ''
-					)
+			'condition' => '_uncode_menu_search:is(on)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_woocommerce_cart',
+			'label' => esc_html__('Woocommerce cart', 'uncode') ,
+			'desc' => esc_html__('Activate to show the Woocommerce icon in the menu bar.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+		) ,
+		array(
+			'id' => '_uncode_woocommerce_cart_desktop',
+			'label' => esc_html__('Woocommerce cart on menu bar', 'uncode') ,
+			'desc' => esc_html__('Show the cart icon in the menu bar when layout is on desktop mode (Only for overlay and offcanvas menu).', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_woocommerce_cart:is(on)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_woocommerce_cart_mobile',
+			'label' => esc_html__('Woocommerce cart on menu bar for mobile', 'uncode') ,
+			'desc' => esc_html__('Show the cart icon in the menu bar when layout is on mobile mode.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_woocommerce_cart:is(on)',
+			'operator' => 'or'
+		) ,
+		array(
+			'id' => '_uncode_menu_bloginfo',
+			'label' => esc_html__('Top line text', 'uncode') ,
+			'desc' => esc_html__('Insert additional text on top of the menu.','uncode') ,
+			'type' => 'textarea',
+			'section' => 'uncode_header_section',
+			'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center)',
+			'operator' => 'or'
+		) ,
+		//////////////////////
+		//  Post Single		///
+		//////////////////////
+		str_replace('%section%', 'post', $menu_section_title),
+		str_replace('%section%', 'post', $menu),
+		str_replace('%section%', 'post', $menu_width),
+		str_replace('%section%', 'post', $menu_opaque),
+		str_replace('%section%', 'post', $header_section_title),
+		str_replace('%section%', 'post', run_array_to($header_type, 'std', 'header_basic')),
+		str_replace('%section%', 'post', $header_uncode_block),
+		str_replace('%section%', 'post', $header_revslider),
+		str_replace('%section%', 'post', $header_layerslider),
+
+		str_replace('%section%', 'post', $header_width),
+		str_replace('%section%', 'post', $header_height),
+		str_replace('%section%', 'post', $header_min_height),
+		str_replace('%section%', 'post', $header_title),
+		str_replace('%section%', 'post', $header_style),
+		str_replace('%section%', 'post', $header_content_width),
+		str_replace('%section%', 'post', $header_custom_width),
+		str_replace('%section%', 'post', $header_align),
+		str_replace('%section%', 'post', $header_position),
+		str_replace('%section%', 'post', $header_title_font),
+		str_replace('%section%', 'post', $header_title_size),
+		str_replace('%section%', 'post', $header_title_height),
+		str_replace('%section%', 'post', $header_title_spacing),
+		str_replace('%section%', 'post', $header_title_weight),
+		str_replace('%section%', 'post', $header_title_transform),
+		str_replace('%section%', 'post', $header_title_italic),
+		str_replace('%section%', 'post', $header_text_animation),
+		str_replace('%section%', 'post', $header_animation_speed),
+		str_replace('%section%', 'post', $header_animation_delay),
+		str_replace('%section%', 'post', $header_featured),
+		str_replace('%section%', 'post', $header_background),
+		str_replace('%section%', 'post', $header_parallax),
+		str_replace('%section%', 'post', $header_overlay_color),
+		str_replace('%section%', 'post', $header_overlay_color_alpha),
+		str_replace('%section%', 'post', $header_scroll_opacity),
+		str_replace('%section%', 'post', $header_scrolldown),
+
+		str_replace('%section%', 'post', $body_section_title),
+		str_replace('%section%', 'post', $body_layout_width),
+		str_replace('%section%', 'post', $body_layout_width_custom),
+		str_replace('%section%', 'post', $show_breadcrumb),
+		str_replace('%section%', 'post', $breadcrumb_align),
+		// str_replace('%section%', 'post', $body_uncode_block_before),
+		str_replace('%section%', 'post', $show_title),
+		str_replace('%section%', 'post', $show_media),
+		str_replace('%section%', 'post', $show_comments),
+		str_replace('%section%', 'post', $show_share),
+		str_replace('%section%', 'post', $show_tags),
+		str_replace('%section%', 'post', $show_tags_align),
+		str_replace('%section%', 'post', $body_uncode_block_after),
+		str_replace('%section%', 'post', $sidebar_section_title),
+		str_replace('%section%', 'post', run_array_to($sidebar_activate, 'std', 'on')),
+		str_replace('%section%', 'post', $sidebar_widget),
+		str_replace('%section%', 'post', $sidebar_position),
+		str_replace('%section%', 'post', $sidebar_size),
+		str_replace('%section%', 'post', $sidebar_sticky),
+		str_replace('%section%', 'post', $sidebar_style),
+		str_replace('%section%', 'post', $sidebar_bgcolor),
+		str_replace('%section%', 'post', $sidebar_fill),
+
+		str_replace('%section%', 'post', $navigation_section_title),
+		str_replace('%section%', 'post', $navigation_activate),
+		str_replace('%section%', 'post', $navigation_page_index),
+		str_replace('%section%', 'post', $navigation_index_label),
+		str_replace('%section%', 'post', $navigation_nextprev_title),
+		str_replace('%section%', 'post', $footer_section_title),
+		str_replace('%section%', 'post', $footer_uncode_block),
+		str_replace('%section%', 'post', $footer_width),
+		str_replace('%section%', 'post', $custom_fields_section_title),
+		str_replace('%section%', 'post', $custom_fields_list),
+		///////////////
+		//  Page		///
+		///////////////
+		str_replace('%section%', 'page', $menu_section_title),
+		str_replace('%section%', 'page', $menu),
+		str_replace('%section%', 'page', $menu_width),
+		str_replace('%section%', 'page', $menu_opaque),
+		str_replace('%section%', 'page', $header_section_title),
+		str_replace('%section%', 'page', $header_type),
+		str_replace('%section%', 'page', $header_uncode_block),
+		str_replace('%section%', 'page', $header_revslider),
+		str_replace('%section%', 'page', $header_layerslider),
+
+		str_replace('%section%', 'page', $header_width),
+		str_replace('%section%', 'page', $header_height),
+		str_replace('%section%', 'page', $header_min_height),
+		str_replace('%section%', 'page', $header_title),
+		str_replace('%section%', 'page', $header_style),
+		str_replace('%section%', 'page', $header_content_width),
+		str_replace('%section%', 'page', $header_custom_width),
+		str_replace('%section%', 'page', $header_align),
+		str_replace('%section%', 'page', $header_position),
+		str_replace('%section%', 'page', $header_title_font),
+		str_replace('%section%', 'page', $header_title_size),
+		str_replace('%section%', 'page', $header_title_height),
+		str_replace('%section%', 'page', $header_title_spacing),
+		str_replace('%section%', 'page', $header_title_weight),
+		str_replace('%section%', 'page', $header_title_transform),
+		str_replace('%section%', 'page', $header_title_italic),
+		str_replace('%section%', 'page', $header_text_animation),
+		str_replace('%section%', 'page', $header_animation_speed),
+		str_replace('%section%', 'page', $header_animation_delay),
+		str_replace('%section%', 'page', $header_featured),
+		str_replace('%section%', 'page', $header_background),
+		str_replace('%section%', 'page', $header_parallax),
+		str_replace('%section%', 'page', $header_overlay_color),
+		str_replace('%section%', 'page', $header_overlay_color_alpha),
+		str_replace('%section%', 'page', $header_scroll_opacity),
+		str_replace('%section%', 'page', $header_scrolldown),
+		str_replace('%section%', 'page', $body_section_title),
+		str_replace('%section%', 'page', $body_layout_width),
+		str_replace('%section%', 'page', $body_layout_width_custom),
+		str_replace('%section%', 'page', run_array_to($show_breadcrumb, 'std', 'on')),
+		str_replace('%section%', 'page', $breadcrumb_align),
+		str_replace('%section%', 'page', run_array_to($show_title, 'std', 'on')),
+		str_replace('%section%', 'page', $show_media),
+		str_replace('%section%', 'page', $show_comments),
+		str_replace('%section%', 'page', $body_uncode_block_after),
+		str_replace('%section%', 'page', $sidebar_section_title),
+		str_replace('%section%', 'page', $sidebar_activate),
+		str_replace('%section%', 'page', $sidebar_widget),
+		str_replace('%section%', 'page', $sidebar_position),
+		str_replace('%section%', 'page', $sidebar_size),
+		str_replace('%section%', 'page', $sidebar_sticky),
+		str_replace('%section%', 'page', $sidebar_style),
+		str_replace('%section%', 'page', $sidebar_bgcolor),
+		str_replace('%section%', 'page', $sidebar_fill),
+		str_replace('%section%', 'page', $footer_section_title),
+		str_replace('%section%', 'page', $footer_uncode_block),
+		str_replace('%section%', 'page', $footer_width),
+		str_replace('%section%', 'page', $custom_fields_section_title),
+		str_replace('%section%', 'page', $custom_fields_list),
+		///////////////////////////
+		//  Portfolio Single		///
+		///////////////////////////
+		str_replace('%section%', 'portfolio', $menu_section_title),
+		str_replace('%section%', 'portfolio', $menu),
+		str_replace('%section%', 'portfolio', $menu_width),
+		str_replace('%section%', 'portfolio', $menu_opaque),
+		str_replace('%section%', 'portfolio', $header_section_title),
+		str_replace('%section%', 'portfolio', $header_type),
+		str_replace('%section%', 'portfolio', $header_uncode_block),
+		str_replace('%section%', 'portfolio', $header_revslider),
+		str_replace('%section%', 'portfolio', $header_layerslider),
+
+		str_replace('%section%', 'portfolio', $header_width),
+		str_replace('%section%', 'portfolio', $header_height),
+		str_replace('%section%', 'portfolio', $header_min_height),
+		str_replace('%section%', 'portfolio', $header_title),
+		str_replace('%section%', 'portfolio', $header_style),
+		str_replace('%section%', 'portfolio', $header_content_width),
+		str_replace('%section%', 'portfolio', $header_custom_width),
+		str_replace('%section%', 'portfolio', $header_align),
+		str_replace('%section%', 'portfolio', $header_position),
+		str_replace('%section%', 'portfolio', $header_title_font),
+		str_replace('%section%', 'portfolio', $header_title_size),
+		str_replace('%section%', 'portfolio', $header_title_height),
+		str_replace('%section%', 'portfolio', $header_title_spacing),
+		str_replace('%section%', 'portfolio', $header_title_weight),
+		str_replace('%section%', 'portfolio', $header_title_transform),
+		str_replace('%section%', 'portfolio', $header_title_italic),
+		str_replace('%section%', 'portfolio', $header_text_animation),
+		str_replace('%section%', 'portfolio', $header_animation_speed),
+		str_replace('%section%', 'portfolio', $header_animation_delay),
+		str_replace('%section%', 'portfolio', $header_featured),
+		str_replace('%section%', 'portfolio', $header_background),
+		str_replace('%section%', 'portfolio', $header_parallax),
+		str_replace('%section%', 'portfolio', $header_overlay_color),
+		str_replace('%section%', 'portfolio', $header_overlay_color_alpha),
+		str_replace('%section%', 'portfolio', $header_scroll_opacity),
+		str_replace('%section%', 'portfolio', $header_scrolldown),
+
+		str_replace('%section%', 'portfolio', $body_section_title),
+		str_replace('%section%', 'portfolio', $body_layout_width),
+		str_replace('%section%', 'portfolio', $body_layout_width_custom),
+		str_replace('%section%', 'portfolio', run_array_to($show_breadcrumb, 'std', 'on')),
+		str_replace('%section%', 'portfolio', $breadcrumb_align),
+		str_replace('%section%', 'portfolio', run_array_to($show_title, 'std', 'on')),
+		str_replace('%section%', 'portfolio', $show_media),
+		str_replace('%section%', 'portfolio', run_array_to($show_comments, 'std', 'off')),
+		str_replace('%section%', 'portfolio', $show_share),
+		str_replace('%section%', 'portfolio', $body_uncode_block_after),
+		array(
+			'id' => '_uncode_portfolio_details_title',
+			'label' => '<i class="fa fa-briefcase3"></i> ' . esc_html__('Details', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_portfolio_section',
+		) ,
+		array(
+			'id' => '_uncode_portfolio_details',
+			'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('details', 'uncode') ,
+			'desc' => sprintf(esc_html__('Create here all the %s details label that you need.', 'uncode') , $portfolio_cpt_name) ,
+			'type' => 'list-item',
+			'section' => 'uncode_portfolio_section',
+			'settings' => array(
+				array(
+					'id' => '_uncode_portfolio_detail_unique_id',
+					'class' => 'unique_id',
+					'std' => 'detail-',
+					'type' => 'text',
+					'label' => sprintf(esc_html__('Unique %s detail ID','uncode') , $portfolio_cpt_name) ,
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+			)
+		) ,
+		array(
+			'id' => '_uncode_portfolio_position',
+			'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('details layout', 'uncode') ,
+			'desc' => sprintf(esc_html__('Specify the layout template for all the %s posts.', 'uncode') , $portfolio_cpt_name) ,
+			'type' => 'select',
+			'section' => 'uncode_portfolio_section',
+			'choices' => array(
+				array(
+					'value' => '',
+					'label' => esc_html__('Select…', 'uncode') ,
+				) ,
+				array(
+					'value' => 'portfolio_top',
+					'label' => esc_html__('Details on the top', 'uncode') ,
+				) ,
+				array(
+					'value' => 'sidebar_right',
+					'label' => esc_html__('Details on the right', 'uncode') ,
+				) ,
+				array(
+					'value' => 'portfolio_bottom',
+					'label' => esc_html__('Details on the bottom', 'uncode') ,
+				) ,
+				array(
+					'value' => 'sidebar_left',
+					'label' => esc_html__('Details on the left', 'uncode') ,
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_portfolio_sidebar_size',
+			'label' => esc_html__('Sidebar size', 'uncode') ,
+			'desc' => esc_html__('Set the sidebar size.', 'uncode') ,
+			'std' => '4',
+			'min_max_step' => '1,12,1',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_portfolio_section',
+			'operator' => 'and',
+			'condition' => '_uncode_portfolio_position:not(),_uncode_portfolio_position:contains(sidebar)',
+		) ,
+		str_replace('%section%', 'portfolio', run_array_to($sidebar_sticky, 'condition', '_uncode_portfolio_position:not(),_uncode_portfolio_position:contains(sidebar)')),
+		array(
+			'id' => '_uncode_portfolio_style',
+			'label' => esc_html__('Skin', 'uncode') ,
+			'desc' => esc_html__('Specify the sidebar text skin color.', 'uncode') ,
+			'type' => 'select',
+			'choices' => array(
+				array(
+					'value' => '',
+					'label' => esc_html__('Inherit', "uncode") ,
+				) ,
+				array(
+					'value' => 'light',
+					'label' => esc_html__('Light', "uncode") ,
+				) ,
+				array(
+					'value' => 'dark',
+					'label' => esc_html__('Dark', "uncode") ,
 				)
+			),
+			'section' => 'uncode_portfolio_section',
+			'condition' => '_uncode_portfolio_position:not()',
+		) ,
+		array(
+			'id' => '_uncode_portfolio_bgcolor',
+			'label' => esc_html__('Sidebar color', 'uncode') ,
+			'desc' => esc_html__('Specify the sidebar background color.', 'uncode') ,
+			'type' => 'uncode_color',
+			'section' => 'uncode_portfolio_section',
+			'condition' => '_uncode_portfolio_position:not()',
+		) ,
+		array(
+			'id' => '_uncode_portfolio_sidebar_fill',
+			'label' => esc_html__('Sidebar filling space', 'uncode') ,
+			'desc' => esc_html__('Activate to remove padding around the sidebar and fill the height.', 'uncode') ,
+			'type' => 'on-off',
+			'section' => 'uncode_portfolio_section',
+			'std' => 'off',
+			'operator' => 'and',
+			'condition' => '_uncode_portfolio_position:not(),_uncode_portfolio_sidebar_bgcolor:not(),_uncode_portfolio_position:contains(sidebar)',
+		),
+		str_replace('%section%', 'portfolio', $navigation_section_title),
+		str_replace('%section%', 'portfolio', $navigation_activate),
+		str_replace('%section%', 'portfolio', $navigation_page_index),
+		str_replace('%section%', 'portfolio', $navigation_index_label),
+		str_replace('%section%', 'portfolio', $navigation_nextprev_title),
+		str_replace('%section%', 'portfolio', $footer_section_title),
+		str_replace('%section%', 'portfolio', $footer_uncode_block),
+		str_replace('%section%', 'portfolio', $footer_width),
+		str_replace('%section%', 'portfolio', $custom_fields_section_title),
+		str_replace('%section%', 'portfolio', $custom_fields_list),
+	);
+
+	$custom_settings_one = array_merge( $custom_settings_one, $cpt_single_options );
+
+	$custom_settings_two = array(
+		///////////////////
+		//  Page 404		///
+		///////////////////
+		str_replace('%section%', '404', $menu_section_title),
+		str_replace('%section%', '404', $menu),
+		str_replace('%section%', '404', $menu_width),
+		str_replace('%section%', '404', $menu_opaque),
+		str_replace('%section%', '404', $header_section_title),
+		str_replace('%section%', '404', $header_type),
+		str_replace('%section%', '404', $header_uncode_block),
+		str_replace('%section%', '404', $header_revslider),
+		str_replace('%section%', '404', $header_layerslider),
+
+		str_replace('%section%', '404', $header_width),
+		str_replace('%section%', '404', $header_height),
+		str_replace('%section%', '404', $header_min_height),
+		str_replace('%section%', '404', $header_title),
+		str_replace('%section%', '404', $header_title_text),
+		str_replace('%section%', '404', $header_style),
+		str_replace('%section%', '404', $header_content_width),
+		str_replace('%section%', '404', $header_custom_width),
+		str_replace('%section%', '404', $header_align),
+		str_replace('%section%', '404', $header_position),
+		str_replace('%section%', '404', $header_title_font),
+		str_replace('%section%', '404', $header_title_size),
+		str_replace('%section%', '404', $header_title_height),
+		str_replace('%section%', '404', $header_title_spacing),
+		str_replace('%section%', '404', $header_title_weight),
+		str_replace('%section%', '404', $header_title_transform),
+		str_replace('%section%', '404', $header_title_italic),
+		str_replace('%section%', '404', $header_text_animation),
+		str_replace('%section%', '404', $header_animation_speed),
+		str_replace('%section%', '404', $header_animation_delay),
+		str_replace('%section%', '404', $header_background),
+		str_replace('%section%', '404', $header_parallax),
+		str_replace('%section%', '404', $header_overlay_color),
+		str_replace('%section%', '404', $header_overlay_color_alpha),
+		str_replace('%section%', '404', $header_scroll_opacity),
+		str_replace('%section%', '404', $header_scrolldown),
+
+		str_replace('%section%', '404', $body_section_title),
+		str_replace('%section%', '404', $body_layout_width),
+		str_replace('%section%', '404', $uncodeblock_404),
+		str_replace('%section%', '404', $uncodeblocks_404),
+		str_replace('%section%', '404', $footer_section_title),
+		str_replace('%section%', '404', $footer_uncode_block),
+		str_replace('%section%', '404', $footer_width),
+		//////////////////////
+		//  Posts Index		///
+		//////////////////////
+		str_replace('%section%', 'post_index', $menu_section_title),
+		str_replace('%section%', 'post_index', $menu),
+		str_replace('%section%', 'post_index', $menu_width),
+		str_replace('%section%', 'post_index', $menu_opaque),
+		str_replace('%section%', 'post_index', $header_section_title),
+		str_replace('%section%', 'post_index', run_array_to($header_type, 'std', 'header_basic')),
+		str_replace('%section%', 'post_index', $header_uncode_block),
+		str_replace('%section%', 'post_index', $header_revslider),
+		str_replace('%section%', 'post_index', $header_layerslider),
+
+		str_replace('%section%', 'post_index', $header_width),
+		str_replace('%section%', 'post_index', $header_height),
+		str_replace('%section%', 'post_index', $header_min_height),
+		str_replace('%section%', 'post_index', $header_title),
+		str_replace('%section%', 'post_index', $header_style),
+		str_replace('%section%', 'post_index', $header_content_width),
+		str_replace('%section%', 'post_index', $header_custom_width),
+		str_replace('%section%', 'post_index', $header_align),
+		str_replace('%section%', 'post_index', $header_position),
+		str_replace('%section%', 'post_index', $header_title_font),
+		str_replace('%section%', 'post_index', $header_title_size),
+		str_replace('%section%', 'post_index', $header_title_height),
+		str_replace('%section%', 'post_index', $header_title_spacing),
+		str_replace('%section%', 'post_index', $header_title_weight),
+		str_replace('%section%', 'post_index', $header_title_transform),
+		str_replace('%section%', 'post_index', $header_title_italic),
+		str_replace('%section%', 'post_index', $header_text_animation),
+		str_replace('%section%', 'post_index', $header_animation_speed),
+		str_replace('%section%', 'post_index', $header_animation_delay),
+		str_replace('%section%', 'post_index', $header_featured),
+		str_replace('%section%', 'post_index', $header_background),
+		str_replace('%section%', 'post_index', $header_parallax),
+		str_replace('%section%', 'post_index', $header_overlay_color),
+		str_replace('%section%', 'post_index', $header_overlay_color_alpha),
+		str_replace('%section%', 'post_index', $header_scroll_opacity),
+		str_replace('%section%', 'post_index', $header_scrolldown),
+
+		str_replace('%section%', 'post_index', $body_section_title),
+		str_replace('%section%', 'post_index', $show_breadcrumb),
+		str_replace('%section%', 'post_index', $breadcrumb_align),
+		str_replace('%section%', 'post_index', $body_uncode_block),
+		str_replace('%section%', 'post_index', $body_layout_width),
+		str_replace('%section%', 'post_index', $body_single_post_width),
+		str_replace('%section%', 'post_index', $body_single_text_lenght),
+		str_replace('%section%', 'post_index', $show_title),
+		str_replace('%section%', 'post_index', $sidebar_section_title),
+		str_replace('%section%', 'post_index', run_array_to($sidebar_activate, 'std', 'on')),
+		str_replace('%section%', 'post_index', $sidebar_widget),
+		str_replace('%section%', 'post_index', $sidebar_position),
+		str_replace('%section%', 'post_index', $sidebar_size),
+		str_replace('%section%', 'post_index', $sidebar_sticky),
+		str_replace('%section%', 'post_index', $sidebar_style),
+		str_replace('%section%', 'post_index', $sidebar_bgcolor),
+		str_replace('%section%', 'post_index', $sidebar_fill),
+		str_replace('%section%', 'post_index', $footer_section_title),
+		str_replace('%section%', 'post_index', $footer_uncode_block),
+		str_replace('%section%', 'post_index', $footer_width),
+		//////////////////////
+		//  Pages Index		///
+		//////////////////////
+		str_replace('%section%', 'page_index', $menu_section_title),
+		str_replace('%section%', 'page_index', $menu),
+		str_replace('%section%', 'page_index', $menu_width),
+		str_replace('%section%', 'page_index', $menu_opaque),
+		str_replace('%section%', 'page_index', $header_section_title),
+		str_replace('%section%', 'page_index', run_array_to($header_type, 'std', 'header_basic')),
+		str_replace('%section%', 'page_index', $header_uncode_block),
+		str_replace('%section%', 'page_index', $header_revslider),
+		str_replace('%section%', 'page_index', $header_layerslider),
+
+		str_replace('%section%', 'page_index', $header_width),
+		str_replace('%section%', 'page_index', $header_height),
+		str_replace('%section%', 'page_index', $header_min_height),
+		str_replace('%section%', 'page_index', $header_title),
+		str_replace('%section%', 'page_index', $header_style),
+		str_replace('%section%', 'page_index', $header_content_width),
+		str_replace('%section%', 'page_index', $header_custom_width),
+		str_replace('%section%', 'page_index', $header_align),
+		str_replace('%section%', 'page_index', $header_position),
+		str_replace('%section%', 'page_index', $header_title_font),
+		str_replace('%section%', 'page_index', $header_title_size),
+		str_replace('%section%', 'page_index', $header_title_height),
+		str_replace('%section%', 'page_index', $header_title_spacing),
+		str_replace('%section%', 'page_index', $header_title_weight),
+		str_replace('%section%', 'page_index', $header_title_transform),
+		str_replace('%section%', 'page_index', $header_title_italic),
+		str_replace('%section%', 'page_index', $header_text_animation),
+		str_replace('%section%', 'page_index', $header_animation_speed),
+		str_replace('%section%', 'page_index', $header_animation_delay),
+		str_replace('%section%', 'page_index', $header_featured),
+		str_replace('%section%', 'page_index', $header_background),
+		str_replace('%section%', 'page_index', $header_parallax),
+		str_replace('%section%', 'page_index', $header_overlay_color),
+		str_replace('%section%', 'page_index', $header_overlay_color_alpha),
+		str_replace('%section%', 'page_index', $header_scroll_opacity),
+		str_replace('%section%', 'page_index', $header_scrolldown),
+
+		str_replace('%section%', 'page_index', $body_section_title),
+		str_replace('%section%', 'page_index', $show_breadcrumb),
+		str_replace('%section%', 'page_index', $breadcrumb_align),
+		str_replace('%section%', 'page_index', $body_uncode_block),
+		str_replace('%section%', 'page_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
+		str_replace('%section%', 'page_index', $body_single_post_width),
+		str_replace('%section%', 'page_index', $body_single_text_lenght),
+		str_replace('%section%', 'page_index', $show_title),
+		str_replace('%section%', 'page_index', $sidebar_section_title),
+		str_replace('%section%', 'page_index', run_array_to($sidebar_activate, 'std', 'on')),
+		str_replace('%section%', 'page_index', $sidebar_widget),
+		str_replace('%section%', 'page_index', $sidebar_position),
+		str_replace('%section%', 'page_index', $sidebar_size),
+		str_replace('%section%', 'page_index', $sidebar_sticky),
+		str_replace('%section%', 'page_index', $sidebar_style),
+		str_replace('%section%', 'page_index', $sidebar_bgcolor),
+		str_replace('%section%', 'page_index', $sidebar_fill),
+		str_replace('%section%', 'page_index', $footer_section_title),
+		str_replace('%section%', 'page_index', $footer_uncode_block),
+		str_replace('%section%', 'page_index', $footer_width),
+		////////////////////////
+		//  Archive Index		///
+		////////////////////////
+		str_replace('%section%', 'portfolio_index', $menu_section_title),
+		str_replace('%section%', 'portfolio_index', $menu),
+		str_replace('%section%', 'portfolio_index', $menu_width),
+		str_replace('%section%', 'portfolio_index', $menu_opaque),
+		str_replace('%section%', 'portfolio_index', $header_section_title),
+		str_replace('%section%', 'portfolio_index', run_array_to($header_type, 'std', 'header_basic')),
+		str_replace('%section%', 'portfolio_index', $header_uncode_block),
+		str_replace('%section%', 'portfolio_index', $header_revslider),
+		str_replace('%section%', 'portfolio_index', $header_layerslider),
+
+		str_replace('%section%', 'portfolio_index', $header_width),
+		str_replace('%section%', 'portfolio_index', $header_height),
+		str_replace('%section%', 'portfolio_index', $header_min_height),
+		str_replace('%section%', 'portfolio_index', $header_title),
+		str_replace('%section%', 'portfolio_index', $header_style),
+		str_replace('%section%', 'portfolio_index', $header_content_width),
+		str_replace('%section%', 'portfolio_index', $header_custom_width),
+		str_replace('%section%', 'portfolio_index', $header_align),
+		str_replace('%section%', 'portfolio_index', $header_position),
+		str_replace('%section%', 'portfolio_index', $header_title_font),
+		str_replace('%section%', 'portfolio_index', $header_title_size),
+		str_replace('%section%', 'portfolio_index', $header_title_height),
+		str_replace('%section%', 'portfolio_index', $header_title_spacing),
+		str_replace('%section%', 'portfolio_index', $header_title_weight),
+		str_replace('%section%', 'portfolio_index', $header_title_transform),
+		str_replace('%section%', 'portfolio_index', $header_title_italic),
+		str_replace('%section%', 'portfolio_index', $header_text_animation),
+		str_replace('%section%', 'portfolio_index', $header_animation_speed),
+		str_replace('%section%', 'portfolio_index', $header_animation_delay),
+		str_replace('%section%', 'portfolio_index', $header_featured),
+		str_replace('%section%', 'portfolio_index', $header_background),
+		str_replace('%section%', 'portfolio_index', $header_parallax),
+		str_replace('%section%', 'portfolio_index', $header_overlay_color),
+		str_replace('%section%', 'portfolio_index', $header_overlay_color_alpha),
+		str_replace('%section%', 'portfolio_index', $header_scroll_opacity),
+		str_replace('%section%', 'portfolio_index', $header_scrolldown),
+
+		str_replace('%section%', 'portfolio_index', $body_section_title),
+		str_replace('%section%', 'portfolio_index', $show_breadcrumb),
+		str_replace('%section%', 'portfolio_index', $breadcrumb_align),
+		str_replace('%section%', 'portfolio_index', $body_uncode_block),
+		str_replace('%section%', 'portfolio_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
+		str_replace('%section%', 'portfolio_index', $body_single_post_width),
+		str_replace('%section%', 'portfolio_index', $show_title),
+		str_replace('%section%', 'portfolio_index', $sidebar_section_title),
+		str_replace('%section%', 'portfolio_index', $sidebar_activate),
+		str_replace('%section%', 'portfolio_index', $sidebar_widget),
+		str_replace('%section%', 'portfolio_index', $sidebar_position),
+		str_replace('%section%', 'portfolio_index', $sidebar_size),
+		str_replace('%section%', 'portfolio_index', $sidebar_sticky),
+		str_replace('%section%', 'portfolio_index', $sidebar_style),
+		str_replace('%section%', 'portfolio_index', $sidebar_bgcolor),
+		str_replace('%section%', 'portfolio_index', $sidebar_fill),
+		str_replace('%section%', 'portfolio_index', $footer_section_title),
+		str_replace('%section%', 'portfolio_index', $footer_uncode_block),
+		str_replace('%section%', 'portfolio_index', $footer_width),
+	);
+
+	$custom_settings_one = array_merge( $custom_settings_one, $custom_settings_two );
+	$custom_settings_one = array_merge( $custom_settings_one, $cpt_index_options );
+
+	$custom_settings_three = array(
+		///////////////////////
+		//  Search Index		///
+		///////////////////////
+		str_replace('%section%', 'search_index', $menu_section_title),
+		str_replace('%section%', 'search_index', $menu),
+		str_replace('%section%', 'search_index', $menu_width),
+		str_replace('%section%', 'search_index', $menu_opaque),
+		str_replace('%section%', 'search_index', $header_section_title),
+		str_replace('%section%', 'search_index', run_array_to($header_type, 'std', 'header_basic')),
+		str_replace('%section%', 'search_index', $header_uncode_block),
+		str_replace('%section%', 'search_index', $header_revslider),
+		str_replace('%section%', 'search_index', $header_layerslider),
+
+		str_replace('%section%', 'search_index', $header_width),
+		str_replace('%section%', 'search_index', $header_height),
+		str_replace('%section%', 'search_index', $header_min_height),
+		str_replace('%section%', 'search_index', $header_title),
+		str_replace('%section%', 'search_index', $header_title_text),
+		str_replace('%section%', 'search_index', $header_style),
+		str_replace('%section%', 'search_index', $header_content_width),
+		str_replace('%section%', 'search_index', $header_custom_width),
+		str_replace('%section%', 'search_index', $header_align),
+		str_replace('%section%', 'search_index', $header_position),
+		str_replace('%section%', 'search_index', $header_title_font),
+		str_replace('%section%', 'search_index', $header_title_size),
+		str_replace('%section%', 'search_index', $header_title_height),
+		str_replace('%section%', 'search_index', $header_title_spacing),
+		str_replace('%section%', 'search_index', $header_title_weight),
+		str_replace('%section%', 'search_index', $header_title_transform),
+		str_replace('%section%', 'search_index', $header_title_italic),
+		str_replace('%section%', 'search_index', $header_text_animation),
+		str_replace('%section%', 'search_index', $header_animation_speed),
+		str_replace('%section%', 'search_index', $header_animation_delay),
+		str_replace('%section%', 'search_index', $header_background),
+		str_replace('%section%', 'search_index', $header_parallax),
+		str_replace('%section%', 'search_index', $header_overlay_color),
+		str_replace('%section%', 'search_index', $header_overlay_color_alpha),
+		str_replace('%section%', 'search_index', $header_scroll_opacity),
+		str_replace('%section%', 'search_index', $header_scrolldown),
+
+		str_replace('%section%', 'search_index', $body_section_title),
+		str_replace('%section%', 'search_index', $body_uncode_block),
+		str_replace('%section%', 'search_index', $body_layout_width),
+		str_replace('%section%', 'search_index', $sidebar_section_title),
+		str_replace('%section%', 'search_index', $sidebar_activate),
+		str_replace('%section%', 'search_index', $sidebar_widget),
+		str_replace('%section%', 'search_index', $sidebar_position),
+		str_replace('%section%', 'search_index', $sidebar_size),
+		str_replace('%section%', 'search_index', $sidebar_sticky),
+		str_replace('%section%', 'search_index', $sidebar_style),
+		str_replace('%section%', 'search_index', $sidebar_bgcolor),
+		str_replace('%section%', 'search_index', $sidebar_fill),
+		str_replace('%section%', 'search_index', $footer_section_title),
+		str_replace('%section%', 'search_index', $footer_uncode_block),
+		str_replace('%section%', 'search_index', $footer_width),
+
+		array(
+			'id' => '_uncode_sidebars',
+			'label' => esc_html__('Site sidebars', 'uncode') ,
+			'desc' => esc_html__('Define here all the sidebars you will need. A default sidebar is already defined.', 'uncode') ,
+			'type' => 'list-item',
+			'section' => 'uncode_sidebars_section',
+			'class' => 'list-item',
+			'settings' => array(
+				array(
+					'id' => '_uncode_sidebar_unique_id',
+					'class' => 'unique_id',
+					'std' => 'sidebar-',
+					'type' => 'text',
+					'label' => esc_html__('Unique sidebar ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+			)
+		) ,
+		array(
+			'id' => '_uncode_font_groups',
+			'label' => esc_html__('Custom fonts', 'uncode') ,
+			'desc' => esc_html__('Define here all the fonts you will need.', 'uncode') ,
+			'std' => array(
+				array(
+					'title' => 'Font Poppins (Sans Serif)',
+					'_uncode_font_group_unique_id' => 'font-762333',
+					'_uncode_font_group' => 'Poppins'
+				),
+				array(
+					'title' => 'Font Hind (Sans Serif)',
+					'_uncode_font_group_unique_id' => 'font-377884',
+					'_uncode_font_group' => 'Hind'
+				),
 			) ,
-			array(
-				'id' => '_uncode_vmenu_width',
-				'label' => esc_html__('Vertical menu width','uncode') ,
-				'desc' => esc_html__('Vertical menu width in px', 'uncode') ,
-				'std' => '252',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_header_section',
-				'rows' => '',
-				'post_type' => '',
-				'taxonomy' => '',
-				'min_max_step' => '108,504,12',
-				'class' => '',
-				'condition' => '_uncode_headers:contains(vmenu)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_menu_full',
-				'label' => esc_html__('Menu full width', 'uncode') ,
-				'desc' => esc_html__('Activate to expand the menu to full width. (Only for the horizontal menus).', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_boxed:is(off)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_menu_visuals_block_title',
-				'label' => '<i class="fa fa-eye2"></i> ' . esc_html__('Visuals', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_shadows',
-				'label' => esc_html__('Menu shadows', 'uncode') ,
-				'desc' => esc_html__('Activate to show the menu shadows.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_borders',
-				'label' => esc_html__('Menu borders', 'uncode') ,
-				'desc' => esc_html__('Activate to show the menu borders.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_no_arrows',
-				'label' => esc_html__('Hide dropdown arrows', 'uncode') ,
-				'desc' => esc_html__('Activate to hide the dropdow arrows.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_animation_block_title',
-				'label' => '<i class="fa fa-fast-forward2"></i> ' . esc_html__('Animation', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(vmenu-offcanvas),_uncode_headers:is(menu-overlay)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_menu_sticky',
-				'label' => esc_html__('Menu sticky', 'uncode') ,
-				'desc' => esc_html__('Activate the sticky menu. This is a menu that is locked into place so that it does not disappear when the user scrolls down the page.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(vmenu-offcanvas),_uncode_headers:is(menu-overlay)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_menu_hide',
-				'label' => esc_html__('Menu hide', 'uncode') ,
-				'desc' => esc_html__('Activate the autohide menu. This is a menu that is hiding after the user have scrolled down the page.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(vmenu-offcanvas)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_menu_shrink',
-				'label' => esc_html__('Menu shrink', 'uncode') ,
-				'desc' => esc_html__('Activate the shrink menu. This is a menu where the logo shrinks after the user have scrolled down the page.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:contains(hmenu),_uncode_headers:is(menu-overlay),_uncode_headers:is(vmenu-offcanvas)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_menu_overlay_animation',
-				'label' => esc_html__('Menu overlay animation', 'uncode') ,
-				'desc' => esc_html__('Specify the overlay menu animation when opening and closing.', 'uncode') ,
-				'std' => 'sequential',
-				'type' => 'select',
-				'section' => 'uncode_header_section',
-				'choices' => array(
-					array(
-						'value' => '3d',
-						'label' => esc_html__('3D', 'uncode') ,
-					) ,
-					array(
-						'value' => 'sequential',
-						'label' => esc_html__('Flat', 'uncode') ,
-					) ,
-					'condition' => '_uncode_headers:is(menu-overlay)',
+			'type' => 'list-item',
+			'section' => 'uncode_typography_section',
+			'settings' => array(
+				array(
+					'id' => '_uncode_font_group_unique_id',
+					'class' => 'unique_id',
+					'std' => 'font-',
+					'type' => 'text',
+					'label' => esc_html__('Unique font ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+				array(
+					'id' => '_uncode_font_group',
+					'label' => esc_html__('Uncode font', 'uncode') ,
+					'desc' => esc_html__('Specify a font.', 'uncode') ,
+					'type' => 'select',
+					'choices' => $title_font,
+				),
+				array(
+					'id' => '_uncode_font_manual',
+					'label' => esc_html__('Font family', 'uncode') ,
+					'desc' => esc_html__('Enter a font family.', 'uncode') ,
+					'type' => 'text',
+					'condition' => '_uncode_font_group:is(manual)',
 					'operator' => 'and'
 				)
-			) ,
-			array(
-				'id' => '_uncode_min_logo',
-				'label' => esc_html__('Minimum logo height', 'uncode'),
-				'desc' => esc_html__('Enter the minimal height of the shrinked logo in <b>px</b>.', 'uncode') ,
-				'type' => 'text',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_menu_shrink:is(on),_uncode_headers:contains(hmenu)',
-				'operator' => 'and',
-			) ,
-			array(
-				'id' => '_uncode_menu_typo_block_title',
-				'label' => '<i class="fa fa-font"></i> ' . esc_html__('Typography', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_first_uppercase',
-				'label' => esc_html__('Menu first level uppercase', 'uncode') ,
-				'desc' => esc_html__('Activate to transform the first menu level to uppercase.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_other_uppercase',
-				'label' => esc_html__('Menu other levels uppercase', 'uncode') ,
-				'desc' => esc_html__('Activate to transform all the others menu level to uppercase.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_add_block_title',
-				'label' => '<i class="fa fa-square-plus"></i> ' . esc_html__('Additionals', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_no_secondary',
-				'label' => esc_html__('Hide secondary menu', 'uncode') ,
-				'desc' => esc_html__('Activate to hide the secondary menu.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_socials',
-				'label' => esc_html__('Social icons', 'uncode') ,
-				'desc' => esc_html__('Activate to show the social connection icons in the menu bar.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_menu_search',
-				'label' => esc_html__('Search icon', 'uncode') ,
-				'desc' => esc_html__('Activate to show the search icon in the menu bar.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_menu_search_animation',
-				'label' => esc_html__('Search overlay animation', 'uncode') ,
-				'desc' => esc_html__('Specify the search overlay animation when opening and closing.', 'uncode') ,
-				'std' => 'sequential',
-				'type' => 'select',
-				'section' => 'uncode_header_section',
-				'choices' => array(
-					array(
-						'value' => '3d',
-						'label' => esc_html__('3D', 'uncode') ,
-					) ,
-					array(
-						'value' => 'sequential',
-						'label' => esc_html__('Flat', 'uncode') ,
-					) ,
-				) ,
-				'condition' => '_uncode_menu_search:is(on)',
-				'operator' => 'or'
-			) ,
-			array(
-				'id' => '_uncode_woocommerce_cart',
-				'label' => esc_html__('Woocommerce cart', 'uncode') ,
-				'desc' => esc_html__('Activate to show the Woocommerce icon in the menu bar.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_header_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_bloginfo',
-				'label' => esc_html__('Top line text', 'uncode') ,
-				'desc' => esc_html__('Insert additional text on top of the menu.','uncode') ,
-				'type' => 'textarea',
-				'section' => 'uncode_header_section',
-				'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center)',
-				'operator' => 'or'
-			) ,
-			//////////////////////
-			//  Post Single		///
-			//////////////////////
-			str_replace('%section%', 'post', $menu_section_title),
-			str_replace('%section%', 'post', $menu),
-			str_replace('%section%', 'post', $menu_width),
-			str_replace('%section%', 'post', $menu_opaque),
-			str_replace('%section%', 'post', $header_section_title),
-			str_replace('%section%', 'post', run_array_to($header_type, 'std', 'header_basic')),
-			str_replace('%section%', 'post', $header_uncode_block),
-			str_replace('%section%', 'post', $header_revslider),
-			str_replace('%section%', 'post', $header_layerslider),
-
-			str_replace('%section%', 'post', $header_width),
-			str_replace('%section%', 'post', $header_height),
-			str_replace('%section%', 'post', $header_min_height),
-			str_replace('%section%', 'post', $header_title),
-			str_replace('%section%', 'post', $header_style),
-			str_replace('%section%', 'post', $header_content_width),
-			str_replace('%section%', 'post', $header_custom_width),
-			str_replace('%section%', 'post', $header_align),
-			str_replace('%section%', 'post', $header_position),
-			str_replace('%section%', 'post', $header_title_font),
-			str_replace('%section%', 'post', $header_title_size),
-			str_replace('%section%', 'post', $header_title_height),
-			str_replace('%section%', 'post', $header_title_spacing),
-			str_replace('%section%', 'post', $header_title_weight),
-			str_replace('%section%', 'post', $header_title_transform),
-			str_replace('%section%', 'post', $header_title_italic),
-			str_replace('%section%', 'post', $header_text_animation),
-			str_replace('%section%', 'post', $header_animation_speed),
-			str_replace('%section%', 'post', $header_animation_delay),
-			str_replace('%section%', 'post', $header_featured),
-			str_replace('%section%', 'post', $header_background),
-			str_replace('%section%', 'post', $header_parallax),
-			str_replace('%section%', 'post', $header_overlay_color),
-			str_replace('%section%', 'post', $header_overlay_color_alpha),
-			str_replace('%section%', 'post', $header_scroll_opacity),
-			str_replace('%section%', 'post', $header_scrolldown),
-
-			str_replace('%section%', 'post', $body_section_title),
-			str_replace('%section%', 'post', $body_layout_width),
-			str_replace('%section%', 'post', $body_layout_width_custom),
-			str_replace('%section%', 'post', $show_breadcrumb),
-			str_replace('%section%', 'post', $breadcrumb_align),
-			str_replace('%section%', 'post', $show_title),
-			str_replace('%section%', 'post', $show_media),
-			str_replace('%section%', 'post', $show_comments),
-			str_replace('%section%', 'post', $show_share),
-			str_replace('%section%', 'post', $show_tags),
-			str_replace('%section%', 'post', $show_tags_align),
-			str_replace('%section%', 'post', $sidebar_section_title),
-			str_replace('%section%', 'post', run_array_to($sidebar_activate, 'std', 'on')),
-			str_replace('%section%', 'post', $sidebar_widget),
-			str_replace('%section%', 'post', $sidebar_position),
-			str_replace('%section%', 'post', $sidebar_size),
-			str_replace('%section%', 'post', $sidebar_sticky),
-			str_replace('%section%', 'post', $sidebar_style),
-			str_replace('%section%', 'post', $sidebar_bgcolor),
-			str_replace('%section%', 'post', $sidebar_fill),
-
-			str_replace('%section%', 'post', $navigation_section_title),
-			str_replace('%section%', 'post', $navigation_activate),
-			str_replace('%section%', 'post', $navigation_page_index),
-			str_replace('%section%', 'post', $navigation_index_label),
-			str_replace('%section%', 'post', $navigation_nextprev_title),
-			str_replace('%section%', 'post', $footer_section_title),
-			str_replace('%section%', 'post', $footer_uncode_block),
-			str_replace('%section%', 'post', $footer_width),
-			///////////////
-			//  Page		///
-			///////////////
-			str_replace('%section%', 'page', $menu_section_title),
-			str_replace('%section%', 'page', $menu),
-			str_replace('%section%', 'page', $menu_width),
-			str_replace('%section%', 'page', $menu_opaque),
-			str_replace('%section%', 'page', $header_section_title),
-			str_replace('%section%', 'page', $header_type),
-			str_replace('%section%', 'page', $header_uncode_block),
-			str_replace('%section%', 'page', $header_revslider),
-			str_replace('%section%', 'page', $header_layerslider),
-
-			str_replace('%section%', 'page', $header_width),
-			str_replace('%section%', 'page', $header_height),
-			str_replace('%section%', 'page', $header_min_height),
-			str_replace('%section%', 'page', $header_title),
-			str_replace('%section%', 'page', $header_style),
-			str_replace('%section%', 'page', $header_content_width),
-			str_replace('%section%', 'page', $header_custom_width),
-			str_replace('%section%', 'page', $header_align),
-			str_replace('%section%', 'page', $header_position),
-			str_replace('%section%', 'page', $header_title_font),
-			str_replace('%section%', 'page', $header_title_size),
-			str_replace('%section%', 'page', $header_title_height),
-			str_replace('%section%', 'page', $header_title_spacing),
-			str_replace('%section%', 'page', $header_title_weight),
-			str_replace('%section%', 'page', $header_title_transform),
-			str_replace('%section%', 'page', $header_title_italic),
-			str_replace('%section%', 'page', $header_text_animation),
-			str_replace('%section%', 'page', $header_animation_speed),
-			str_replace('%section%', 'page', $header_animation_delay),
-			str_replace('%section%', 'page', $header_featured),
-			str_replace('%section%', 'page', $header_background),
-			str_replace('%section%', 'page', $header_parallax),
-			str_replace('%section%', 'page', $header_overlay_color),
-			str_replace('%section%', 'page', $header_overlay_color_alpha),
-			str_replace('%section%', 'page', $header_scroll_opacity),
-			str_replace('%section%', 'page', $header_scrolldown),
-			str_replace('%section%', 'page', $body_section_title),
-			str_replace('%section%', 'page', $body_layout_width),
-			str_replace('%section%', 'page', $body_layout_width_custom),
-			str_replace('%section%', 'page', run_array_to($show_breadcrumb, 'std', 'on')),
-			str_replace('%section%', 'page', $breadcrumb_align),
-			str_replace('%section%', 'page', run_array_to($show_title, 'std', 'on')),
-			str_replace('%section%', 'page', $show_media),
-			str_replace('%section%', 'page', $show_comments),
-			str_replace('%section%', 'page', $sidebar_section_title),
-			str_replace('%section%', 'page', $sidebar_activate),
-			str_replace('%section%', 'page', $sidebar_widget),
-			str_replace('%section%', 'page', $sidebar_position),
-			str_replace('%section%', 'page', $sidebar_size),
-			str_replace('%section%', 'page', $sidebar_sticky),
-			str_replace('%section%', 'page', $sidebar_style),
-			str_replace('%section%', 'page', $sidebar_bgcolor),
-			str_replace('%section%', 'page', $sidebar_fill),
-			str_replace('%section%', 'page', $footer_section_title),
-			str_replace('%section%', 'page', $footer_uncode_block),
-			str_replace('%section%', 'page', $footer_width),
-			///////////////////////////
-			//  Portfolio Single		///
-			///////////////////////////
-			str_replace('%section%', 'portfolio', $menu_section_title),
-			str_replace('%section%', 'portfolio', $menu),
-			str_replace('%section%', 'portfolio', $menu_width),
-			str_replace('%section%', 'portfolio', $menu_opaque),
-			str_replace('%section%', 'portfolio', $header_section_title),
-			str_replace('%section%', 'portfolio', $header_type),
-			str_replace('%section%', 'portfolio', $header_uncode_block),
-			str_replace('%section%', 'portfolio', $header_revslider),
-			str_replace('%section%', 'portfolio', $header_layerslider),
-
-			str_replace('%section%', 'portfolio', $header_width),
-			str_replace('%section%', 'portfolio', $header_height),
-			str_replace('%section%', 'portfolio', $header_min_height),
-			str_replace('%section%', 'portfolio', $header_title),
-			str_replace('%section%', 'portfolio', $header_style),
-			str_replace('%section%', 'portfolio', $header_content_width),
-			str_replace('%section%', 'portfolio', $header_custom_width),
-			str_replace('%section%', 'portfolio', $header_align),
-			str_replace('%section%', 'portfolio', $header_position),
-			str_replace('%section%', 'portfolio', $header_title_font),
-			str_replace('%section%', 'portfolio', $header_title_size),
-			str_replace('%section%', 'portfolio', $header_title_height),
-			str_replace('%section%', 'portfolio', $header_title_spacing),
-			str_replace('%section%', 'portfolio', $header_title_weight),
-			str_replace('%section%', 'portfolio', $header_title_transform),
-			str_replace('%section%', 'portfolio', $header_title_italic),
-			str_replace('%section%', 'portfolio', $header_text_animation),
-			str_replace('%section%', 'portfolio', $header_animation_speed),
-			str_replace('%section%', 'portfolio', $header_animation_delay),
-			str_replace('%section%', 'portfolio', $header_featured),
-			str_replace('%section%', 'portfolio', $header_background),
-			str_replace('%section%', 'portfolio', $header_parallax),
-			str_replace('%section%', 'portfolio', $header_overlay_color),
-			str_replace('%section%', 'portfolio', $header_overlay_color_alpha),
-			str_replace('%section%', 'portfolio', $header_scroll_opacity),
-			str_replace('%section%', 'portfolio', $header_scrolldown),
-
-			str_replace('%section%', 'portfolio', $body_section_title),
-			str_replace('%section%', 'portfolio', $body_layout_width),
-			str_replace('%section%', 'portfolio', $body_layout_width_custom),
-			str_replace('%section%', 'portfolio', run_array_to($show_breadcrumb, 'std', 'on')),
-			str_replace('%section%', 'portfolio', $breadcrumb_align),
-			str_replace('%section%', 'portfolio', run_array_to($show_title, 'std', 'on')),
-			str_replace('%section%', 'portfolio', $show_media),
-			str_replace('%section%', 'portfolio', run_array_to($show_comments, 'std', 'off')),
-			str_replace('%section%', 'portfolio', $show_share),
-			array(
-				'id' => '_uncode_portfolio_details_title',
-				'label' => '<i class="fa fa-briefcase3"></i> ' . esc_html__('Details', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_portfolio_section',
-			) ,
-			array(
-				'id' => '_uncode_portfolio_details',
-				'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('details', 'uncode') ,
-				'desc' => sprintf(esc_html__('Create here all the %s details label that you need.', 'uncode') , $portfolio_cpt_name) ,
-				'type' => 'list-item',
-				'section' => 'uncode_portfolio_section',
-				'settings' => array(
-					array(
-						'id' => '_uncode_portfolio_detail_unique_id',
-						'class' => 'unique_id',
-						'std' => 'detail-',
-						'type' => 'text',
-						'label' => sprintf(esc_html__('Unique %s detail ID','uncode') , $portfolio_cpt_name) ,
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-				)
-			) ,
-			array(
-				'id' => '_uncode_portfolio_position',
-				'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('details layout', 'uncode') ,
-				'desc' => sprintf(esc_html__('Specify the layout template for all the %s posts.', 'uncode') , $portfolio_cpt_name) ,
-				'type' => 'select',
-				'section' => 'uncode_portfolio_section',
-				'choices' => array(
-					array(
-						'value' => '',
-						'label' => esc_html__('Select…', 'uncode') ,
-					) ,
-					array(
-						'value' => 'portfolio_top',
-						'label' => esc_html__('Details on the top', 'uncode') ,
-					) ,
-					array(
-						'value' => 'sidebar_right',
-						'label' => esc_html__('Details on the right', 'uncode') ,
-					) ,
-					array(
-						'value' => 'portfolio_bottom',
-						'label' => esc_html__('Details on the bottom', 'uncode') ,
-					) ,
-					array(
-						'value' => 'sidebar_left',
-						'label' => esc_html__('Details on the left', 'uncode') ,
-					) ,
-				)
-			) ,
-			array(
-				'id' => '_uncode_portfolio_sidebar_size',
-				'label' => esc_html__('Sidebar size', 'uncode') ,
-				'desc' => esc_html__('Set the sidebar size.', 'uncode') ,
-				'std' => '4',
-				'min_max_step' => '1,12,1',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_portfolio_section',
-				'operator' => 'and',
-				'condition' => '_uncode_portfolio_position:not(),_uncode_portfolio_position:contains(sidebar)',
-			) ,
-			str_replace('%section%', 'portfolio', run_array_to($sidebar_sticky, 'condition', '_uncode_portfolio_position:not(),_uncode_portfolio_position:contains(sidebar)')),
-			array(
-				'id' => '_uncode_portfolio_style',
-				'label' => esc_html__('Skin', 'uncode') ,
-				'desc' => esc_html__('Specify the sidebar text skin color.', 'uncode') ,
-				'type' => 'select',
-				'choices' => array(
-					array(
-						'value' => '',
-						'label' => esc_html__('Inherit', "uncode") ,
-					) ,
-					array(
-						'value' => 'light',
-						'label' => esc_html__('Light', "uncode") ,
-					) ,
-					array(
-						'value' => 'dark',
-						'label' => esc_html__('Dark', "uncode") ,
-					)
+			)
+		) ,
+		array(
+			'id' => '_uncode_font_size',
+			'label' => esc_html__('Default font size', 'uncode') ,
+			'desc' => esc_html__('Font size for p,li,dt,dd,dl,address,label,small,pre in <b>px</b>.', 'uncode') ,
+			'std' => '15',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h1',
+			'label' => esc_html__('Font size H1', 'uncode') ,
+			'desc' => esc_html__('Font size for H1 in <b>px</b>.', 'uncode') ,
+			'std' => '35',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h2',
+			'label' => esc_html__('Font size H2', 'uncode') ,
+			'desc' => esc_html__('Font size for H2 in <b>px</b>.', 'uncode') ,
+			'std' => '29',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h3',
+			'label' => esc_html__('Font size H3', 'uncode') ,
+			'desc' => esc_html__('Font size for H3 in <b>px</b>.', 'uncode') ,
+			'std' => '24',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h4',
+			'label' => esc_html__('Font size H4', 'uncode') ,
+			'desc' => esc_html__('Font size for H4 in <b>px</b>.', 'uncode') ,
+			'std' => '20',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h5',
+			'label' => esc_html__('Font size H5', 'uncode') ,
+			'desc' => esc_html__('Font size for H5 in <b>px</b>.', 'uncode') ,
+			'std' => '17',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_h6',
+			'label' => esc_html__('Font size H6', 'uncode') ,
+			'desc' => esc_html__('Font size for H6 in <b>px</b>.', 'uncode') ,
+			'std' => '14',
+			'type' => 'text',
+			'section' => 'uncode_typography_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_font_sizes',
+			'label' => esc_html__('Custom font size', 'uncode') ,
+			'desc' => esc_html__('Define here all the additional font sizes you will need.', 'uncode') ,
+			'std' => '',
+			'type' => 'list-item',
+			'section' => 'uncode_typography_section',
+			'settings' => array(
+				array(
+					'id' => '_uncode_heading_font_size_unique_id',
+					'class' => 'unique_id',
+					'std' => 'fontsize-',
+					'type' => 'text',
+					'label' => esc_html__('Unique font size ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
 				),
-				'section' => 'uncode_portfolio_section',
-				'condition' => '_uncode_portfolio_position:not()',
-			) ,
-			array(
-				'id' => '_uncode_portfolio_bgcolor',
-				'label' => esc_html__('Sidebar color', 'uncode') ,
-				'desc' => esc_html__('Specify the sidebar background color.', 'uncode') ,
-				'type' => 'uncode_color',
-				'section' => 'uncode_portfolio_section',
-				'condition' => '_uncode_portfolio_position:not()',
-			) ,
-			array(
-				'id' => '_uncode_portfolio_sidebar_fill',
-				'label' => esc_html__('Sidebar filling space', 'uncode') ,
-				'desc' => esc_html__('Activate to remove padding around the sidebar and fill the height.', 'uncode') ,
-				'type' => 'on-off',
-				'section' => 'uncode_portfolio_section',
-				'std' => 'off',
-				'operator' => 'and',
-				'condition' => '_uncode_portfolio_position:not(),_uncode_portfolio_sidebar_bgcolor:not(),_uncode_portfolio_position:contains(sidebar)',
+				array(
+					'id' => '_uncode_heading_font_size',
+					'label' => esc_html__('Font size', 'uncode') ,
+					'desc' => esc_html__('Font size in <b>px</b>.', 'uncode') ,
+					'std' => '',
+					'type' => 'text',
+				)
+			)
+		) ,
+		array(
+			'id' => '_uncode_heading_font_heights',
+			'label' => esc_html__('Custom line height', 'uncode') ,
+			'desc' => esc_html__('Define here all the additional font line heights you will need.', 'uncode') ,
+			'std' => '',
+			'type' => 'list-item',
+			'section' => 'uncode_typography_section',
+			'settings' => array(
+				array(
+					'id' => '_uncode_heading_font_height_unique_id',
+					'class' => 'unique_id',
+					'std' => 'fontheight-',
+					'type' => 'text',
+					'label' => esc_html__('Unique font height ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+				array(
+					'id' => '_uncode_heading_font_height',
+					'label' => esc_html__('Font line height', 'uncode') ,
+					'desc' => esc_html__('Insert a line height.', 'uncode') ,
+					'std' => '',
+					'type' => 'text',
+				)
+			)
+		) ,
+		array(
+			'id' => '_uncode_heading_font_spacings',
+			'label' => esc_html__('Custom letter spacing', 'uncode') ,
+			'desc' => esc_html__('Define here all the letter spacings you will need.', 'uncode') ,
+			'std' => '',
+			'type' => 'list-item',
+			'section' => 'uncode_typography_section',
+			'settings' => array(
+				array(
+					'id' => '_uncode_heading_font_spacing_unique_id',
+					'class' => 'unique_id',
+					'std' => 'fontspace-',
+					'type' => 'text',
+					'label' => esc_html__('Unique letter spacing ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+				array(
+					'id' => '_uncode_heading_font_spacing',
+					'label' => esc_html__('Letter spacing', 'uncode') ,
+					'desc' => esc_html__('Letter spacing with the unit (em or px). Ex. 0.2em', 'uncode') ,
+					'std' => '',
+					'type' => 'text',
+				)
+			)
+		) ,
+		array(
+			'id' => '_uncode_custom_colors_list',
+			'label' => esc_html__('Color palettes', 'uncode') ,
+			'desc' => esc_html__('Define all the colors you will need.', 'uncode') ,
+			'std' => array(
+				array(
+					'title' => esc_html__('Black','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-jevc',
+					'_uncode_custom_color' => '#000000',
+				),
+				array(
+					'title' => esc_html__('Dark 1','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-nhtu',
+					'_uncode_custom_color' => '#101213',
+				),
+				array(
+					'title' => esc_html__('Dark 2','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-wayh',
+					'_uncode_custom_color' => '#141618',
+				),
+				array(
+					'title' => esc_html__('Dark 3','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-rgdb',
+					'_uncode_custom_color' => '#1b1d1f',
+				),
+				array(
+					'title' => esc_html__('Dark 4','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-prif',
+					'_uncode_custom_color' => '#303133',
+				),
+				array(
+					'title' => esc_html__('White','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-xsdn',
+					'_uncode_custom_color' => '#ffffff',
+				),
+				array(
+					'title' => esc_html__('Light 1','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-lxmt',
+					'_uncode_custom_color' => '#f7f7f7',
+				),
+				array(
+					'title' => esc_html__('Light 2','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-gyho',
+					'_uncode_custom_color' => '#eaeaea',
+				),
+				array(
+					'title' => esc_html__('Light 3','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-uydo',
+					'_uncode_custom_color' => '#dddddd',
+				),
+				array(
+					'title' => esc_html__('Light 4','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-wvjs',
+					'_uncode_custom_color' => '#777',
+				),
+				array(
+					'title' => esc_html__('Cerulean','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-vyce',
+					'_uncode_custom_color' => '#0cb4ce',
+				),
+					array(
+					'title' => esc_html__('International Orange','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-dfgh',
+					'_uncode_custom_color' => '#FF590A',
+				),
+					array(
+					'title' => esc_html__('Malachite','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-iopl',
+					'_uncode_custom_color' => '#0CCE50',
+				),
+					array(
+					'title' => esc_html__('Sunglow','uncode'),
+					'_uncode_custom_color_unique_id' => 'color-zsdf',
+					'_uncode_custom_color' => '#FFC42E',
+				),
 			),
-			str_replace('%section%', 'portfolio', $navigation_section_title),
-			str_replace('%section%', 'portfolio', $navigation_activate),
-			str_replace('%section%', 'portfolio', $navigation_page_index),
-			str_replace('%section%', 'portfolio', $navigation_index_label),
-			str_replace('%section%', 'portfolio', $navigation_nextprev_title),
-			str_replace('%section%', 'portfolio', $footer_section_title),
-			str_replace('%section%', 'portfolio', $footer_uncode_block),
-			str_replace('%section%', 'portfolio', $footer_width),
-			///////////////////
-			//  Page 404		///
-			///////////////////
-			str_replace('%section%', '404', $menu_section_title),
-			str_replace('%section%', '404', $menu),
-			str_replace('%section%', '404', $menu_width),
-			str_replace('%section%', '404', $menu_opaque),
-			str_replace('%section%', '404', $header_section_title),
-			str_replace('%section%', '404', $header_type),
-			str_replace('%section%', '404', $header_uncode_block),
-			str_replace('%section%', '404', $header_revslider),
-			str_replace('%section%', '404', $header_layerslider),
-
-			str_replace('%section%', '404', $header_width),
-			str_replace('%section%', '404', $header_height),
-			str_replace('%section%', '404', $header_min_height),
-			str_replace('%section%', '404', $header_title),
-			str_replace('%section%', '404', $header_title_text),
-			str_replace('%section%', '404', $header_style),
-			str_replace('%section%', '404', $header_content_width),
-			str_replace('%section%', '404', $header_custom_width),
-			str_replace('%section%', '404', $header_align),
-			str_replace('%section%', '404', $header_position),
-			str_replace('%section%', '404', $header_title_font),
-			str_replace('%section%', '404', $header_title_size),
-			str_replace('%section%', '404', $header_title_height),
-			str_replace('%section%', '404', $header_title_spacing),
-			str_replace('%section%', '404', $header_title_weight),
-			str_replace('%section%', '404', $header_title_transform),
-			str_replace('%section%', '404', $header_title_italic),
-			str_replace('%section%', '404', $header_text_animation),
-			str_replace('%section%', '404', $header_animation_speed),
-			str_replace('%section%', '404', $header_animation_delay),
-			str_replace('%section%', '404', $header_background),
-			str_replace('%section%', '404', $header_parallax),
-			str_replace('%section%', '404', $header_overlay_color),
-			str_replace('%section%', '404', $header_overlay_color_alpha),
-			str_replace('%section%', '404', $header_scroll_opacity),
-			str_replace('%section%', '404', $header_scrolldown),
-
-			str_replace('%section%', '404', $body_section_title),
-			str_replace('%section%', '404', $body_layout_width),
-			str_replace('%section%', '404', $uncodeblock_404),
-			str_replace('%section%', '404', $uncodeblocks_404),
-			str_replace('%section%', '404', $footer_section_title),
-			str_replace('%section%', '404', $footer_uncode_block),
-			str_replace('%section%', '404', $footer_width),
-			//////////////////////
-			//  Posts Index		///
-			//////////////////////
-			str_replace('%section%', 'post_index', $menu_section_title),
-			str_replace('%section%', 'post_index', $menu),
-			str_replace('%section%', 'post_index', $menu_width),
-			str_replace('%section%', 'post_index', $menu_opaque),
-			str_replace('%section%', 'post_index', $header_section_title),
-			str_replace('%section%', 'post_index', run_array_to($header_type, 'std', 'header_basic')),
-			str_replace('%section%', 'post_index', $header_uncode_block),
-			str_replace('%section%', 'post_index', $header_revslider),
-			str_replace('%section%', 'post_index', $header_layerslider),
-
-			str_replace('%section%', 'post_index', $header_width),
-			str_replace('%section%', 'post_index', $header_height),
-			str_replace('%section%', 'post_index', $header_min_height),
-			str_replace('%section%', 'post_index', $header_title),
-			str_replace('%section%', 'post_index', $header_style),
-			str_replace('%section%', 'post_index', $header_content_width),
-			str_replace('%section%', 'post_index', $header_custom_width),
-			str_replace('%section%', 'post_index', $header_align),
-			str_replace('%section%', 'post_index', $header_position),
-			str_replace('%section%', 'post_index', $header_title_font),
-			str_replace('%section%', 'post_index', $header_title_size),
-			str_replace('%section%', 'post_index', $header_title_height),
-			str_replace('%section%', 'post_index', $header_title_spacing),
-			str_replace('%section%', 'post_index', $header_title_weight),
-			str_replace('%section%', 'post_index', $header_title_transform),
-			str_replace('%section%', 'post_index', $header_title_italic),
-			str_replace('%section%', 'post_index', $header_text_animation),
-			str_replace('%section%', 'post_index', $header_animation_speed),
-			str_replace('%section%', 'post_index', $header_animation_delay),
-			str_replace('%section%', 'post_index', $header_featured),
-			str_replace('%section%', 'post_index', $header_background),
-			str_replace('%section%', 'post_index', $header_parallax),
-			str_replace('%section%', 'post_index', $header_overlay_color),
-			str_replace('%section%', 'post_index', $header_overlay_color_alpha),
-			str_replace('%section%', 'post_index', $header_scroll_opacity),
-			str_replace('%section%', 'post_index', $header_scrolldown),
-
-			str_replace('%section%', 'post_index', $body_section_title),
-			str_replace('%section%', 'post_index', $show_breadcrumb),
-			str_replace('%section%', 'post_index', $breadcrumb_align),
-			str_replace('%section%', 'post_index', $body_uncode_block),
-			str_replace('%section%', 'post_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
-			str_replace('%section%', 'post_index', $body_single_post_width),
-			str_replace('%section%', 'post_index', $body_single_text_lenght),
-			str_replace('%section%', 'post_index', $show_title),
-			str_replace('%section%', 'post_index', $sidebar_section_title),
-			str_replace('%section%', 'post_index', run_array_to($sidebar_activate, 'std', 'on')),
-			str_replace('%section%', 'post_index', $sidebar_widget),
-			str_replace('%section%', 'post_index', $sidebar_position),
-			str_replace('%section%', 'post_index', $sidebar_size),
-			str_replace('%section%', 'post_index', $sidebar_sticky),
-			str_replace('%section%', 'post_index', $sidebar_style),
-			str_replace('%section%', 'post_index', $sidebar_bgcolor),
-			str_replace('%section%', 'post_index', $sidebar_fill),
-			str_replace('%section%', 'post_index', $footer_section_title),
-			str_replace('%section%', 'post_index', $footer_uncode_block),
-			str_replace('%section%', 'post_index', $footer_width),
-			//////////////////////
-			//  Pages Index		///
-			//////////////////////
-			str_replace('%section%', 'page_index', $menu_section_title),
-			str_replace('%section%', 'page_index', $menu),
-			str_replace('%section%', 'page_index', $menu_width),
-			str_replace('%section%', 'page_index', $menu_opaque),
-			str_replace('%section%', 'page_index', $header_section_title),
-			str_replace('%section%', 'page_index', run_array_to($header_type, 'std', 'header_basic')),
-			str_replace('%section%', 'page_index', $header_uncode_block),
-			str_replace('%section%', 'page_index', $header_revslider),
-			str_replace('%section%', 'page_index', $header_layerslider),
-
-			str_replace('%section%', 'page_index', $header_width),
-			str_replace('%section%', 'page_index', $header_height),
-			str_replace('%section%', 'page_index', $header_min_height),
-			str_replace('%section%', 'page_index', $header_title),
-			str_replace('%section%', 'page_index', $header_style),
-			str_replace('%section%', 'page_index', $header_content_width),
-			str_replace('%section%', 'page_index', $header_custom_width),
-			str_replace('%section%', 'page_index', $header_align),
-			str_replace('%section%', 'page_index', $header_position),
-			str_replace('%section%', 'page_index', $header_title_font),
-			str_replace('%section%', 'page_index', $header_title_size),
-			str_replace('%section%', 'page_index', $header_title_height),
-			str_replace('%section%', 'page_index', $header_title_spacing),
-			str_replace('%section%', 'page_index', $header_title_weight),
-			str_replace('%section%', 'page_index', $header_title_transform),
-			str_replace('%section%', 'page_index', $header_title_italic),
-			str_replace('%section%', 'page_index', $header_text_animation),
-			str_replace('%section%', 'page_index', $header_animation_speed),
-			str_replace('%section%', 'page_index', $header_animation_delay),
-			str_replace('%section%', 'page_index', $header_featured),
-			str_replace('%section%', 'page_index', $header_background),
-			str_replace('%section%', 'page_index', $header_parallax),
-			str_replace('%section%', 'page_index', $header_overlay_color),
-			str_replace('%section%', 'page_index', $header_overlay_color_alpha),
-			str_replace('%section%', 'page_index', $header_scroll_opacity),
-			str_replace('%section%', 'page_index', $header_scrolldown),
-
-			str_replace('%section%', 'page_index', $body_section_title),
-			str_replace('%section%', 'page_index', $show_breadcrumb),
-			str_replace('%section%', 'page_index', $breadcrumb_align),
-			str_replace('%section%', 'page_index', $body_uncode_block),
-			str_replace('%section%', 'page_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
-			str_replace('%section%', 'page_index', $body_single_post_width),
-			str_replace('%section%', 'page_index', $body_single_text_lenght),
-			str_replace('%section%', 'page_index', $show_title),
-			str_replace('%section%', 'page_index', $sidebar_section_title),
-			str_replace('%section%', 'page_index', run_array_to($sidebar_activate, 'std', 'on')),
-			str_replace('%section%', 'page_index', $sidebar_widget),
-			str_replace('%section%', 'page_index', $sidebar_position),
-			str_replace('%section%', 'page_index', $sidebar_size),
-			str_replace('%section%', 'page_index', $sidebar_sticky),
-			str_replace('%section%', 'page_index', $sidebar_style),
-			str_replace('%section%', 'page_index', $sidebar_bgcolor),
-			str_replace('%section%', 'page_index', $sidebar_fill),
-			str_replace('%section%', 'page_index', $footer_section_title),
-			str_replace('%section%', 'page_index', $footer_uncode_block),
-			str_replace('%section%', 'page_index', $footer_width),
-			////////////////////////
-			//  Archive Index		///
-			////////////////////////
-			str_replace('%section%', 'portfolio_index', $menu_section_title),
-			str_replace('%section%', 'portfolio_index', $menu),
-			str_replace('%section%', 'portfolio_index', $menu_width),
-			str_replace('%section%', 'portfolio_index', $menu_opaque),
-			str_replace('%section%', 'portfolio_index', $header_section_title),
-			str_replace('%section%', 'portfolio_index', run_array_to($header_type, 'std', 'header_basic')),
-			str_replace('%section%', 'portfolio_index', $header_uncode_block),
-			str_replace('%section%', 'portfolio_index', $header_revslider),
-			str_replace('%section%', 'portfolio_index', $header_layerslider),
-
-			str_replace('%section%', 'portfolio_index', $header_width),
-			str_replace('%section%', 'portfolio_index', $header_height),
-			str_replace('%section%', 'portfolio_index', $header_min_height),
-			str_replace('%section%', 'portfolio_index', $header_title),
-			str_replace('%section%', 'portfolio_index', $header_style),
-			str_replace('%section%', 'portfolio_index', $header_content_width),
-			str_replace('%section%', 'portfolio_index', $header_custom_width),
-			str_replace('%section%', 'portfolio_index', $header_align),
-			str_replace('%section%', 'portfolio_index', $header_position),
-			str_replace('%section%', 'portfolio_index', $header_title_font),
-			str_replace('%section%', 'portfolio_index', $header_title_size),
-			str_replace('%section%', 'portfolio_index', $header_title_height),
-			str_replace('%section%', 'portfolio_index', $header_title_spacing),
-			str_replace('%section%', 'portfolio_index', $header_title_weight),
-			str_replace('%section%', 'portfolio_index', $header_title_transform),
-			str_replace('%section%', 'portfolio_index', $header_title_italic),
-			str_replace('%section%', 'portfolio_index', $header_text_animation),
-			str_replace('%section%', 'portfolio_index', $header_animation_speed),
-			str_replace('%section%', 'portfolio_index', $header_animation_delay),
-			str_replace('%section%', 'portfolio_index', $header_featured),
-			str_replace('%section%', 'portfolio_index', $header_background),
-			str_replace('%section%', 'portfolio_index', $header_parallax),
-			str_replace('%section%', 'portfolio_index', $header_overlay_color),
-			str_replace('%section%', 'portfolio_index', $header_overlay_color_alpha),
-			str_replace('%section%', 'portfolio_index', $header_scroll_opacity),
-			str_replace('%section%', 'portfolio_index', $header_scrolldown),
-
-			str_replace('%section%', 'portfolio_index', $body_section_title),
-			str_replace('%section%', 'portfolio_index', $show_breadcrumb),
-			str_replace('%section%', 'portfolio_index', $breadcrumb_align),
-			str_replace('%section%', 'portfolio_index', $body_uncode_block),
-			str_replace('%section%', 'portfolio_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
-			str_replace('%section%', 'portfolio_index', $body_single_post_width),
-			str_replace('%section%', 'portfolio_index', $show_title),
-			str_replace('%section%', 'portfolio_index', $sidebar_section_title),
-			str_replace('%section%', 'portfolio_index', $sidebar_activate),
-			str_replace('%section%', 'portfolio_index', $sidebar_widget),
-			str_replace('%section%', 'portfolio_index', $sidebar_position),
-			str_replace('%section%', 'portfolio_index', $sidebar_size),
-			str_replace('%section%', 'portfolio_index', $sidebar_sticky),
-			str_replace('%section%', 'portfolio_index', $sidebar_style),
-			str_replace('%section%', 'portfolio_index', $sidebar_bgcolor),
-			str_replace('%section%', 'portfolio_index', $sidebar_fill),
-			str_replace('%section%', 'portfolio_index', $footer_section_title),
-			str_replace('%section%', 'portfolio_index', $footer_uncode_block),
-			str_replace('%section%', 'portfolio_index', $footer_width),
-			///////////////////////
-			//  Search Index		///
-			///////////////////////
-			str_replace('%section%', 'search_index', $menu_section_title),
-			str_replace('%section%', 'search_index', $menu),
-			str_replace('%section%', 'search_index', $menu_width),
-			str_replace('%section%', 'search_index', $menu_opaque),
-			str_replace('%section%', 'search_index', $header_section_title),
-			str_replace('%section%', 'search_index', run_array_to($header_type, 'std', 'header_basic')),
-			str_replace('%section%', 'search_index', $header_uncode_block),
-			str_replace('%section%', 'search_index', $header_revslider),
-			str_replace('%section%', 'search_index', $header_layerslider),
-
-			str_replace('%section%', 'search_index', $header_width),
-			str_replace('%section%', 'search_index', $header_height),
-			str_replace('%section%', 'search_index', $header_min_height),
-			str_replace('%section%', 'search_index', $header_title),
-			str_replace('%section%', 'search_index', $header_title_text),
-			str_replace('%section%', 'search_index', $header_style),
-			str_replace('%section%', 'search_index', $header_content_width),
-			str_replace('%section%', 'search_index', $header_custom_width),
-			str_replace('%section%', 'search_index', $header_align),
-			str_replace('%section%', 'search_index', $header_position),
-			str_replace('%section%', 'search_index', $header_title_font),
-			str_replace('%section%', 'search_index', $header_title_size),
-			str_replace('%section%', 'search_index', $header_title_height),
-			str_replace('%section%', 'search_index', $header_title_spacing),
-			str_replace('%section%', 'search_index', $header_title_weight),
-			str_replace('%section%', 'search_index', $header_title_transform),
-			str_replace('%section%', 'search_index', $header_title_italic),
-			str_replace('%section%', 'search_index', $header_text_animation),
-			str_replace('%section%', 'search_index', $header_animation_speed),
-			str_replace('%section%', 'search_index', $header_animation_delay),
-			str_replace('%section%', 'search_index', $header_background),
-			str_replace('%section%', 'search_index', $header_parallax),
-			str_replace('%section%', 'search_index', $header_overlay_color),
-			str_replace('%section%', 'search_index', $header_overlay_color_alpha),
-			str_replace('%section%', 'search_index', $header_scroll_opacity),
-			str_replace('%section%', 'search_index', $header_scrolldown),
-
-			str_replace('%section%', 'search_index', $body_section_title),
-			str_replace('%section%', 'search_index', $body_uncode_block),
-			str_replace('%section%', 'search_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
-			str_replace('%section%', 'search_index', $sidebar_section_title),
-			str_replace('%section%', 'search_index', $sidebar_activate),
-			str_replace('%section%', 'search_index', $sidebar_widget),
-			str_replace('%section%', 'search_index', $sidebar_position),
-			str_replace('%section%', 'search_index', $sidebar_size),
-			str_replace('%section%', 'search_index', $sidebar_sticky),
-			str_replace('%section%', 'search_index', $sidebar_style),
-			str_replace('%section%', 'search_index', $sidebar_bgcolor),
-			str_replace('%section%', 'search_index', $sidebar_fill),
-			str_replace('%section%', 'search_index', $footer_section_title),
-			str_replace('%section%', 'search_index', $footer_uncode_block),
-			str_replace('%section%', 'search_index', $footer_width),
-
-			array(
-				'id' => '_uncode_sidebars',
-				'label' => esc_html__('Site sidebars', 'uncode') ,
-				'desc' => esc_html__('Define here all the sidebars you will need. A default sidebar is already defined.', 'uncode') ,
-				'type' => 'list-item',
-				'section' => 'uncode_sidebars_section',
-				'class' => 'list-item',
-				'settings' => array(
-					array(
-						'id' => '_uncode_sidebar_unique_id',
-						'class' => 'unique_id',
-						'std' => 'sidebar-',
-						'type' => 'text',
-						'label' => esc_html__('Unique sidebar ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-				)
-			) ,
-			array(
-				'id' => '_uncode_font_groups',
-				'label' => esc_html__('Custom fonts', 'uncode') ,
-				'desc' => esc_html__('Define here all the fonts you will need.', 'uncode') ,
-				'std' => array(
-					array(
-						'title' => 'Font Poppins (Sans Serif)',
-						'_uncode_font_group_unique_id' => 'font-762333',
-						'_uncode_font_group' => 'Poppins'
-					),
-					array(
-						'title' => 'Font Hind (Sans Serif)',
-						'_uncode_font_group_unique_id' => 'font-377884',
-						'_uncode_font_group' => 'Hind'
-					),
+			'type' => 'list-item',
+			'section' => 'uncode_colors_section',
+			'class' => 'list-colors',
+			'settings' => array(
+				array(
+					'id' => '_uncode_custom_color_unique_id',
+					'std' => 'color-',
+					'class' => 'unique_id',
+					'type' => 'text',
+					'label' => esc_html__('Unique color ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+				array(
+					'id' => '_uncode_custom_color_regular',
+					'label' => esc_html__('Monochrome', 'uncode') ,
+					'desc' => esc_html__('Activate to assign a monochromatic color, otherwise a gradient will be used.', 'uncode') ,
+					'std' => 'on',
+					'type' => 'on-off',
+					'section' => 'uncode_customize_section',
 				) ,
-				'type' => 'list-item',
-				'section' => 'uncode_typography_section',
-				'settings' => array(
-					array(
-						'id' => '_uncode_font_group_unique_id',
-						'class' => 'unique_id',
-						'std' => 'font-',
-						'type' => 'text',
-						'label' => esc_html__('Unique font ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_font_group',
-						'label' => esc_html__('Uncode font', 'uncode') ,
-						'desc' => esc_html__('Specify a font.', 'uncode') ,
-						'type' => 'select',
-						'choices' => $title_font,
-					),
-					array(
-						'id' => '_uncode_font_manual',
-						'label' => esc_html__('Font family', 'uncode') ,
-						'desc' => esc_html__('Enter a font family.', 'uncode') ,
-						'type' => 'text',
-						'condition' => '_uncode_font_group:is(manual)',
-						'operator' => 'and'
-					)
+				array(
+					'id' => '_uncode_custom_color',
+					'label' => esc_html__('Colorpicker', 'uncode') ,
+					'desc' => esc_html__('Specify the color for this palette. You can also define a color with the alpha value.', 'uncode') ,
+					'std' => '',
+					'type' => 'colorpicker',
+					'condition' => '_uncode_custom_color_regular:is(on)',
+				) ,
+				array(
+					'id' => '_uncode_custom_color_gradient',
+					'label' => esc_html__('Gradient', 'uncode') ,
+					'desc' => esc_html__('Specify the gradient color for this palette. NB. You can use a gradient color only as a background color.', 'uncode') ,
+					'std' => '',
+					'type' => 'gradientpicker',
+					'condition' => '_uncode_custom_color_regular:is(off)',
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_custom_light_block_title',
+			'label' => '<i class="fa fa-square-o"></i> ' . esc_html__('Light skin', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_logo_color_light',
+			'label' => esc_html__('SVG/Text logo color', 'uncode') ,
+			'desc' => esc_html__('Specify the logo color if it\'s a SVG or textual.', 'uncode') ,
+			'std' => 'color-prif',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_color_light',
+			'label' => esc_html__('Menu text color', 'uncode') ,
+			'desc' => esc_html__('Specify the menu text color.', 'uncode') ,
+			'std' => 'color-prif',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_bg_color_light',
+			'label' => esc_html__('Primary menu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary menu background color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_bg_alpha_light',
+			'label' => esc_html__('Primary menu background opacity', 'uncode') ,
+			'desc' => esc_html__('Adjust the primary menu background transparency.', 'uncode') ,
+			'std' => '100',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_submenu_bg_color_light',
+			'label' => esc_html__('Primary submenu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary submenu text color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_border_color_light',
+			'label' => esc_html__('Primary menu border color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary menu border color.', 'uncode') ,
+			'std' => 'color-gyho',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_border_alpha_light',
+			'label' => esc_html__('Primary menu border opacity', 'uncode') ,
+			'desc' => esc_html__('Adjust the primary menu border transparency.', 'uncode') ,
+			'std' => '100',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_secmenu_bg_color_light',
+			'label' => esc_html__('Secondary menu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the secondary menu background color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_color_light',
+			'label' => esc_html__('Headings color', 'uncode') ,
+			'desc' => esc_html__('Specify the headings text color.', 'uncode') ,
+			'std' => 'color-prif',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_text_color_light',
+			'label' => esc_html__('Content text color', 'uncode') ,
+			'desc' => esc_html__('Specify the content area text color.', 'uncode') ,
+			'std' => 'color-wvjs',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_background_color_light',
+			'label' => esc_html__('Content background color', 'uncode') ,
+			'desc' => esc_html__('Specify the content background color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_custom_dark_block_title',
+			'label' => '<i class="fa fa-square"></i> ' . esc_html__('Dark skin', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_logo_color_dark',
+			'label' => esc_html__('SVG/Text logo color', 'uncode') ,
+			'desc' => esc_html__('Specify the logo color if it\'s a SVG or textual.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_color_dark',
+			'label' => esc_html__('Menu text color', 'uncode') ,
+			'desc' => esc_html__('Specify the menu text color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_bg_color_dark',
+			'label' => esc_html__('Primary menu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary menu background color.', 'uncode') ,
+			'std' => 'color-wayh',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_bg_alpha_dark',
+			'label' => esc_html__('Primary menu background opacity', 'uncode') ,
+			'desc' => esc_html__('Adjust the primary menu background transparency.', 'uncode') ,
+			'std' => '100',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_submenu_bg_color_dark',
+			'label' => esc_html__('Primary submenu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary submenu text color.', 'uncode') ,
+			'std' => 'color-rgdb',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_border_color_dark',
+			'label' => esc_html__('Primary menu border color', 'uncode') ,
+			'desc' => esc_html__('Specify the primary menu border color.', 'uncode') ,
+			'std' => 'color-prif',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_border_alpha_dark',
+			'label' => esc_html__('Primary menu border opacity', 'uncode') ,
+			'desc' => esc_html__('Adjust the primary menu border transparency.', 'uncode') ,
+			'std' => '100',
+			'type' => 'numeric-slider',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_secmenu_bg_color_dark',
+			'label' => esc_html__('Secondary menu background color', 'uncode') ,
+			'desc' => esc_html__('Specify the secondary menu background color.', 'uncode') ,
+			'std' => 'color-wayh',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_heading_color_dark',
+			'label' => esc_html__('Headings color', 'uncode') ,
+			'desc' => esc_html__('Specify the headings text color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_text_color_dark',
+			'label' => esc_html__('Content text color', 'uncode') ,
+			'desc' => esc_html__('Specify the content area text color.', 'uncode') ,
+			'std' => 'color-xsdn',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_background_color_dark',
+			'label' => esc_html__('Content background color', 'uncode') ,
+			'desc' => esc_html__('Specify the content background color.', 'uncode') ,
+			'std' => 'color-wayh',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_custom_general_block_title',
+			'label' => '<i class="fa fa-globe3"></i> ' . esc_html__('General', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_body_background',
+			'label' => esc_html__('HTML body background', 'uncode') ,
+			'desc' => esc_html__('Specify the body background color and media.', 'uncode') ,
+			'type' => 'background',
+			'std' => array(
+				'background-color' => 'color-lxmt',
+				'background-repeat' => '',
+				'background-attachment' => '',
+				'background-position' => '',
+				'background-size' => '',
+				'background-image' => '',
+			),
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_accent_color',
+			'label' => esc_html__('Accent color', 'uncode') ,
+			'desc' => esc_html__('Specify the accent color.', 'uncode') ,
+			'std' => 'color-vyce',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_body_font_family',
+			'label' => esc_html__('Body font family', 'uncode') ,
+			'desc' => esc_html__('Specify the body font family.', 'uncode') ,
+			'std' => 'font-377884',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $custom_fonts
+		) ,
+		array(
+			'id' => '_uncode_ui_font_family',
+			'label' => esc_html__('UI font family', 'uncode') ,
+			'desc' => esc_html__('Specify the UI font family.', 'uncode') ,
+			'std' => 'font-762333',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $custom_fonts
+		) ,
+		array(
+			'id' => '_uncode_ui_font_weight',
+			'label' => esc_html__('UI font weight', 'uncode') ,
+			'desc' => esc_html__('Specify the UI font weight.', 'uncode') ,
+			'std' => '600',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $title_weight
+		) ,
+		array(
+			'id' => '_uncode_heading_font_family',
+			'label' => esc_html__('Headings font family', 'uncode') ,
+			'desc' => esc_html__('Specify the headings font family.', 'uncode') ,
+			'std' => 'font-377884',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $custom_fonts
+		) ,
+		array(
+			'id' => '_uncode_heading_font_weight',
+			'label' => esc_html__('Headings font weight', 'uncode') ,
+			'desc' => esc_html__('Specify the Headings font weight.', 'uncode') ,
+			'std' => '600',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $title_weight
+		) ,
+		array(
+			'id' => '_uncode_smooth_scroller',
+			'label' => esc_html__('Smooth scroller', 'uncode') ,
+			'desc' => esc_html__('Activate the enhanced smooth scroller.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_input_underline',
+			'label' => esc_html__('Input text underlined', 'uncode') ,
+			'desc' => esc_html__('Activate to style all the input text with the underline.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_style_block_title',
+			'label' => '<i class="fa fa-menu"></i> ' . esc_html__('Menu', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_overlay_menu_style',
+			'label' => esc_html__('Overlay menu skin', 'uncode') ,
+			'desc' => esc_html__('Specify the overlay menu skin.', 'uncode') ,
+			'std' => 'light',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'condition' => '_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'choices' => $stylesArrayMenu
+		) ,
+		array(
+			'id' => '_uncode_menu_color_hover',
+			'label' => esc_html__('Menu highlight color', 'uncode') ,
+			'desc' => esc_html__('Specify the menu active and hover effect color (If not specified an opaque version of the menu color will be used).', 'uncode') ,
+			'std' => '',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_primary_menu_style',
+			'label' => esc_html__('Primary menu skin', 'uncode') ,
+			'desc' => esc_html__('Specify the primary menu skin.', 'uncode') ,
+			'std' => 'light',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'choices' => $stylesArrayMenu
+		) ,
+		array(
+			'id' => '_uncode_primary_submenu_style',
+			'label' => esc_html__('Primary submenu skin', 'uncode') ,
+			'desc' => esc_html__('Specify the primary submenu skin.', 'uncode') ,
+			'std' => 'light',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'choices' => $stylesArrayMenu
+		) ,
+		array(
+			'id' => '_uncode_secondary_menu_style',
+			'label' => esc_html__('Secondary menu skin', 'uncode') ,
+			'desc' => esc_html__('Specify the secondary menu skin.', 'uncode') ,
+			'std' => 'dark',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center)',
+			'operator' => 'or',
+			'choices' => $stylesArrayMenu
+		) ,
+		array(
+			'id' => '_uncode_menu_font_size',
+			'label' => esc_html__('Menu font size', 'uncode') ,
+			'desc' => esc_html__('Specify the menu font size.', 'uncode') ,
+			'std' => '12',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_submenu_font_size',
+			'label' => esc_html__('Submenu font size', 'uncode') ,
+			'desc' => esc_html__('Specify the submenu font size.', 'uncode') ,
+			'std' => '12',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_mobile_font_size',
+			'label' => esc_html__('Mobile menu font size', 'uncode') ,
+			'desc' => esc_html__('Specify the menu font size for mobile.', 'uncode') ,
+			'std' => '12',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_menu_font_family',
+			'label' => esc_html__('Menu font family', 'uncode') ,
+			'desc' => esc_html__('Specify the menu font family.', 'uncode') ,
+			'std' => 'font-762333',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $custom_fonts
+		) ,
+		array(
+			'id' => '_uncode_menu_font_weight',
+			'label' => esc_html__('Menu font weight', 'uncode') ,
+			'desc' => esc_html__('Specify the menu font weight.', 'uncode') ,
+			'std' => '600',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $title_weight
+		) ,
+		array(
+			'id' => '_uncode_custom_content_block_title',
+			'label' => '<i class="fa fa-layout"></i> ' . esc_html__('Content', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_general_style',
+			'label' => esc_html__('Skin', 'uncode') ,
+			'desc' => esc_html__('Specify the content skin.', 'uncode') ,
+			'std' => 'light',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'condition' => '',
+			'operator' => 'and',
+			'choices' => array(
+				array(
+					'value' => 'light',
+					'label' => esc_html__('Light', 'uncode') ,
+					'src' => ''
+				) ,
+				array(
+					'value' => 'dark',
+					'label' => esc_html__('Dark', 'uncode') ,
+					'src' => ''
 				)
-			) ,
-			array(
-				'id' => '_uncode_font_size',
-				'label' => esc_html__('Default font size', 'uncode') ,
-				'desc' => esc_html__('Font size for p,li,dt,dd,dl,address,label,small,pre in <b>px</b>.', 'uncode') ,
-				'std' => '15',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h1',
-				'label' => esc_html__('Font size H1', 'uncode') ,
-				'desc' => esc_html__('Font size for H1 in <b>px</b>.', 'uncode') ,
-				'std' => '35',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h2',
-				'label' => esc_html__('Font size H2', 'uncode') ,
-				'desc' => esc_html__('Font size for H2 in <b>px</b>.', 'uncode') ,
-				'std' => '29',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h3',
-				'label' => esc_html__('Font size H3', 'uncode') ,
-				'desc' => esc_html__('Font size for H3 in <b>px</b>.', 'uncode') ,
-				'std' => '24',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h4',
-				'label' => esc_html__('Font size H4', 'uncode') ,
-				'desc' => esc_html__('Font size for H4 in <b>px</b>.', 'uncode') ,
-				'std' => '20',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h5',
-				'label' => esc_html__('Font size H5', 'uncode') ,
-				'desc' => esc_html__('Font size for H5 in <b>px</b>.', 'uncode') ,
-				'std' => '17',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_h6',
-				'label' => esc_html__('Font size H6', 'uncode') ,
-				'desc' => esc_html__('Font size for H6 in <b>px</b>.', 'uncode') ,
-				'std' => '14',
-				'type' => 'text',
-				'section' => 'uncode_typography_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_font_sizes',
-				'label' => esc_html__('Custom font size', 'uncode') ,
-				'desc' => esc_html__('Define here all the additional font sizes you will need.', 'uncode') ,
-				'std' => '',
-				'type' => 'list-item',
-				'section' => 'uncode_typography_section',
-				'settings' => array(
-					array(
-						'id' => '_uncode_heading_font_size_unique_id',
-						'class' => 'unique_id',
-						'std' => 'fontsize-',
-						'type' => 'text',
-						'label' => esc_html__('Unique font size ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_heading_font_size',
-						'label' => esc_html__('Font size', 'uncode') ,
-						'desc' => esc_html__('Font size in <b>px</b>.', 'uncode') ,
-						'std' => '',
-						'type' => 'text',
-					)
-				)
-			) ,
-			array(
-				'id' => '_uncode_heading_font_heights',
-				'label' => esc_html__('Custom line height', 'uncode') ,
-				'desc' => esc_html__('Define here all the additional font line heights you will need.', 'uncode') ,
-				'std' => '',
-				'type' => 'list-item',
-				'section' => 'uncode_typography_section',
-				'settings' => array(
-					array(
-						'id' => '_uncode_heading_font_height_unique_id',
-						'class' => 'unique_id',
-						'std' => 'fontheight-',
-						'type' => 'text',
-						'label' => esc_html__('Unique font height ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_heading_font_height',
-						'label' => esc_html__('Font line height', 'uncode') ,
-						'desc' => esc_html__('Insert a line height.', 'uncode') ,
-						'std' => '',
-						'type' => 'text',
-					)
-				)
-			) ,
-			array(
-				'id' => '_uncode_heading_font_spacings',
-				'label' => esc_html__('Custom letter spacing', 'uncode') ,
-				'desc' => esc_html__('Define here all the letter spacings you will need.', 'uncode') ,
-				'std' => '',
-				'type' => 'list-item',
-				'section' => 'uncode_typography_section',
-				'settings' => array(
-					array(
-						'id' => '_uncode_heading_font_spacing_unique_id',
-						'class' => 'unique_id',
-						'std' => 'fontspace-',
-						'type' => 'text',
-						'label' => esc_html__('Unique letter spacing ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_heading_font_spacing',
-						'label' => esc_html__('Letter spacing', 'uncode') ,
-						'desc' => esc_html__('Letter spacing with the unit (em or px). Ex. 0.2em', 'uncode') ,
-						'std' => '',
-						'type' => 'text',
-					)
-				)
-			) ,
-			array(
-				'id' => '_uncode_custom_colors_list',
-				'label' => esc_html__('Color palettes', 'uncode') ,
-				'desc' => esc_html__('Define all the colors you will need.', 'uncode') ,
-				'std' => array(
-					array(
-						'title' => esc_html__('Black','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-jevc',
-						'_uncode_custom_color' => '#000000',
-					),
-					array(
-						'title' => esc_html__('Dark 1','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-nhtu',
-						'_uncode_custom_color' => '#101213',
-					),
-					array(
-						'title' => esc_html__('Dark 2','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-wayh',
-						'_uncode_custom_color' => '#141618',
-					),
-					array(
-						'title' => esc_html__('Dark 3','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-rgdb',
-						'_uncode_custom_color' => '#1b1d1f',
-					),
-					array(
-						'title' => esc_html__('Dark 4','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-prif',
-						'_uncode_custom_color' => '#303133',
-					),
-					array(
-						'title' => esc_html__('White','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-xsdn',
-						'_uncode_custom_color' => '#ffffff',
-					),
-					array(
-						'title' => esc_html__('Light 1','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-lxmt',
-						'_uncode_custom_color' => '#f7f7f7',
-					),
-					array(
-						'title' => esc_html__('Light 2','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-gyho',
-						'_uncode_custom_color' => '#eaeaea',
-					),
-					array(
-						'title' => esc_html__('Light 3','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-uydo',
-						'_uncode_custom_color' => '#dddddd',
-					),
-					array(
-						'title' => esc_html__('Light 4','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-wvjs',
-						'_uncode_custom_color' => '#777',
-					),
-					array(
-						'title' => esc_html__('Cerulean','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-vyce',
-						'_uncode_custom_color' => '#0cb4ce',
-					),
-						array(
-						'title' => esc_html__('International Orange','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-dfgh',
-						'_uncode_custom_color' => '#FF590A',
-					),
-						array(
-						'title' => esc_html__('Malachite','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-iopl',
-						'_uncode_custom_color' => '#0CCE50',
-					),
-						array(
-						'title' => esc_html__('Sunglow','uncode'),
-						'_uncode_custom_color_unique_id' => 'color-zsdf',
-						'_uncode_custom_color' => '#FFC42E',
-					),
-				),
-				'type' => 'list-item',
-				'section' => 'uncode_colors_section',
-				'class' => 'list-colors',
-				'settings' => array(
-					array(
-						'id' => '_uncode_custom_color_unique_id',
-						'std' => 'color-',
-						'class' => 'unique_id',
-						'type' => 'text',
-						'label' => esc_html__('Unique color ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_custom_color_regular',
-						'label' => esc_html__('Monochrome', 'uncode') ,
-						'desc' => esc_html__('Activate to assign a monochromatic color, otherwise a gradient will be used.', 'uncode') ,
-						'std' => 'on',
-						'type' => 'on-off',
-						'section' => 'uncode_customize_section',
-					) ,
-					array(
-						'id' => '_uncode_custom_color',
-						'label' => esc_html__('Colorpicker', 'uncode') ,
-						'desc' => esc_html__('Specify the color for this palette. You can also define a color with the alpha value.', 'uncode') ,
-						'std' => '',
-						'type' => 'colorpicker',
-						'condition' => '_uncode_custom_color_regular:is(on)',
-					) ,
-					array(
-						'id' => '_uncode_custom_color_gradient',
-						'label' => esc_html__('Gradient', 'uncode') ,
-						'desc' => esc_html__('Specify the gradient color for this palette. NB. You can use a gradient color only as a background color.', 'uncode') ,
-						'std' => '',
-						'type' => 'gradientpicker',
-						'condition' => '_uncode_custom_color_regular:is(off)',
-					) ,
-				)
-			) ,
-			array(
-				'id' => '_uncode_custom_light_block_title',
-				'label' => '<i class="fa fa-square-o"></i> ' . esc_html__('Light skin', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_logo_color_light',
-				'label' => esc_html__('SVG/Text logo color', 'uncode') ,
-				'desc' => esc_html__('Specify the logo color if it\'s a SVG or textual.', 'uncode') ,
-				'std' => 'color-prif',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_color_light',
-				'label' => esc_html__('Menu text color', 'uncode') ,
-				'desc' => esc_html__('Specify the menu text color.', 'uncode') ,
-				'std' => 'color-prif',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_bg_color_light',
-				'label' => esc_html__('Primary menu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary menu background color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_bg_alpha_light',
-				'label' => esc_html__('Primary menu background opacity', 'uncode') ,
-				'desc' => esc_html__('Adjust the primary menu background transparency.', 'uncode') ,
-				'std' => '100',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_submenu_bg_color_light',
-				'label' => esc_html__('Primary submenu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary submenu text color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_border_color_light',
-				'label' => esc_html__('Primary menu border color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary menu border color.', 'uncode') ,
-				'std' => 'color-gyho',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_border_alpha_light',
-				'label' => esc_html__('Primary menu border opacity', 'uncode') ,
-				'desc' => esc_html__('Adjust the primary menu border transparency.', 'uncode') ,
-				'std' => '100',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_secmenu_bg_color_light',
-				'label' => esc_html__('Secondary menu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the secondary menu background color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_color_light',
-				'label' => esc_html__('Headings color', 'uncode') ,
-				'desc' => esc_html__('Specify the headings text color.', 'uncode') ,
-				'std' => 'color-prif',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_text_color_light',
-				'label' => esc_html__('Content text color', 'uncode') ,
-				'desc' => esc_html__('Specify the content area text color.', 'uncode') ,
-				'std' => 'color-wvjs',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_background_color_light',
-				'label' => esc_html__('Content background color', 'uncode') ,
-				'desc' => esc_html__('Specify the content background color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_custom_dark_block_title',
-				'label' => '<i class="fa fa-square"></i> ' . esc_html__('Dark skin', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_logo_color_dark',
-				'label' => esc_html__('SVG/Text logo color', 'uncode') ,
-				'desc' => esc_html__('Specify the logo color if it\'s a SVG or textual.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_color_dark',
-				'label' => esc_html__('Menu text color', 'uncode') ,
-				'desc' => esc_html__('Specify the menu text color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_bg_color_dark',
-				'label' => esc_html__('Primary menu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary menu background color.', 'uncode') ,
-				'std' => 'color-wayh',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_bg_alpha_dark',
-				'label' => esc_html__('Primary menu background opacity', 'uncode') ,
-				'desc' => esc_html__('Adjust the primary menu background transparency.', 'uncode') ,
-				'std' => '100',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_submenu_bg_color_dark',
-				'label' => esc_html__('Primary submenu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary submenu text color.', 'uncode') ,
-				'std' => 'color-rgdb',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_border_color_dark',
-				'label' => esc_html__('Primary menu border color', 'uncode') ,
-				'desc' => esc_html__('Specify the primary menu border color.', 'uncode') ,
-				'std' => 'color-prif',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_border_alpha_dark',
-				'label' => esc_html__('Primary menu border opacity', 'uncode') ,
-				'desc' => esc_html__('Adjust the primary menu border transparency.', 'uncode') ,
-				'std' => '100',
-				'type' => 'numeric-slider',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_secmenu_bg_color_dark',
-				'label' => esc_html__('Secondary menu background color', 'uncode') ,
-				'desc' => esc_html__('Specify the secondary menu background color.', 'uncode') ,
-				'std' => 'color-wayh',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_heading_color_dark',
-				'label' => esc_html__('Headings color', 'uncode') ,
-				'desc' => esc_html__('Specify the headings text color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_text_color_dark',
-				'label' => esc_html__('Content text color', 'uncode') ,
-				'desc' => esc_html__('Specify the content area text color.', 'uncode') ,
-				'std' => 'color-xsdn',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_background_color_dark',
-				'label' => esc_html__('Content background color', 'uncode') ,
-				'desc' => esc_html__('Specify the content background color.', 'uncode') ,
-				'std' => 'color-wayh',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_custom_general_block_title',
-				'label' => '<i class="fa fa-globe3"></i> ' . esc_html__('General', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_body_background',
-				'label' => esc_html__('HTML body background', 'uncode') ,
-				'desc' => esc_html__('Specify the body background color and media.', 'uncode') ,
-				'type' => 'background',
-				'std' => array(
-					'background-color' => 'color-lxmt',
-					'background-repeat' => '',
-					'background-attachment' => '',
-					'background-position' => '',
-					'background-size' => '',
-					'background-image' => '',
-				),
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_accent_color',
-				'label' => esc_html__('Accent color', 'uncode') ,
-				'desc' => esc_html__('Specify the accent color.', 'uncode') ,
-				'std' => 'color-vyce',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_body_font_family',
-				'label' => esc_html__('Body font family', 'uncode') ,
-				'desc' => esc_html__('Specify the body font family.', 'uncode') ,
-				'std' => 'font-377884',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $custom_fonts
-			) ,
-			array(
-				'id' => '_uncode_ui_font_family',
-				'label' => esc_html__('UI font family', 'uncode') ,
-				'desc' => esc_html__('Specify the UI font family.', 'uncode') ,
-				'std' => 'font-762333',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $custom_fonts
-			) ,
-			array(
-				'id' => '_uncode_ui_font_weight',
-				'label' => esc_html__('UI font weight', 'uncode') ,
-				'desc' => esc_html__('Specify the UI font weight.', 'uncode') ,
-				'std' => '600',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $title_weight
-			) ,
-			array(
-				'id' => '_uncode_heading_font_family',
-				'label' => esc_html__('Headings font family', 'uncode') ,
-				'desc' => esc_html__('Specify the headings font family.', 'uncode') ,
-				'std' => 'font-377884',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $custom_fonts
-			) ,
-			array(
-				'id' => '_uncode_heading_font_weight',
-				'label' => esc_html__('Headings font weight', 'uncode') ,
-				'desc' => esc_html__('Specify the Headings font weight.', 'uncode') ,
-				'std' => '600',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $title_weight
-			) ,
-			array(
-				'id' => '_uncode_smooth_scroller',
-				'label' => esc_html__('Smooth scroller', 'uncode') ,
-				'desc' => esc_html__('Activate the enhanced smooth scroller.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_style_block_title',
-				'label' => '<i class="fa fa-menu"></i> ' . esc_html__('Menu', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_overlay_menu_style',
-				'label' => esc_html__('Overlay menu skin', 'uncode') ,
-				'desc' => esc_html__('Specify the overlay menu skin.', 'uncode') ,
-				'std' => 'light',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'condition' => '_uncode_headers:is(menu-overlay)',
-				'choices' => $stylesArrayMenu
-			) ,
-			array(
-				'id' => '_uncode_menu_color_hover',
-				'label' => esc_html__('Menu highlight color', 'uncode') ,
-				'desc' => esc_html__('Specify the menu active and hover effect color (If not specified an opaque version of the menu color will be used).', 'uncode') ,
-				'std' => '',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_primary_menu_style',
-				'label' => esc_html__('Primary menu skin', 'uncode') ,
-				'desc' => esc_html__('Specify the primary menu skin.', 'uncode') ,
-				'std' => 'light',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'choices' => $stylesArrayMenu
-			) ,
-			array(
-				'id' => '_uncode_primary_submenu_style',
-				'label' => esc_html__('Primary submenu skin', 'uncode') ,
-				'desc' => esc_html__('Specify the primary submenu skin.', 'uncode') ,
-				'std' => 'light',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'choices' => $stylesArrayMenu
-			) ,
-			array(
-				'id' => '_uncode_secondary_menu_style',
-				'label' => esc_html__('Secondary menu skin', 'uncode') ,
-				'desc' => esc_html__('Specify the secondary menu skin.', 'uncode') ,
-				'std' => 'dark',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center)',
-				'operator' => 'or',
-				'choices' => $stylesArrayMenu
-			) ,
-			array(
-				'id' => '_uncode_menu_font_size',
-				'label' => esc_html__('Menu font size', 'uncode') ,
-				'desc' => esc_html__('Specify the menu font size.', 'uncode') ,
-				'std' => '12',
-				'type' => 'text',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_submenu_font_size',
-				'label' => esc_html__('Submenu font size', 'uncode') ,
-				'desc' => esc_html__('Specify the submenu font size.', 'uncode') ,
-				'std' => '12',
-				'type' => 'text',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_mobile_font_size',
-				'label' => esc_html__('Mobile menu font size', 'uncode') ,
-				'desc' => esc_html__('Specify the menu font size for mobile.', 'uncode') ,
-				'std' => '12',
-				'type' => 'text',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_menu_font_family',
-				'label' => esc_html__('Menu font family', 'uncode') ,
-				'desc' => esc_html__('Specify the menu font family.', 'uncode') ,
-				'std' => 'font-762333',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $custom_fonts
-			) ,
-			array(
-				'id' => '_uncode_menu_font_weight',
-				'label' => esc_html__('Menu font weight', 'uncode') ,
-				'desc' => esc_html__('Specify the menu font weight.', 'uncode') ,
-				'std' => '600',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $title_weight
-			) ,
-			array(
-				'id' => '_uncode_custom_content_block_title',
-				'label' => '<i class="fa fa-layout"></i> ' . esc_html__('Content', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_general_style',
-				'label' => esc_html__('Skin', 'uncode') ,
-				'desc' => esc_html__('Specify the content skin.', 'uncode') ,
-				'std' => 'light',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'condition' => '',
-				'operator' => 'and',
-				'choices' => array(
-					array(
-						'value' => 'light',
-						'label' => esc_html__('Light', 'uncode') ,
-						'src' => ''
-					) ,
-					array(
-						'value' => 'dark',
-						'label' => esc_html__('Dark', 'uncode') ,
-						'src' => ''
-					)
-				)
-			) ,
-			array(
-				'id' => '_uncode_general_bg_color',
-				'label' => esc_html__('Background color', 'uncode') ,
-				'desc' => esc_html__('Specify a custom content background color.', 'uncode') ,
-				'std' => '',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_custom_buttons_block_title',
-				'label' => '<i class="fa fa-download3"></i> ' . esc_html__('Buttons', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_buttons_font_family',
-				'label' => esc_html__('Buttons font family', 'uncode') ,
-				'desc' => esc_html__('Specify the buttons font family.', 'uncode') ,
-				'std' => 'font-762333',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $custom_fonts
-			) ,
-			array(
-				'id' => '_uncode_buttons_font_weight',
-				'label' => esc_html__('Buttons font weight', 'uncode') ,
-				'desc' => esc_html__('Specify the buttons font weight.', 'uncode') ,
-				'std' => '600',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => $title_weight
-			) ,
-			array(
-				'id' => '_uncode_buttons_text_transform',
-				'label' => esc_html__('Buttons text transform', 'uncode') ,
-				'desc' => esc_html__('Specify the buttons text transform.', 'uncode') ,
-				'std' => 'uppercase',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'operator' => 'or',
-				'choices' => array(
-					array(
-						'value' => 'uppercase',
-						'label' => esc_html__('Uppercase', 'uncode') ,
-					) ,
-					array(
-						'value' => 'lowercase',
-						'label' => esc_html__('Lowercase', 'uncode') ,
-					) ,
-					array(
-						'value' => 'capitalize',
-						'label' => esc_html__('Capitalize', 'uncode') ,
-					) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_general_bg_color',
+			'label' => esc_html__('Background color', 'uncode') ,
+			'desc' => esc_html__('Specify a custom content background color.', 'uncode') ,
+			'std' => '',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_custom_buttons_block_title',
+			'label' => '<i class="fa fa-download3"></i> ' . esc_html__('Buttons', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_buttons_font_family',
+			'label' => esc_html__('Buttons font family', 'uncode') ,
+			'desc' => esc_html__('Specify the buttons font family.', 'uncode') ,
+			'std' => 'font-762333',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $custom_fonts
+		) ,
+		array(
+			'id' => '_uncode_buttons_font_weight',
+			'label' => esc_html__('Buttons font weight', 'uncode') ,
+			'desc' => esc_html__('Specify the buttons font weight.', 'uncode') ,
+			'std' => '600',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => $title_weight
+		) ,
+		array(
+			'id' => '_uncode_buttons_text_transform',
+			'label' => esc_html__('Buttons text transform', 'uncode') ,
+			'desc' => esc_html__('Specify the buttons text transform.', 'uncode') ,
+			'std' => 'uppercase',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'choices' => array(
+				array(
+					'value' => 'uppercase',
+					'label' => esc_html__('Uppercase', 'uncode') ,
+				) ,
+				array(
+					'value' => 'lowercase',
+					'label' => esc_html__('Lowercase', 'uncode') ,
+				) ,
+				array(
+					'value' => 'capitalize',
+					'label' => esc_html__('Capitalize', 'uncode') ,
 				) ,
 			) ,
-			array(
-				'id' => '_uncode_footer_style_block_title',
-				'label' => '<i class="fa fa-ellipsis"></i> ' . esc_html__('Footer', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_last_style',
-				'label' => esc_html__('Copyright area skin', 'uncode') ,
-				'desc' => esc_html__('Specify the copyright area skin color.', 'uncode') ,
-				'std' => 'dark',
-				'type' => 'select',
-				'section' => 'uncode_customize_section',
-				'condition' => '',
-				'operator' => 'and',
-				'choices' => $stylesArrayMenu
-			) ,
-			array(
-				'id' => '_uncode_footer_bg_color',
-				'label' => esc_html__('Copyright area custom background color', 'uncode') ,
-				'desc' => esc_html__('Specify a custom copyright area background color.', 'uncode') ,
-				'std' => '',
-				'type' => 'uncode_color',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_custom_portfolio_block_title',
-				'label' => '<i class="fa fa-briefcase3"></i> ' . ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_portfolio_cpt',
-				'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT label', 'uncode') ,
-				'desc' => esc_html__('Enter a custom portfolio post type label.', 'uncode') ,
-				'std' => 'portfolio',
-				'type' => 'text',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_portfolio_cpt_slug',
-				'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT slug', 'uncode') ,
-				'desc' => esc_html__('Enter a custom portfolio post type slug.', 'uncode') ,
-				'std' => 'portfolio',
-				'type' => 'text',
-				'section' => 'uncode_customize_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_layout_block_title',
-				'label' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_full',
-				'label' => esc_html__('Footer full width', 'uncode') ,
-				'desc' => esc_html__('Expand the footer to full width.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_footer_section',
-				'condition' => '_uncode_boxed:is(off)',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_footer_content_block_title',
-				'label' => '<i class="fa fa-cog2"></i> ' . esc_html__('Widget area', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_block',
-				'label' => esc_html__('Content Block', 'uncode') ,
-				'desc' => esc_html__('Specify the Content Block to use as a footer content.', 'uncode') ,
-				'std' => '',
-				'type' => 'custom-post-type-select',
-				'section' => 'uncode_footer_section',
-				'post_type' => 'uncodeblock',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_footer_last_block_title',
-				'label' => '&copy; ' . esc_html__('Copyright area', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_copyright',
-				'label' => esc_html__('Automatic copyright text', 'uncode') ,
-				'desc' => esc_html__('Activate to use an automatic copyright text.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_text',
-				'label' => esc_html__('Custom copyright text', 'uncode') ,
-				'desc' => esc_html__('Insert a custom text for the footer copyright area.', 'uncode') ,
-				'type' => 'textarea',
-				'section' => 'uncode_footer_section',
-				'operator' => 'or',
-				'condition' => '_uncode_footer_copyright:is(off)',
-			) ,
-			array(
-				'id' => '_uncode_footer_position',
-				'label' => esc_html__('Content alignment', 'uncode') ,
-				'desc' => esc_html__('Specify the footer copyright text alignment.', 'uncode') ,
-				'std' => 'left',
-				'type' => 'select',
-				'section' => 'uncode_footer_section',
-				'choices' => array(
-					array(
-						'value' => 'left',
-						'label' => esc_html__('Left', 'uncode')
-					) ,
-					array(
-						'value' => 'center',
-						'label' => esc_html__('Center', 'uncode')
-					) ,
-					array(
-						'value' => 'right',
-						'label' => esc_html__('Right', 'uncode')
-					)
+		) ,
+		array(
+			'id' => '_uncode_footer_style_block_title',
+			'label' => '<i class="fa fa-ellipsis"></i> ' . esc_html__('Footer', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_last_style',
+			'label' => esc_html__('Copyright area skin', 'uncode') ,
+			'desc' => esc_html__('Specify the copyright area skin color.', 'uncode') ,
+			'std' => 'dark',
+			'type' => 'select',
+			'section' => 'uncode_customize_section',
+			'condition' => '',
+			'operator' => 'and',
+			'choices' => $stylesArrayMenu
+		) ,
+		array(
+			'id' => '_uncode_footer_bg_color',
+			'label' => esc_html__('Copyright area custom background color', 'uncode') ,
+			'desc' => esc_html__('Specify a custom copyright area background color.', 'uncode') ,
+			'std' => '',
+			'type' => 'uncode_color',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_custom_portfolio_block_title',
+			'label' => '<i class="fa fa-briefcase3"></i> ' . ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_portfolio_cpt',
+			'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT label', 'uncode') ,
+			'desc' => esc_html__('Enter a custom portfolio post type label.', 'uncode') ,
+			'std' => 'portfolio',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_portfolio_cpt_slug',
+			'label' => ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT slug', 'uncode') ,
+			'desc' => esc_html__('Enter a custom portfolio post type slug.', 'uncode') ,
+			'std' => 'portfolio',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_layout_block_title',
+			'label' => '<i class="fa fa-layers"></i> ' . esc_html__('Layout', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_full',
+			'label' => esc_html__('Footer full width', 'uncode') ,
+			'desc' => esc_html__('Expand the footer to full width.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_footer_section',
+			'condition' => '_uncode_boxed:is(off)',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_footer_content_block_title',
+			'label' => '<i class="fa fa-cog2"></i> ' . esc_html__('Widget area', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_block',
+			'label' => esc_html__('Content Block', 'uncode') ,
+			'desc' => esc_html__('Specify the Content Block to use as a footer content.', 'uncode') ,
+			'std' => '',
+			'type' => 'custom-post-type-select',
+			'section' => 'uncode_footer_section',
+			'post_type' => 'uncodeblock',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_footer_last_block_title',
+			'label' => '&copy; ' . esc_html__('Copyright area', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_copyright',
+			'label' => esc_html__('Automatic copyright text', 'uncode') ,
+			'desc' => esc_html__('Activate to use an automatic copyright text.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_text',
+			'label' => esc_html__('Custom copyright text', 'uncode') ,
+			'desc' => esc_html__('Insert a custom text for the footer copyright area.', 'uncode') ,
+			'type' => 'textarea',
+			'section' => 'uncode_footer_section',
+			'operator' => 'or',
+			'condition' => '_uncode_footer_copyright:is(off)',
+		) ,
+		array(
+			'id' => '_uncode_footer_position',
+			'label' => esc_html__('Content alignment', 'uncode') ,
+			'desc' => esc_html__('Specify the footer copyright text alignment.', 'uncode') ,
+			'std' => 'left',
+			'type' => 'select',
+			'section' => 'uncode_footer_section',
+			'choices' => array(
+				array(
+					'value' => 'left',
+					'label' => esc_html__('Left', 'uncode')
+				) ,
+				array(
+					'value' => 'center',
+					'label' => esc_html__('Center', 'uncode')
+				) ,
+				array(
+					'value' => 'right',
+					'label' => esc_html__('Right', 'uncode')
 				)
-			) ,
-			array(
-				'id' => '_uncode_footer_social',
-				'label' => esc_html__('Social links', 'uncode') ,
-				'desc' => esc_html__('Activate to have the social icons in the footer copyright area.', 'uncode') ,
-				'type' => 'on-off',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_add_block_title',
-				'label' => '<i class="fa fa-square-plus"></i> ' . esc_html__('Additionals', 'uncode') ,
-				'type' => 'textblock-titled',
-				'class' => 'section-title',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_uparrow',
-				'label' => esc_html__('Scroll up button', 'uncode') ,
-				'desc' => esc_html__('Activate to add a scroll up button in the footer.', 'uncode') ,
-				'type' => 'on-off',
-				'std' => 'on',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_footer_uparrow_mobile',
-				'label' => esc_html__('Scroll up button on mobile', 'uncode') ,
-				'desc' => esc_html__('Activate to add a scroll up button in the footer for mobile devices.', 'uncode') ,
-				'type' => 'on-off',
-				'std' => 'on',
-				'condition' => '_uncode_footer_uparrow:is(on)',
-				'operator' => 'and',
-				'section' => 'uncode_footer_section',
-			) ,
-			array(
-				'id' => '_uncode_social_list',
-				'label' => esc_html__('Social Networks', 'uncode') ,
-				'desc' => esc_html__('Define here all the social networks you will need.', 'uncode') ,
-				'type' => 'list-item',
-				'section' => 'uncode_connections_section',
-				'class' => 'list-social',
-				'settings' => array(
-					array(
-						'id' => '_uncode_social_unique_id',
-						'class' => 'unique_id',
-						'std' => 'social-',
-						'type' => 'text',
-						'label' => esc_html__('Unique social ID','uncode'),
-						'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
-					),
-					array(
-						'id' => '_uncode_social',
-						'label' => esc_html__('Social Network Icon', 'uncode') ,
-						'desc' => esc_html__('Specify the social network icon.', 'uncode') ,
-						'type' => 'text',
-						'class' => 'button_icon_container',
-					) ,
-					array(
-						'id' => '_uncode_link',
-						'label' => esc_html__('Social Network Link', 'uncode') ,
-						'desc' => esc_html__('Enter your social network link.', 'uncode') ,
-						'std' => '',
-						'type' => 'text',
-						'condition' => '',
-						'operator' => 'and'
-					) ,
-					array(
-						'id' => '_uncode_menu_hidden',
-						'label' => esc_html__('Hide In The Menu', 'uncode') ,
-						'desc' => esc_html__('Activate to hide the social icon in the menu (if the social connections in the menu is active).', 'uncode') ,
-						'std' => 'off',
-						'type' => 'on-off',
-						'condition' => '',
-						'operator' => 'and'
-					) ,
-				)
-			) ,
-			array(
-				'id' => '_uncode_custom_css',
-				'label' => esc_html__('CSS', 'uncode') ,
-				'desc' => esc_html__('Enter here your custom CSS.', 'uncode') ,
-				'std' => '',
-				'type' => 'css',
-				'section' => 'uncode_cssjs_section',
-				'rows' => '20',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_custom_js',
-				'label' => esc_html__('Javascript', 'uncode') ,
-				'desc' => esc_html__('Enter here your custom Javacript code.', 'uncode') ,
-				'std' => '',
-				'type' => 'textarea-simple',
-				'section' => 'uncode_cssjs_section',
-				'rows' => '20',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_adaptive',
-				'label' => esc_html__('Adaptive images', 'uncode') ,
-				'desc' => esc_html__('Activate to take advantage of the Adaptive Images system. Adaptive Images detects your visitor\'s screen size and automatically delivers device appropriate re-scaled images.', 'uncode') ,
-				'std' => 'on',
-				'type' => 'on-off',
-				'section' => 'uncode_performance_section',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_adaptive_async',
-				'label' => esc_html__('Asynchronous adaptive image system', 'uncode') ,
-				'desc' => esc_html__('Activate to load the adaptive images asynchronously, this will improve the loading performance and it\'s necessary if using an aggresive caching system.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_performance_section',
-				'operator' => 'or',
-				'condition' => '_uncode_adaptive:is(on)',
-			) ,
-			array(
-				'id' => '_uncode_adaptive_async_blur',
-				'label' => esc_html__('Asynchronous loading blur effect', 'uncode') ,
-				'desc' => esc_html__('Activate to use a bluring effect when loading the images.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_performance_section',
-				'operator' => 'and',
-				'condition' => '_uncode_adaptive:is(on),_uncode_adaptive_async:is(on)',
-			) ,
-			array(
-				'id' => '_uncode_adaptive_quality',
-				'label' => esc_html__('Image quality', 'uncode') ,
-				'desc' => esc_html__('Adjust the images compression quality.', 'uncode') ,
-				'std' => '90',
-				'type' => 'numeric-slider',
-				'min_max_step'=> '60,100,1',
-				'section' => 'uncode_performance_section',
-				'operator' => 'or',
-				'condition' => '_uncode_adaptive:is(on)',
-			) ,
-			array(
-				'id' => '_uncode_adaptive_sizes',
-				'label' => esc_html__('Image sizes range', 'uncode') ,
-				'desc' => esc_html__('Enter all the image sizes you want use for the Adaptive Images system. NB. The values needs to be comma separated.', 'uncode') ,
-				'type' => 'text',
-				'std' => '516,720,1032,1440,2064,2880',
-				'section' => 'uncode_performance_section',
-				'operator' => 'or',
-				'condition' => '_uncode_adaptive:is(on)',
-			) ,
-			array(
-				'id' => '_uncode_htaccess',
-				'label' => esc_html__('Apache Server Configs', 'uncode') ,
-				'desc' => esc_html__('Activate the enhanced .htaccess, this will improve the web site\'s performance and security.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_performance_section',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_production',
-				'label' => esc_html__('Production mode', 'uncode') ,
-				'desc' => esc_html__('Activate this to switch to production mode, the CSS and JS will be cached by the browser and the JS minified.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_performance_section',
-				'condition' => '',
-				'operator' => 'and'
-			) ,
-			array(
-				'id' => '_uncode_redirect',
-				'label' => esc_html__('Activate page redirect', 'uncode') ,
-				'desc' => esc_html__('Activate to redirect all the website calls to a specific page. NB. This can only be visible when the user is not logged in.', 'uncode') ,
-				'std' => 'off',
-				'type' => 'on-off',
-				'section' => 'uncode_redirect_section',
-			) ,
-			array(
-				'id' => '_uncode_redirect_page',
-				'label' => esc_html__('Redirect page', 'uncode') ,
-				'desc' => esc_html__('Specify the redirect page. NB. This page will be presented without menu and footer.', 'uncode') ,
-				'type' => 'page_select',
-				'section' => 'uncode_redirect_section',
-				'post_type' => 'page',
-				'condition' => '_uncode_redirect:is(on)',
-				'operator' => 'and'
-			) ,
-		)
+			)
+		) ,
+		array(
+			'id' => '_uncode_footer_social',
+			'label' => esc_html__('Social links', 'uncode') ,
+			'desc' => esc_html__('Activate to have the social icons in the footer copyright area.', 'uncode') ,
+			'type' => 'on-off',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_add_block_title',
+			'label' => '<i class="fa fa-square-plus"></i> ' . esc_html__('Additionals', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_uparrow',
+			'label' => esc_html__('Scroll up button', 'uncode') ,
+			'desc' => esc_html__('Activate to add a scroll up button in the footer.', 'uncode') ,
+			'type' => 'on-off',
+			'std' => 'on',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_footer_uparrow_mobile',
+			'label' => esc_html__('Scroll up button on mobile', 'uncode') ,
+			'desc' => esc_html__('Activate to add a scroll up button in the footer for mobile devices.', 'uncode') ,
+			'type' => 'on-off',
+			'std' => 'on',
+			'condition' => '_uncode_footer_uparrow:is(on)',
+			'operator' => 'and',
+			'section' => 'uncode_footer_section',
+		) ,
+		array(
+			'id' => '_uncode_social_list',
+			'label' => esc_html__('Social Networks', 'uncode') ,
+			'desc' => esc_html__('Define here all the social networks you will need.', 'uncode') ,
+			'type' => 'list-item',
+			'section' => 'uncode_connections_section',
+			'class' => 'list-social',
+			'settings' => array(
+				array(
+					'id' => '_uncode_social_unique_id',
+					'class' => 'unique_id',
+					'std' => 'social-',
+					'type' => 'text',
+					'label' => esc_html__('Unique social ID','uncode'),
+					'desc' => esc_html__('This value is created automatically and it shouldn\'t be edited unless you know what you are doing.','uncode'),
+				),
+				array(
+					'id' => '_uncode_social',
+					'label' => esc_html__('Social Network Icon', 'uncode') ,
+					'desc' => esc_html__('Specify the social network icon.', 'uncode') ,
+					'type' => 'text',
+					'class' => 'button_icon_container',
+				) ,
+				array(
+					'id' => '_uncode_link',
+					'label' => esc_html__('Social Network Link', 'uncode') ,
+					'desc' => esc_html__('Enter your social network link.', 'uncode') ,
+					'std' => '',
+					'type' => 'text',
+					'condition' => '',
+					'operator' => 'and'
+				) ,
+				array(
+					'id' => '_uncode_menu_hidden',
+					'label' => esc_html__('Hide In The Menu', 'uncode') ,
+					'desc' => esc_html__('Activate to hide the social icon in the menu (if the social connections in the menu is active).', 'uncode') ,
+					'std' => 'off',
+					'type' => 'on-off',
+					'condition' => '',
+					'operator' => 'and'
+				) ,
+			)
+		) ,
+		array(
+			'id' => '_uncode_gmaps_api',
+			'label' => esc_html__('Google Maps API KEY', 'uncode') ,
+			'desc' => sprintf( wp_kses(__( 'To use Uncode custom styled Google Maps you need to create <a href="%s" target="_blank">here the Google API KEY</a> and paste it in this field.', 'uncode' ), array( 'a' => array( 'href' => array(),'target' => array() ) ) ), 'https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key' ),
+			'type' => 'text',
+			'section' => 'uncode_gmaps_section',
+		) ,
+		array(
+			'id' => '_uncode_custom_css',
+			'label' => esc_html__('CSS', 'uncode') ,
+			'desc' => esc_html__('Enter here your custom CSS.', 'uncode') ,
+			'std' => '',
+			'type' => 'css',
+			'section' => 'uncode_cssjs_section',
+			'rows' => '20',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_custom_js',
+			'label' => esc_html__('Javascript', 'uncode') ,
+			'desc' => esc_html__('Enter here your custom Javacript code.', 'uncode') ,
+			'std' => '',
+			'type' => 'textarea-simple',
+			'section' => 'uncode_cssjs_section',
+			'rows' => '20',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_adaptive',
+			'label' => esc_html__('Adaptive images', 'uncode') ,
+			'desc' => esc_html__('Activate to take advantage of the Adaptive Images system. Adaptive Images detects your visitor\'s screen size and automatically delivers device appropriate re-scaled images.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_performance_section',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_adaptive_async',
+			'label' => esc_html__('Asynchronous adaptive image system', 'uncode') ,
+			'desc' => esc_html__('Activate to load the adaptive images asynchronously, this will improve the loading performance and it\'s necessary if using an aggresive caching system.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_performance_section',
+			'operator' => 'or',
+			'condition' => '_uncode_adaptive:is(on)',
+		) ,
+		array(
+			'id' => '_uncode_adaptive_async_blur',
+			'label' => esc_html__('Asynchronous loading blur effect', 'uncode') ,
+			'desc' => esc_html__('Activate to use a bluring effect when loading the images.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_performance_section',
+			'operator' => 'and',
+			'condition' => '_uncode_adaptive:is(on),_uncode_adaptive_async:is(on)',
+		) ,
+		array(
+			'id' => '_uncode_adaptive_quality',
+			'label' => esc_html__('Image quality', 'uncode') ,
+			'desc' => esc_html__('Adjust the images compression quality.', 'uncode') ,
+			'std' => '90',
+			'type' => 'numeric-slider',
+			'min_max_step'=> '60,100,1',
+			'section' => 'uncode_performance_section',
+			'operator' => 'or',
+			'condition' => '_uncode_adaptive:is(on)',
+		) ,
+		array(
+			'id' => '_uncode_adaptive_sizes',
+			'label' => esc_html__('Image sizes range', 'uncode') ,
+			'desc' => esc_html__('Enter all the image sizes you want use for the Adaptive Images system. NB. The values needs to be comma separated.', 'uncode') ,
+			'type' => 'text',
+			'std' => '258,516,720,1032,1440,2064,2880',
+			'section' => 'uncode_performance_section',
+			'operator' => 'or',
+			'condition' => '_uncode_adaptive:is(on)',
+		) ,
+		array(
+			'id' => '_uncode_htaccess',
+			'label' => esc_html__('Apache Server Configs', 'uncode') ,
+			'desc' => esc_html__('Activate the enhanced .htaccess, this will improve the web site\'s performance and security.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_performance_section',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_production',
+			'label' => esc_html__('Production mode', 'uncode') ,
+			'desc' => esc_html__('Activate this to switch to production mode, the CSS and JS will be cached by the browser and the JS minified.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_performance_section',
+			'condition' => '',
+			'operator' => 'and'
+		) ,
+		array(
+			'id' => '_uncode_redirect',
+			'label' => esc_html__('Activate page redirect', 'uncode') ,
+			'desc' => esc_html__('Activate to redirect all the website calls to a specific page. NB. This can only be visible when the user is not logged in.', 'uncode') ,
+			'std' => 'off',
+			'type' => 'on-off',
+			'section' => 'uncode_redirect_section',
+		) ,
+		array(
+			'id' => '_uncode_redirect_page',
+			'label' => esc_html__('Redirect page', 'uncode') ,
+			'desc' => esc_html__('Specify the redirect page. NB. This page will be presented without menu and footer.', 'uncode') ,
+			'type' => 'page_select',
+			'section' => 'uncode_redirect_section',
+			'post_type' => 'page',
+			'condition' => '_uncode_redirect:is(on)',
+			'operator' => 'and'
+		) ,
+	);
+
+	$custom_settings_one = array_merge( $custom_settings_one, $custom_settings_three );
+
+	$custom_settings = array(
+		'sections' => $custom_settings_section_one,
+		'settings' => $custom_settings_one,
 	);
 
 	if (class_exists('WooCommerce'))
@@ -3816,6 +4141,7 @@ function custom_theme_options()
 			str_replace('%section%', 'product', $show_breadcrumb),
 			str_replace('%section%', 'product', $breadcrumb_align),
 			str_replace('%section%', 'product', $show_title),
+			str_replace('%section%', 'product', $body_uncode_block_after),
 			str_replace('%section%', 'product', $navigation_section_title),
 			str_replace('%section%', 'product', $navigation_activate),
 			str_replace('%section%', 'product', $navigation_page_index),
@@ -3824,6 +4150,8 @@ function custom_theme_options()
 			str_replace('%section%', 'product', $footer_section_title),
 			str_replace('%section%', 'product', $footer_uncode_block),
 			str_replace('%section%', 'product', $footer_width),
+			str_replace('%section%', 'product', $custom_fields_section_title),
+			str_replace('%section%', 'product', $custom_fields_list),
 			/////////////////////////
 			//  Products Index		///
 			/////////////////////////
@@ -3868,7 +4196,7 @@ function custom_theme_options()
 			str_replace('%section%', 'product_index', $show_breadcrumb),
 			str_replace('%section%', 'product_index', $breadcrumb_align),
 			str_replace('%section%', 'product_index', $body_uncode_block),
-			str_replace('%section%', 'product_index', run_array_to($body_layout_width, 'condition', '_uncode_%section%_content_block:is(),_uncode_%section%_content_block:is(none)')),
+			str_replace('%section%', 'product_index', $body_layout_width),
 			str_replace('%section%', 'product_index', $body_single_post_width),
 			str_replace('%section%', 'product_index', $show_title),
 			str_replace('%section%', 'product_index', $sidebar_section_title),
@@ -3933,6 +4261,11 @@ function custom_theme_options()
 					'src' => get_template_directory_uri() . '/core/assets/images/layout/hmenu-center.jpg'
 				) ,
 				array(
+					'value' => 'hmenu-center-split',
+					'label' => esc_html__('Center Splitted', 'uncode') ,
+					'src' => get_template_directory_uri() . '/core/assets/images/layout/hmenu-splitted.jpg'
+				) ,
+				array(
 					'value' => 'vmenu',
 					'label' => esc_html__('Lateral', 'uncode') ,
 					'src' => get_template_directory_uri() . '/core/assets/images/layout/vmenu.jpg'
@@ -3946,6 +4279,11 @@ function custom_theme_options()
 					'value' => 'menu-overlay',
 					'label' => esc_html__('Overlay', 'uncode') ,
 					'src' => get_template_directory_uri() . '/core/assets/images/layout/overlay.jpg'
+				) ,
+				array(
+					'value' => 'menu-overlay-center',
+					'label' => esc_html__('Overlay Center', 'uncode') ,
+					'src' => get_template_directory_uri() . '/core/assets/images/layout/overlay-center.jpg'
 				) ,
 			);
 		}

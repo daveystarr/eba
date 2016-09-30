@@ -41,6 +41,7 @@ class Radium_Theme_Importer {
 	 * @var object
 	 */
 	public $content_demo;
+	public $import_menu;
 
 	/**
 	 * Flag imported to prevent duplicates
@@ -118,7 +119,7 @@ class Radium_Theme_Importer {
 					<div style="background-color: #F5FAFD; margin:70px 0; padding: 10px 30px; color: #777; clear:both; line-height:16px; font-size: 12px;">
 						<p><b><?php echo esc_html__('Important:','uncode'); ?></b></p>
 						<ul style="padding-left: 0px; list-style-position: inside; list-style-type: disc;">
-							<li><?php printf(wp_kses(__('Deactivate all the plugins except the one listed  %s under the section \'Plugins used in the Uncode demo site\' if you are planning to use them.','uncode'), array( 'a' => array( 'href' => array() ) ) ) , '<a href="http://www.undsgn.com/uncode/documentation/first-steps/#installation">'.esc_html__('here','uncode').'</a>'); ?></li>
+							<li><?php printf(wp_kses(__('Deactivate all the plugins except the one listed  %s under the section \'Plugins used in the Uncode demo site\' if you are planning to use them.','uncode'), array( 'a' => array( 'href' => array() ) ) ) , '<a href="http://www.undsgn.com/uncode/documentation/plugins-installation/">'.esc_html__('here','uncode').'</a>'); ?></li>
 							<li><?php printf(esc_html__('Make sure that of the server requirements in %s > Welcome page are fulfilled.','uncode'), UNCODE_NAME); ?></li>
 							<li><?php echo esc_html__('It\'s always recommended to run the import on a clean installtion of WordPress.','uncode'); ?></li>
 							<li><?php echo esc_html__('Some of the images imported will not match the demo site since they are copyrighted material.','uncode'); ?></li>
@@ -129,13 +130,22 @@ class Radium_Theme_Importer {
 						global $wp_filesystem;
 						if (empty($wp_filesystem)) {
 						  require_once (ABSPATH . '/wp-admin/includes/file.php');
-						  WP_Filesystem();
 						}
-						$response = $wp_filesystem->get_contents($this->content_demo);
-						if($response) {
+						$demo_file = $this->content_demo;
+						$can_read_file = true;
+						if (false === ($creds = request_filesystem_credentials($demo_file, '', false, false))) {
+							$can_read_file = false;
+						}
+						/* initialize the API */
+						if ( ! WP_Filesystem($creds) ) {
+							/* any problems and we exit */
+							$can_read_file = false;
+						}
+						$response = $wp_filesystem->get_contents($demo_file);
+						if($response && $can_read_file) {
 							?>
 							<form class="js-one-click-import-form" style="text-align: center;">
-								<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('IMPORT ALL','uncode'); ?>" style="height: 70px;width: 300px;font-size: 24px;" />
+								<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('IMPORT LAYOUTS','uncode'); ?>" style="height: 70px;width: 300px;font-size: 24px;" />
 							</form>
 							<?php
 						} else { ?>
@@ -215,15 +225,19 @@ class Radium_Theme_Importer {
 						<br />
 						<br />
 						<br />
-						<input id="import-single-switch" class="panel-save button-primary" value="<?php echo esc_html__('IMPORT SINGLES','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
+						<input id="import-single-switch" class="panel-save button-primary" value="<?php echo esc_html__('SINGLE LAYOUTS','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
 						<form class="js-one-click-import-form import-ot" style="display: inline;">
-							<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('IMPORT THEME OPTIONS','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
+							<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('THEME OPTIONS','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
+						</form>
+						<form class="js-one-click-import-form import-menu" style="display: inline;">
+							<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('IMPORT MENU','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
 						</form>
 						<form class="js-one-click-import-form import-widgets" style="display: inline;">
-							<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('IMPORT WIDGETS','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
+							<input class="panel-save button-primary" type="submit" value="<?php echo esc_html__('WIDGETS','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px;" />
 						</form>
+						<br />
 						<form class="js-one-click-import-form delete-media" style="display: inline;">
-							<input class="panel-save button" type="submit" value="<?php echo esc_html__('DELETE DEMO MEDIA','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px; color: #a00;" />
+							<input class="panel-save button" type="submit" value="<?php echo esc_html__('DELETE DEMO MEDIA','uncode'); ?>" style="height: 50px;width: 220px;font-size: 14px; text-align: center;margin: 10px; color: #a00; margin-top: 36px;" />
 						</form>
 						<br />
 						<br />
@@ -292,8 +306,11 @@ class Radium_Theme_Importer {
 
 				$ids = isset($_REQUEST['ids']) ? $_REQUEST['ids'] : '';
 				$theme_options = isset($_REQUEST['options']) ? $_REQUEST['options'] : '';
+				$import_menu = isset($_REQUEST['menu']) ? $_REQUEST['menu'] : '';
 				$widgets = isset($_REQUEST['widgets']) ? $_REQUEST['widgets'] : '';
 				$delete = isset($_REQUEST['delete']) ? $_REQUEST['delete'] : '';
+
+				$this->import_menu = ($import_menu !== '' && $import_menu === 'true') ? true : false;
 
 				$partial_import_done = '<div class="uncode-wrap about-wrap"><p style="font-weight: bold; font-size: 2em; margin-top: 0;">' . esc_html__( 'Import completed!', 'uncode' ) . '</p></div>';
 				$partial_import_done .= '<div id="import-fine" style="display: none;" />';
@@ -309,11 +326,14 @@ class Radium_Theme_Importer {
 					$partial_import_done = '<div class="uncode-wrap about-wrap"><p style="font-weight: bold; font-size: 2em; margin-top: 0;">' . esc_html__( 'All demo medias deleted!', 'uncode' ) . '</p></div>';
 					$partial_import_done .= '<div id="import-fine" style="display: none;" />';
 					echo $partial_import_done;
+				} else if ($this->import_menu) {
+					$this->set_demo_data( $this->content_demo, '');
+					if ($this->import_menu) $this->set_demo_menus();
 				} else {
 					if ($ids === '' || (string) $ids === '-1') {
 						$this->set_demo_theme_options( $this->theme_options_file ); //import before widgets incase we need more sidebars
-						$this->set_demo_data( $this->content_demo );
-						$this->set_demo_menus();
+						$this->set_demo_data( $this->content_demo, '');
+						if ($this->import_menu) $this->set_demo_menus();
 						$this->process_widget_import_file( $this->widgets );
 						$homepage = get_page_by_title( 'Index' );
 						if ( $homepage )
@@ -344,8 +364,9 @@ class Radium_Theme_Importer {
 						var cf7_active = '<?php echo (is_plugin_active( 'contact-form-7/wp-contact-form-7.php' )) ? '' : esc_html__('Contact Form 7 (optional) - Plugin is not active','uncode') . '\n'; ?>',
 						woo_active = '<?php echo (is_plugin_active( 'woocommerce/woocommerce.php' )) ? '' : esc_html__('WooCommerce (optional) - Plugin is not active','uncode') . '\n'; ?>',
 						ucore_active = '<?php echo (is_plugin_active( 'uncode-core/uncode-core.php' )) ? '' : esc_html__('Uncode Core (required) - Plugin is not active','uncode') . '\n'; ?>',
+						menu_import = '<?php echo esc_html__('NB. This will not import the menu. If you want also the menu to be imported, please use the specific button on this page.', 'uncode') . '\n'; ?>',
 						inactive_plugins = (cf7_active != '' || woo_active != '' || ucore_active != '') ? '<?php echo esc_html__('The following plugins are inactive and this will prevent the relative content to be imported:','uncode'); ?>' + '\n\n' : '';
-						var c = ($(e.currentTarget).hasClass('import-ot') || $(e.currentTarget).hasClass('import-widgets')) ? confirm("<?php esc_html__('This will replace your settings, are you sure?', 'uncode'); ?>") : confirm(inactive_plugins + ucore_active + cf7_active + woo_active + "\n<?php echo esc_html__('Are you sure?', 'uncode'); ?>");
+						var c = ($(e.currentTarget).hasClass('import-ot') || $(e.currentTarget).hasClass('import-widgets') || $(e.currentTarget).hasClass('import-menu')) ? confirm("<?php esc_html__('This will replace your settings, are you sure?', 'uncode'); ?>") : confirm(inactive_plugins + ucore_active + cf7_active + woo_active + "\n\n" + menu_import + "\n\n<?php echo esc_html__('Are you sure?', 'uncode'); ?>");
 						if (c) {
 							$( this ).find( '.panel-save' ).attr( 'disabled', true );
 							$( '#import-area' ).hide();
@@ -355,6 +376,7 @@ class Radium_Theme_Importer {
 								dataType: "html",
 								ids: $( this ).hasClass('import-singles') ? $( this ).serialize() : '-1',
 								options: $( this ).hasClass('import-ot') ? true : false,
+								menu: $( this ).hasClass('import-menu') ? true : false,
 								widgets: $( this ).hasClass('import-widgets') ? true : false,
 								delete: $( this ).hasClass('delete-media') ? true : false,
 								demononce: '<?php echo wp_create_nonce('radium-demo-code'); ?>'
@@ -378,7 +400,7 @@ class Radium_Theme_Importer {
 										runned++;
 										uncode_import_demo(this_data);
 									} else {
-										result = 'Ooops, the Demo Content couldn\'t be imported all in once. Please refer to this <a href="http://www.undsgn.com/discussion/4481/-cannot-install-demo-contents-#Item_1" target="_blank">troubleshoot thread</a> for a possible workaround.';
+										result = 'Ooops, the Demo Content couldn\'t be imported all in once. Please refer to this <a href="http://www.undsgn.com/uncode/documentation/cannot-install-demo-contents/" target="_blank">troubleshoot thread</a> for a possible workaround.';
 										$('.uncode-wrap').html(result).css({
 											'text-align': 'center',
 										 	'padding': '100px'
@@ -395,12 +417,17 @@ class Radium_Theme_Importer {
 								}
 							},
 							error: function (xhr, ajaxOptions, thrownError) {
-								thrownError = 'Ooops, the Demo Content couldn\'t be imported all in once. Please refer to this <a href="http://www.undsgn.com/discussion/4481/-cannot-install-demo-contents-#Item_1" target="_blank">troubleshoot thread</a> for a possible workaround.';
-								var result = '<b>' + thrownError + '</b>';
-								$('.uncode-wrap').html(result).css({
-									 'text-align': 'center',
-									 'padding': '100px'
-								});
+								thrownError = 'Ooops, the Demo Content couldn\'t be imported all in once. Please refer to this <a href="http://www.undsgn.com/uncode/documentation/cannot-install-demo-contents/" target="_blank">troubleshoot thread</a> for a possible workaround.';
+								if (runned < 10) {
+									runned++;
+									uncode_import_demo(this_data);
+								} else {
+									var result = '<b>' + thrownError + '</b>';
+									$('.uncode-wrap').html(result).css({
+										 'text-align': 'center',
+										 'padding': '100px'
+									});
+								}
 							}
 						});
 					}
@@ -487,12 +514,14 @@ class Radium_Theme_Importer {
 			global $wp_filesystem;
 			if (empty($wp_filesystem)) {
 			  require_once (ABSPATH . '/wp-admin/includes/file.php');
-			  WP_Filesystem();
 			}
+			$creds = request_filesystem_credentials($file, '', false, false);
+			WP_Filesystem($creds);
 			$response = $wp_filesystem->get_contents($file);
 			if($response){
 
 				$wp_import = new WP_Import();
+				$wp_import->import_menu = $this->import_menu;
 				$wp_import->fetch_attachments = true;
 				$wp_import->import( $file, $ids );
 
@@ -537,8 +566,9 @@ class Radium_Theme_Importer {
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
 		}
+		$creds = request_filesystem_credentials($file, '', false, false);
+		WP_Filesystem($creds);
 		/* Will result in $api_response being an array of data,
 		parsed from the JSON response of the API listed above */
 		$data = $wp_filesystem->get_contents($file);
@@ -639,8 +669,9 @@ class Radium_Theme_Importer {
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
 		}
+		$creds = request_filesystem_credentials($file, '', false, false);
+		WP_Filesystem($creds);
 		$response = $wp_filesystem->get_contents($file);
 		/* Will result in $api_response being an array of data,
 		parsed from the JSON response of the API listed above */

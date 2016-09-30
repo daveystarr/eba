@@ -265,10 +265,17 @@
 			}
 			//add the resize event to the map
 			google.maps.event.addDomListener(window, 'resize', function() {
+				resizeMap();
+			});
+			window.addEventListener('boxResized', function(e) {
+				resizeMap();
+			});
+			// resize function
+			var resizeMap = function() {
 				var center = map.getCenter();
 				google.maps.event.trigger(map, "resize");
 				map.setCenter(center);
-			});
+			}
 			//add custom buttons for the zoom-in/zoom-out on the map
 			var CustomZoomControl = function(controlDiv, map) {
 				//grap the zoom elements from the DOM and insert them in the map

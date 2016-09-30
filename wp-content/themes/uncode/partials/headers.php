@@ -19,7 +19,7 @@ if (!class_exists('unheader')) {
 
 			$poster_id = false;
 
-			$limit_width = $limit_content_width = $content_html = $content_width = $header_title = $header_title_custom = $header_title_font = $header_title_size = $header_title_height = $header_title_spacing = $header_title_weight = $header_title_italic = $header_title_transform = $header_background = $header_container_background = $header_title = $header_parallax = $header_parallax_class = $height_style = $data_height = $header_background_video = $back_mime = $back_mime_css = $header_background_selfvideo = $header_overlay_color = $header_overlay_color_alpha = $header_overlay_pattern = $header_container_overlay_color = $header_container_overlay_color_alpha = $header_container_overlay_pattern = $header_align = $header_scroll_opacity = $header_scrolldown = '';
+			$limit_width = $limit_content_width = $content_html = $content_width = $header_title = $header_title_custom = $header_title_font = $header_title_size = $header_title_height = $header_title_spacing = $header_title_weight = $header_title_italic = $header_title_transform = $header_background = $header_container_background = $header_title = $header_parallax = $header_parallax_class = $height_style = $data_height = $header_background_video = $back_mime = $back_mime_css = $header_background_selfvideo = $header_overlay_color = $header_overlay_color_alpha = $header_overlay_pattern = $header_container_overlay_color = $header_container_overlay_color_alpha = $header_container_overlay_pattern = $header_align = $header_scroll_opacity = $header_scrolldown = $header_no_padding = '';
 
 			$boxed = ot_get_option( '_uncode_boxed');
 
@@ -89,12 +89,16 @@ if (!class_exists('unheader')) {
 			if (isset($args['_uncode_header_overlay_color_alpha'])) $header_overlay_color_alpha = $args['_uncode_header_overlay_color_alpha'][0];
 			if (isset($args['_uncode_header_scroll_opacity'])) $header_scroll_opacity = $args['_uncode_header_scroll_opacity'][0];
 			if (isset($args['_uncode_header_scrolldown'])) $header_scrolldown = $args['_uncode_header_scrolldown'][0];
+			if (isset($args['_uncode_specific_menu_no_padding'])) $header_no_padding = $args['_uncode_specific_menu_no_padding'][0];
 
 			$item_style = ' style-' . $header_style;
 
 			if ($header_scrolldown === 'on') {
 				$header_scroll_html = '<div class="header-scrolldown'.$item_style.'"><i class="fa fa-angle-down"></i></div>';
 			} else $header_scroll_html = '';
+
+			if ($header_no_padding === 'on') $header_no_padding = 'remove-menu-padding ';
+			else $header_no_padding = '';
 
 			$this->html = '';
 
@@ -167,7 +171,7 @@ if (!class_exists('unheader')) {
 						$content_html .= $header_background_array['content_html'];
 					}
 
-					$this->html.= '<div class="header-basic' . $limit_width . $item_style . '">
+					$this->html.= '<div class="'.$header_no_padding . 'header-basic' . $limit_width . $item_style . '">
 													<div class="background-element header-wrapper'.($header_scroll_opacity === 'on' ? ' header-scroll-opacity' : '') . (($onepage) ? ' onepage-section' : '') . $header_parallax . $header_background_array['back_color'] . (($header_background_array['content_html'] === '' || $header_background_array['content_only_text']) ? ' header-only-text' : '') .'"' . $onepage_header_name . $data_height . $height_style. '>
 													' . (isset($header_background_array['back_html']) ? $header_background_array['back_html'] : '');
 					if ($content_html !== '')
@@ -186,10 +190,11 @@ if (!class_exists('unheader')) {
 
 			case 'header_uncodeblock':
 
-				$this->html .= '<div class="header-wrapper header-uncode-block'.($header_scroll_opacity === 'on' ? ' header-scroll-opacity' : '').'">
+				$this->html .= '<div class="'.$header_no_padding . 'header-wrapper header-uncode-block'. ($header_scroll_opacity === 'on' ? ' header-scroll-opacity' : '') . '">
 									' . (isset($header_background_array['back_html']) ? $header_background_array['back_html'] : '');
 
 				$uncodeblock_id = (isset($args['_uncode_blocks_list']) && $args['_uncode_blocks_list'][0] !== '') ? $args['_uncode_blocks_list'][0] : '';
+				if ($uncodeblock_id !== '') $uncodeblock_id = apply_filters( 'wpml_object_id', $uncodeblock_id, 'post' );
 				$uncode_block = ($uncodeblock_id !== '') ? get_post_field('post_content', $uncodeblock_id) : '';
 				$uncode_block = str_replace('[vc_row ', '[vc_row is_header="yes" ', $uncode_block);
 				$uncode_block = str_replace('[uncode_slider ', '[uncode_slider is_header="yes" ', $uncode_block);
@@ -249,12 +254,12 @@ if (!class_exists('unheader')) {
 
 			case 'header_revslider':
 
-				$this->html.= '<div class="header-wrapper header-revslider">
+				$this->html.= '<div class="' . $header_no_padding . 'header-wrapper header-revslider">
 									' . (isset($header_background_array['back_html']) ? $header_background_array['back_html'] : '') . '
 									<div class="header-main-container">';
 
 				$revslider_id = (isset($args['_uncode_revslider_list']) && $args['_uncode_revslider_list'][0] != '') ? $args['_uncode_revslider_list'][0] : '';
-				$this->html.= __(do_shortcode('[rev_slider ' . $revslider_id . ']'));
+				$this->html.= do_shortcode('[rev_slider ' . $revslider_id . ']');
 
 				$this->html.= 		'</div>';
 				$this->html.= '</div>';
@@ -263,12 +268,12 @@ if (!class_exists('unheader')) {
 
 			case 'header_layerslider':
 
-				$this->html.= '<div class="header-wrapper">
+				$this->html.= '<div class="' . $header_no_padding . 'header-wrapper">
 									' . (isset($header_background_array['back_html']) ? $header_background_array['back_html'] : '') . '
 									<div class="header-main-container">';
 
 				$layerslider_id = (isset($args['_uncode_layerslider_list']) && $args['_uncode_layerslider_list'][0] != '') ? $args['_uncode_layerslider_list'][0] : '';
-				$this->html.= __(do_shortcode('[layerslider id="' . $layerslider_id . '"]'));
+				$this->html.= do_shortcode('[layerslider id="' . $layerslider_id . '"]');
 
 				$this->html.= 		'</div>';
 				$this->html.= '</div>';

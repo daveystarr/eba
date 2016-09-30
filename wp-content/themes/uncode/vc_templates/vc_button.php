@@ -47,6 +47,7 @@ $a_title = $link['title'];
 $a_target = $link['target'];
 
 if ($media_lightbox !== '') {
+	$lightbox_classes = array();
 	$media_attributes = uncode_get_media_info($media_lightbox);
 	if (isset($media_attributes)) {
 		$media_metavalues = unserialize($media_attributes->metadata);
@@ -65,6 +66,10 @@ if ($media_lightbox !== '') {
 			}
 
 			$a_href = $big_image['url'];
+		} else if ($media_mime === 'oembed/iframe') {
+			$lightbox_classes['data-type'] = 'inline';
+			$a_href = '#inline-' . $media_lightbox;
+			echo '<div id="inline-'.$media_lightbox.'" class="ilightbox-html" style="display: none;">' . $media_attributes->post_content . '</div>';
 		} else {
 			if ($media_mime === 'image/url') {
 				$a_href = $media_attributes->guid;
@@ -95,10 +100,9 @@ if ($media_lightbox !== '') {
 			$video_src .= '},';
 		}
 
-		$lightbox_classes = array();
 		if ($lbox_skin !== '') $lightbox_classes['data-skin'] = $lbox_skin;
-		if ($lbox_title !== '') $lightbox_classes['data-title'] = true;
-		if ($lbox_caption !== '') $lightbox_classes['data-caption'] = true;
+		if ($lbox_title !== '' && isset($media_attributes->post_title) && $media_attributes->post_title !== '') $lightbox_classes['data-title'] = $media_attributes->post_title;
+		if ($lbox_caption !== '' && isset($media_attributes->post_excerpt) && $media_attributes->post_excerpt !== '') $lightbox_classes['data-caption'] = $media_attributes->post_excerpt;
 		if ($lbox_dir !== '') $lightbox_classes['data-dir'] = $lbox_dir;
 		if ($lbox_social !== '') $lightbox_classes['data-social'] = true;
 		if ($lbox_deep !== '') $lightbox_classes['data-deep'] = $media_lightbox;
@@ -106,10 +110,12 @@ if ($media_lightbox !== '') {
 		if ($lbox_no_arrows !== '') $lightbox_classes['data-noarr'] = true;
 		if (count($lightbox_classes) === 0) $lightbox_classes['data-active'] = true;
 		if ($lbox_connected === 'yes') {
-			if (!isset($lightbox_id)) $lightbox_id = big_rand();
-		} else $lightbox_id = $media_lightbox;
+			if (!isset($lightbox_id) || $lightbox_id === '') $lightbox_id = big_rand();
+			$lbox_id = $lightbox_id;
+		} else $lbox_id = $media_lightbox;
+
 		$lightbox_data = ' ' . implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $lightbox_classes, array_keys($lightbox_classes)));
-		$lightbox_data .= ' data-lbox="ilightbox_single-' . $lightbox_id . '"';
+		$lightbox_data .= ' data-lbox="ilightbox_single-' . $lbox_id . '"';
 		$lightbox_data .= ' data-options="'.$media_dimensions.$video_src.'"';
 	}
 } else $lightbox_data = '';

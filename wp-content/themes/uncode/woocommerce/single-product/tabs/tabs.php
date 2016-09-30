@@ -49,7 +49,7 @@ if ( ! empty( $tabs ) ) :
 				</div>
 				<?php } else { ?>
 				<div class="tab-pane fade<?php echo $limit_content_width; ?> single-h-padding<?php if ($index === 0) echo ' active in'; ?>" id="tab-<?php echo esc_attr( $key ) ?>">
-					<?php echo do_shortcode( shortcode_unautop( $tab_content ) ); ?>
+					<?php echo uncode_remove_wpautop( $tab_content ); ?>
 				</div>
 			<?php } ?>
 

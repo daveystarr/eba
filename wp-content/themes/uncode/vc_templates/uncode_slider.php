@@ -35,7 +35,8 @@ if ((int)$slider_interval === 0 || $slider_interval === '') {
 $el_id = 'uslider_' . rand();
 
 $el_class = $this->getExtraClass($el_class);
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'uncode-slider ' . $el_class, $this->settings['base'], $atts );
+if ($el_class !== '') $el_class = $el_class . ' ';
+$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $el_class . 'uncode-slider ' , $this->settings['base'], $atts );
 
 $style = $is_header !== 'yes' ? ' style-'.$style : '';
 
@@ -47,4 +48,4 @@ $output .= '</div>';
 $output .= '</div>';
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

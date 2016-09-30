@@ -29,4 +29,4 @@ if ($separator === 'yes' && $layout === 'multiple') $output .= '<hr class="separ
 $output .= '<div class="share-button share-buttons'.(($layout === 'multiple') ? ' share-inline' : ' share-vertical').(($bigger === 'yes') ? ' share-bigger' : '') . (($no_back === 'yes') ? ' only-icon' : '') . $align . '"></div>';
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

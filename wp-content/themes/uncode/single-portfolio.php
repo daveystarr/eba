@@ -14,7 +14,7 @@ get_header();
  */
 
 /** Init variables **/
-$limit_width = $limit_content_width = $the_content = $main_content = $media_content = $info_content = $navigation_content = $layout = $bg_color = $portfolio_style = $portfolio_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $title_content = $comment_content = $page_custom_width = $row_classes = $main_classes = $media_classes = $info_classes = $footer_content = '';
+$limit_width = $limit_content_width = $the_content = $main_content = $media_content = $info_content = $navigation_content = $layout = $bg_color = $portfolio_style = $portfolio_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $title_content = $comment_content = $page_custom_width = $row_classes = $main_classes = $media_classes = $info_classes = $footer_content = $content_after_body = '';
 $with_builder = false;
 
 $post_type = 'portfolio';
@@ -221,7 +221,7 @@ while (have_posts()):
 		$header_html = $page_header->html;
 		if ($header_html !== '') {
 			echo '<div id="page-header">';
-			echo do_shortcode( shortcode_unautop( $page_header->html ) );
+			echo uncode_remove_wpautop( $page_header->html );
 			echo '</div>';
 		}
 	}
@@ -230,11 +230,8 @@ while (have_posts()):
 
 	if ($show_breadcrumb && !is_front_page() && !is_home())
 	{
-		if ($breadcrumb_align !== '') $breadcrumb_align = ' text-' . $breadcrumb_align;
-		else
-		{
-			$breadcrumb_align = ' text-right';
-		}
+		if ($breadcrumb_align === '') $breadcrumb_align = 'right';
+		$breadcrumb_align = ' text-' . $breadcrumb_align;
 
 		if (isset($metabox_data['_uncode_specific_navigation_index'][0]) && $metabox_data['_uncode_specific_navigation_index'][0] !== '') {
 			$navigation_index = $metabox_data['_uncode_specific_navigation_index'][0];
@@ -243,7 +240,7 @@ while (have_posts()):
 		}
 		$content_breadcrumb = uncode_breadcrumbs($navigation_index);
 		$breadcrumb_title = '<div class="breadcrumb-title h5 text-bold">' . get_the_title() . '</div>';
-		echo uncode_get_row_template(($breadcrumb_align === 'left' ? $content_breadcrumb . $breadcrumb_title : $breadcrumb_title . $content_breadcrumb) , '', $limit_content_width, $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
+		echo uncode_get_row_template($breadcrumb_title . $content_breadcrumb, '', $limit_content_width, $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
 	}
 
 	/** Build title **/
@@ -260,7 +257,13 @@ while (have_posts()):
 	$the_content = get_the_content();
 	if (has_shortcode($the_content, 'vc_row')) $with_builder = true;
 
-	$text_content = apply_filters('the_content', get_the_excerpt());
+	if (!$with_builder) $the_content = apply_filters('the_content', $the_content);
+	else {
+		$get_content_appended = apply_filters('the_content', '');
+		if (!is_null($get_content_appended) && $get_content_appended !== '') $the_content = $the_content . uncode_get_row_template($get_content_appended, $limit_width, $limit_content_width, $style, '', false, true, 'double', $page_custom_width);
+	}
+
+	$text_content = apply_filters('the_excerpt',get_the_excerpt());
 
 	/** Build media **/
 
@@ -341,6 +344,72 @@ while (have_posts()):
 					'</div>
 				</div>
 			</div>';
+	}
+
+	/** Build post after block **/
+
+	$page_content_block_after = (isset($metabox_data['_uncode_specific_content_block_after'][0])) ? $metabox_data['_uncode_specific_content_block_after'][0] : '';
+	if ($page_content_block_after === '') {
+		$generic_content_block_after = ot_get_option('_uncode_' . $post_type . '_content_block_after');
+		$content_block_after = $generic_content_block_after !== '' ? $generic_content_block_after : false;
+	} else {
+		$content_block_after = $page_content_block_after !== 'none' ? $page_content_block_after : false;
+	}
+
+	if ($content_block_after !== false) {
+		$content_after_body = apply_filters( 'wpml_object_id', $content_after_body, 'post' );
+		$content_after_body = get_post_field('post_content', $content_block_after);
+		if (class_exists('Vc_Base')) {
+			$vc = new Vc_Base();
+			$vc->addShortcodesCustomCss($content_block_after);
+		}
+		if (has_shortcode($content_after_body, 'vc_row')) $content_after_body = '<div class="post-after row-container">' . $content_after_body . '</div>';
+		else $content_after_body = '<div class="post-after row-container">' . uncode_get_row_template($content_after_body, $limit_width, $limit_content_width, $style, '', false, true, 'double', $page_custom_width) . '</div>';
+		if (class_exists('RP4WP_Post_Link_Manager')) {
+			$automatic_linking_post_amount = RP4WP::get()->settings->get_option( 'automatic_linking_post_amount' );
+			$uncode_related = new RP4WP_Post_Link_Manager();
+			$related_posts = $uncode_related->get_children($post->ID,false);
+			$related_posts_ids = array();
+			foreach ($related_posts as $key => $value) {
+				if (isset($value->ID)) $related_posts_ids[] = $value->ID;
+			}
+			$archive_query = '';
+			$regex = '/\[uncode_index(.*?)\]/';
+			$regex_attr = '/(.*?)=\"(.*?)\"/';
+			preg_match_all($regex, $content_after_body, $matches, PREG_SET_ORDER);
+			foreach ($matches as $key => $value) {
+				$index_found = false;
+				if (isset($value[1])) {
+					preg_match_all($regex_attr, trim($value[1]), $matches_attr, PREG_SET_ORDER);
+					foreach ($matches_attr as $key_attr => $value_attr) {
+						switch (trim($value_attr[1])) {
+							case 'auto_query':
+								if ($value_attr[2] === 'yes') $index_found = true;
+								break;
+							case 'loop':
+								$archive_query = $value_attr[2];
+								break;
+						}
+					}
+				}
+				if ($index_found) {
+					if ($archive_query === '') $archive_query = ' loop="size:10|by_id:' . implode(',', $related_posts_ids) .'|post_type:' . $post->post_type . '"';
+					else {
+						$parse_query = uncode_parse_loop_data($archive_query);
+						$parse_query['by_id'] = implode(',', $related_posts_ids);
+						if (!isset($parse_query['order'])) $parse_query['order'] = 'none';
+						$parse_query['post_type'] = $post->post_type;
+						$archive_query = ' loop="' . uncode_unparse_loop_data($parse_query) . '"';
+					}
+					$value[1] = preg_replace('#\s(loop)="([^"]+)"#', $archive_query, $value[1], -1, $index_count);
+					if ($index_count === 0) {
+						$value[1] .= $archive_query;
+					}
+					$replacement = '[uncode_index' . $value[1] . ']';
+					$content_after_body = str_replace($value[0], $replacement, $content_after_body);
+				}
+			}
+		}
 	}
 
 	/** Build post footer **/
@@ -463,7 +532,7 @@ while (have_posts()):
 
 		/** Create html with sidebar **/
 
-		$footer_content = '<div class="post-footer post-footer-' . $style . ' style-' . $style . $footer_classes . '">' . $footer_content . '</div>';
+		if ($footer_content !== '') $footer_content = '<div class="post-footer post-footer-' . $style . ' style-' . $style . $footer_classes . '">' . $footer_content . '</div>';
 
 		$main_content = '<div class="col-lg-' . $main_size . '">
 									' . $the_content . '
@@ -596,11 +665,11 @@ while (have_posts()):
 
 	echo '<div class="page-body' . $bg_color . '">
 					<div class="portfolio-wrapper"' . $page_custom_width . '>
-						<div class="portfolio-body">' . do_shortcode($the_content) . '</div>' .
-						$comment_content .
-						$navigation_content .
+						<div class="portfolio-body">' . uncode_remove_wpautop($the_content) . '</div>' .
+						 uncode_remove_wpautop($content_after_body) . $comment_content .
 					'</div>
-				</div>';
+				</div>'
+				. $navigation_content;
 endwhile;
 // end of the loop.
 

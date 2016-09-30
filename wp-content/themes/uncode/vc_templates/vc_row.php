@@ -1,6 +1,6 @@
 <?php
 
-$el_class = $row_name = $back_image = $back_repeat = $back_attachment = $back_position = $back_size = $back_color = $overlay_color = $overlay_alpha = $unlock_row = $unlock_row_content = $limit_content = $row_height_percent = $row_inner_height_percent = $row_height_pixel = $inner_height = $parallax = $equal_height = $top_padding = $bottom_padding = $h_padding = $gutter_size = $override_padding = $force_width_grid = $shift_y = $shift_y_fixed = $css = $border_color = $border_style = $output = $row_style = $background_div = $row_inline_style = $desktop_visibility = $medium_visibility = $mobile_visibility = '';
+$el_class = $row_name = $back_image = $back_repeat = $back_attachment = $back_position = $back_size = $back_color = $overlay_color = $overlay_alpha = $unlock_row = $unlock_row_content = $limit_content = $row_height_percent = $row_inner_height_percent = $row_height_pixel = $inner_height = $parallax = $equal_height = $top_padding = $bottom_padding = $h_padding = $gutter_size = $override_padding = $force_width_grid = $shift_y = $shift_y_fixed = $css = $border_color = $border_style = $output = $row_style = $background_div = $row_inline_style = $desktop_visibility = $medium_visibility = $mobile_visibility = $sticky = '';
 
 extract(shortcode_atts(array(
 	'el_class' => '',
@@ -33,6 +33,7 @@ extract(shortcode_atts(array(
   'mobile_visibility' => '',
 	'shift_y' => '',
 	'shift_y_fixed' => '',
+	'sticky' => '',
 	'css' => '',
 	'border_color' => '',
 	'border_style' => '',
@@ -81,6 +82,8 @@ if (strpos($content,'[uncode_block') !== false) {
 
 
 $row_cont_classes[] = $this->getExtraClass($el_class);
+if ($sticky === 'yes') $row_cont_classes[] = 'sticky-element';
+
 $el_id = '';
 if ($row_name !== '') {
 	$row_name = esc_attr($row_name);
@@ -275,7 +278,7 @@ if (!$uncodeblock_found) :
 	if ($unlock_row !== 'yes') $output.= $background_div;
 	if (!$with_slider) $output.= '<div class="' . esc_attr(trim(implode(' ', $row_inner_classes))) . '">';
 	$output.= $content;
-	echo wpb_js_remove_wpautop($output);
+	echo uncode_remove_wpautop($output);
 	$script_id = 'script-'.big_rand();
 	echo '<script id="'.esc_attr($script_id).'" type="text/javascript">UNCODE.initRow(document.getElementById("'.$script_id.'"));</script>';
 	$output = '';
@@ -284,4 +287,4 @@ if (!$uncodeblock_found) :
 	$output.= '</div>';
 endif;
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

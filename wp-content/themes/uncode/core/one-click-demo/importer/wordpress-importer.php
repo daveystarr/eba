@@ -59,6 +59,7 @@ class WP_Import extends WP_Importer {
 	var $menu_item_orphans = array();
 	var $missing_menu_items = array();
 
+	var $import_menu = false;
 	var $fetch_attachments = false;
 	var $url_remap = array();
 	var $featured_images = array();
@@ -147,7 +148,7 @@ class WP_Import extends WP_Importer {
 		wp_suspend_cache_invalidation( false );
 
 		// update incorrect/missing information in the DB
-		if (empty($ids_array)) $this->backfill_parents();
+		if (empty($ids_array) || !$this->import_menu) $this->backfill_parents();
 		$this->backfill_attachment_urls();
 		$this->remap_featured_images();
 
@@ -164,8 +165,9 @@ class WP_Import extends WP_Importer {
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
 		}
+		$creds = request_filesystem_credentials($file, '', false, false);
+		WP_Filesystem($creds);
 		$response = $wp_filesystem->get_contents($file);
 		if ( ! $response ) {
 			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'radium' ) . '</strong><br />';
@@ -528,6 +530,9 @@ class WP_Import extends WP_Importer {
 
 		foreach ( $this->terms as $term ) {
 			// if the term already exists in the correct taxonomy leave it alone
+			if (!$this->import_menu && $term['term_taxonomy'] === 'nav_menu') continue;
+			if ($this->import_menu && $term['term_taxonomy'] !== 'nav_menu') continue;
+
 			$term_id = term_exists( $term['slug'], $term['term_taxonomy'] );
 			if ( $term_id ) {
 				if ( is_array($term_id) ) $term_id = $term_id['term_id'];
@@ -575,6 +580,8 @@ class WP_Import extends WP_Importer {
 
 		foreach ( $this->posts as $post ) {
 			$post = apply_filters( 'wp_import_post_data_raw', $post );
+
+			if (!$this->import_menu && $post['post_type'] === 'nav_menu_item') continue;
 
 			if (!empty($ids_array) && !in_array($post['post_id'], $ids_array) && ($post['post_type'] === 'post' || $post['post_type'] === 'page' || $post['post_type'] === 'portfolio' || $post['post_type'] === 'product' || $post['post_type'] === 'uncodeblock' || $post['post_type'] === 'nav_menu_item')) continue;
 

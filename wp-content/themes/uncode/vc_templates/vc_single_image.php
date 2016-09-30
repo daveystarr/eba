@@ -73,10 +73,6 @@ $stylesArray = array(
 
 global $lightbox_id;
 
-$shape = ($shape != '') ? ' ' . $shape : '';
-if ($border === 'yes') $shape .= ' img-thumbnail';
-if ($shadow === 'yes') $shape .= ' tmb-shadow';
-
 $el_class = $this->getExtraClass($el_class);
 
 if ($image !== '' && $media === '') $media = $image;
@@ -113,6 +109,17 @@ $block_data = array();
 $block_classes = array('tmb');
 $tmb_data = array();
 $title_classes = array();
+
+$shape = $tmb_shape = ($shape != '') ? ' ' . $shape : '';
+
+if ($border === 'yes') {
+	$shape .= ' img-thumbnail';
+	$tmb_shape .= ' tmb-bordered';
+}
+if ($shadow === 'yes') {
+	$shape .= ' tmb-shadow';
+	$tmb_shape .= ' tmb-media-shadow';
+}
 
 $block_classes[] = 'tmb-' . $media_style;
 $overlay_style = $stylesArray[!array_search($media_style, $stylesArray) ];
@@ -159,11 +166,6 @@ if ($advanced === 'yes') {
 
 	if ($media_text_reduced === 'yes') $block_classes[] = 'tmb-text-space-reduced';
 	if ($media_image_anim === 'yes' && $carousel_textual !== 'yes') $block_classes[] = 'tmb-image-anim';
-	if ($shadow === 'yes') {
-		$block_classes[] = 'tmb-shadowed';
-		if ($media_text === 'under') $block_classes[] = 'tmb-media-shadowed';
-	}
-	if ($border === 'yes') $block_classes[] = 'tmb-bordered';
 	if ($media_title_transform !== '') $block_classes[] = 'tmb-entry-title-' . $media_title_transform;
 	if ($media_title_dimension !== '') $title_classes[] = $media_title_dimension;
 	else $title_classes[] = 'h6';
@@ -173,6 +175,7 @@ if ($advanced === 'yes') {
 	if ($media_title_space !== '') $title_classes[] = $media_title_space;
 }
 
+if ($advanced !== 'on') $block_classes[] = $tmb_shape;
 if ($no_double_tap === 'yes') $block_classes[] = 'tmb-no-double-tap';
 
 $block_data['classes'] = $block_classes;
@@ -227,9 +230,10 @@ if ($media_lightbox === 'yes') {
 	if ($lbox_no_arrows !== '') $lightbox_classes['data-noarr'] = true;
 	if (count($lightbox_classes) === 0) $lightbox_classes['data-active'] = true;
 	if ($lbox_connected === 'yes') {
-		if (!isset($lightbox_id)) $lightbox_id = big_rand();
-	} else $lightbox_id = $media;
-}
+		if (!isset($lightbox_id) || $lightbox_id === '') $lightbox_id = big_rand();
+		$lbox_id = $lightbox_id;
+	} else $lbox_id = $media_lightbox;
+} else $lbox_id = $media;
 
 if ($advanced === 'yes') {
 
@@ -250,13 +254,13 @@ if ($advanced === 'yes') {
 
 	if (isset($layout['media'][0]) && $layout['media'][0] === 'poster') $block_data['poster'] = true;
 
-	if (empty($media) || FALSE === get_post_status( $media )) {
+	if (empty($media) || FALSE === get_post_mime_type( $media )) {
 		$media_html = '<img src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=media+not+available&amp;w=500&amp;h=500" />';
 	} else {
 		if (isset($div_data['data-delay']) && $div_data['data-delay'] !== '') $block_data['delay'] = $animation_delay;
-		$media_html = uncode_create_single_block($block_data, 'single-' . $lightbox_id, 'masonry', $layout, $lightbox_classes, $carousel_textual);
+		$media_html = uncode_create_single_block($block_data, 'single-' . $lbox_id, 'masonry', $layout, $lightbox_classes, $carousel_textual);
 	}
-	$media_string = '<div class="uncode-single-media-wrapper single-advanced' . $shape . '">' . $media_html . '</div>';
+	$media_string = '<div class="uncode-single-media-wrapper single-advanced">' . $media_html . '</div>';
 
 } else {
 
@@ -272,7 +276,7 @@ if ($advanced === 'yes') {
 
 	$layout = array('media' => array());
 
-	if (empty($media) || FALSE === get_post_status( $media )) {
+	if (empty($media) || FALSE === get_post_mime_type( $media )) {
 		$media_html = '<div class="t-entry-visual-cont"><img src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=media+not+available&amp;w=500&amp;h=500" /></div>';
 	} else {
 
@@ -280,25 +284,42 @@ if ($advanced === 'yes') {
 			$poster = get_post_meta($media, "_uncode_poster_image", true);
 			if (isset($poster) && $poster !== '') $block_data['poster'] = true;
 		}
+
 		if (isset($div_data['data-delay']) && $div_data['data-delay'] !== '') $block_data['delay'] = $animation_delay;
 		$media_attributes = uncode_get_media_info($media);
 		$media_metavalues = unserialize($media_attributes->metadata);
-		$media_html = uncode_create_single_block($block_data, 'single-' . $lightbox_id, 'masonry', $layout, $lightbox_classes, $carousel_textual);
-		$dom = new DOMDocument();
-		@$dom->loadHTML($media_html);
-		$xpath = new DomXpath($dom);
-		foreach($xpath->query('//div[@class="t-entry-visual-overlay"]') as $e ) {
-		  $e->parentNode->removeChild($e);
+		$media_html = uncode_create_single_block($block_data, 'single-' . $lbox_id, 'masonry', $layout, $lightbox_classes, $carousel_textual);
+
+		if (class_exists('DOMDocument')) {
+			libxml_use_internal_errors(true);
+			if (function_exists('mb_convert_encoding')) $media_html = mb_convert_encoding($media_html, 'HTML-ENTITIES', 'UTF-8');
+			$dom = new DOMDocument();
+			@$dom->loadHTML($media_htm);
+			if (class_exists('DomXpath')) {
+				$xpath = new DomXpath($dom);
+				foreach($xpath->query('//div[@class="t-entry-visual-overlay"]') as $e ) {
+				  $e->parentNode->removeChild($e);
+				}
+				foreach($xpath->query('//div[@class="t-overlay-wrap"]') as $e ) {
+				  $e->parentNode->removeChild($e);
+				}
+				$div = $xpath->query('//div[@class="t-entry-visual-cont"]')->item(0);
+				$body = $dom->getElementsByTagName('body');
+				if ( $body && 0<$body->length ) {
+					$body = $body->item(0);
+					$media_html = $dom->savehtml();
+					preg_match("~<body.*?>(.*?)<\/body>~is", $media_html, $match);
+					$media_html = $match[1];
+				}
+			}
 		}
-		foreach($xpath->query('//div[@class="t-overlay-wrap"]') as $e ) {
-		  $e->parentNode->removeChild($e);
-		}
-		$div = $xpath->query('//div[@class="t-entry-visual-cont"]')->item(0);
-		$media_html = $dom->saveHTML();
 	}
 
 	if ($media_lightbox === 'yes') {
 		$media_string = str_replace('t-entry-visual-cont', 'uncode-single-media-wrapper' . $shape, $media_html);
+		if ($media_attributes->post_mime_type === 'oembed/iframe') {
+			$media_string .= '<div id="inline-'.$media.'" class="ilightbox-html" style="display: none;">' . $media_attributes->post_content . '</div>';
+		}
 	} else {
 		if (!empty($a_href)) {
 			$a_target = ($a_target !== '') ? ' target="' . $a_target . '"' : '';
@@ -318,4 +339,4 @@ $output.= '</div>';
 if ($caption === 'yes' && isset($media_attributes->post_excerpt) && $media_attributes->post_excerpt !== '') $output.= '<figcaption>'.$media_attributes->post_excerpt.'</figcaption>';
 $output.= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

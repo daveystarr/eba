@@ -22,7 +22,7 @@ if ($redirect_page) {
 if (wp_is_mobile()) $html_class = 'touch';
 else $html_class = 'no-touch';
 
-if (!is_admin() && is_user_logged_in()) $html_class .= ' admin-mode';
+if (is_admin_bar_showing()) $html_class .= ' admin-mode';
 
 ?><!DOCTYPE html>
 <html class="<?php echo esc_attr($html_class); ?>" <?php language_attributes(); ?> xmlns="http://www.w3.org/1999/xhtml">
@@ -82,11 +82,20 @@ if (!is_admin() && is_user_logged_in()) $html_class .= ' admin-mode';
 		}
 	}
 
-	$boxed_width = ($boxed === 'on') ? ' limit-width' : '';
+	$body_attr = '';
+	if ($boxed === 'on') {
+		$boxed_width = ' limit-width';
+	} else {
+		$boxed_width = '';
+		$body_border = ot_get_option('_uncode_body_border');
+		if ($body_border !== '' && $body_border !== 0) {
+			$body_attr = ' data-border="' . esc_attr($body_border) . '"';
+		}
+	}
 
 ?>
-<body <?php body_class($background_color_css); ?>>
-	<?php echo do_shortcode( shortcode_unautop( $background_div ) ); ?>
+<body <?php body_class($background_color_css); echo $body_attr; ?>>
+	<?php echo uncode_remove_wpautop( $background_div ) ; ?>
 	<?php do_action( 'before' ); ?>
 
 	<div class="box-wrapper<?php echo esc_html($back_class); ?>"<?php echo wp_kses_post($background_style); ?>>
@@ -94,12 +103,12 @@ if (!is_admin() && is_user_logged_in()) $html_class .= ' admin-mode';
 		<script type="text/javascript">UNCODE.initBox();</script>
 		<?php
 			if ($is_redirect !== true) {
-				if ($menutype === 'vmenu-offcanvas' || $menutype == 'menu-overlay') {
+				if ($menutype === 'vmenu-offcanvas' || $menutype === 'menu-overlay' || $menutype === 'menu-overlay-center') {
 					$mainmenu = new unmenu('offcanvas_head', $menutype);
-					echo do_shortcode( shortcode_unautop( $mainmenu->html ) );
+					echo uncode_remove_wpautop( $mainmenu->html );
 				}
 				$mainmenu = new unmenu($menutype, $menutype);
-				echo do_shortcode( shortcode_unautop( $mainmenu->html ) );
+				echo uncode_remove_wpautop( $mainmenu->html );
 			}
 			?>
 			<script type="text/javascript">UNCODE.fixMenuHeight();</script>

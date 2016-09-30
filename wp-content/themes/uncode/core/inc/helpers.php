@@ -18,6 +18,36 @@ function uncode_truncate($text, $length) {
 }
 
 /**
+ * Parse Loop data
+ */
+function uncode_parse_loop_data($value) {
+	if (is_array($value)) return $value;
+	$data = array();
+	$values_pairs = preg_split('/\|/', $value);
+	foreach ($values_pairs as $pair)
+	{
+		if (!empty($pair))
+		{
+			list($key, $value) = preg_split('/\:/', $pair);
+			$data[$key] = $value;
+		}
+	}
+	return $data;
+}
+
+/**
+ * Parse Loop data
+ */
+function uncode_unparse_loop_data($values) {
+	$data = array();
+	foreach ($values as $key => $value)
+	{
+		$data[] = $key.':'.$value;
+	}
+	return implode('|',$data);
+}
+
+/**
  * Random string
  */
 function uncode_randomstring($length = 6)
@@ -159,9 +189,10 @@ function uncode_save_additional_fields($attachment_id)
 add_action('edit_attachment', 'uncode_save_additional_fields');
 
 if ( ! function_exists( 'uncode_estimated_reading_time' ) ) {
-	function uncode_estimated_reading_time($content) {
-
-    $words = str_word_count( strip_tags( preg_replace('/\[([^\]]*)\]/', '', $content) ) );
+	function uncode_estimated_reading_time($post_id) {
+		$post_id = apply_filters( 'wpml_object_id', $post_id, 'post' );
+		$post_content = get_post_field('post_content', $post_id);
+    $words = str_word_count( strip_tags( preg_replace('/\[([^\]]*)\]/', '', $post_content) ) );
     $minutes = floor( $words / 120 );
     $seconds = floor( $words % 120 / ( 120 / 60 ) );
 
@@ -193,15 +224,14 @@ function uncode_resize_image($url, $path, $originalWidth, $originalHeight, $sing
 {
 	global $adaptive_images, $adaptive_images_async, $ai_bpoints;
 
-	if ($adaptive_images === 'on' || is_array($async))
-	{
+	if ($adaptive_images === 'on' || is_array($async)) {
 		if (is_array($async)) {
 			$ai_width = (int)$async['images'];
 			$ai_screen = (int)$async['screen'];
 
 			if (empty($ai_bpoints)) {
 				$ai_sizes = ot_get_option('_uncode_adaptive_sizes');
-			  if ($ai_sizes === '') $ai_sizes = '516,720,1032,1440,2064,2880';
+			  if ($ai_sizes === '') $ai_sizes = '258,516,720,1032,1440,2064,2880';
 			  $ai_sizes = preg_replace('/\s+/', '', $ai_sizes);
 			  $ai_bpoints = explode(',', $ai_sizes);
 			}
@@ -222,25 +252,17 @@ function uncode_resize_image($url, $path, $originalWidth, $originalHeight, $sing
 		}
 
 		if (!$custom_width) {
-			if ($ai_screen < 781)
-			{
+			if ($ai_screen < 781) {
 				$closest_size = uncode_getClosest($ai_width , $ai_bpoints);
-			}
-			else
-			{
-				if ($fixed_width === null)
-				{
+			} else {
+				if ($fixed_width === null) {
 					if ($crop) $closest_size = uncode_getClosest(($ai_width / (12 / max($single_width, $single_height))) , $ai_bpoints);
-					else
-					{
+					else {
 						$closest_size = uncode_getClosest(($ai_width / (12 / $single_width)) , $ai_bpoints);
 					}
-				}
-				else
-				{
+				} else {
 					if ($crop) $closest_size = uncode_getClosest(max($single_width, $single_height) , $ai_bpoints);
-					else
-					{
+					else {
 						$closest_size = uncode_getClosest($single_width, $ai_bpoints);
 					}
 				}
@@ -248,36 +270,24 @@ function uncode_resize_image($url, $path, $originalWidth, $originalHeight, $sing
 		} else {
 			$closest_size = uncode_getClosest($single_width, $ai_bpoints);
 		}
-
-	}
-	else
-	{
-		if ($crop) $closest_size = uncode_getClosest(max($originalWidth, $originalHeight) , $ai_bpoints);
-		else
-		{
-			$closest_size = uncode_getClosest($originalWidth, $ai_bpoints);
-		}
+	} else {
+		$closest_size = 10000;
 	}
 
-	if ($crop)
-	{
+	if ($crop) {
 
 		if ($closest_size > min($originalWidth, $originalHeight)) $closest_size = min($originalWidth, $originalHeight);
 
-		if ($single_width > $single_height)
-		{
+		if ($single_width > $single_height) {
 			$dest_w = $closest_size;
 			$dest_h = ($closest_size / $single_width) * $single_height;
-		}
-		else
-		{
+		} else {
 			$dest_h = $closest_size;
 			$dest_w = $dest_h * ($single_width / $single_height);
 		}
+
 		$new_dimensions = image_resize_dimensions($originalWidth, $originalHeight, $dest_w, $dest_h, $crop);
-	}
-	else
-	{
+	} else {
 		if ($closest_size > $originalWidth) $closest_size = $originalWidth;
 		$new_dimensions = image_resize_dimensions($originalWidth, $originalHeight, $closest_size, $originalHeight, $crop);
 	}
@@ -367,6 +377,14 @@ function uncode_resize_image($url, $path, $originalWidth, $originalHeight, $sing
 				'height' => $new_img_size[1]
 			);
 
+			//If using Wp Smushit
+      if( class_exists('WpSmush') ){
+        global $WpSmush;
+        if( filesize( $new_img_path ) < WP_SMUSH_MAX_BYTES ){
+          $WpSmush->do_smushit($new_img_path, $new_img);
+        }
+      }
+
 			return $vt_image;
 		}
 
@@ -391,7 +409,32 @@ function uncode_get_media_info($media_id)
 {
 	if ($media_id !== '') {
 		global $wpdb;
-		$info = $wpdb->get_row($wpdb->prepare("SELECT {$wpdb->posts}.post_content,{$wpdb->posts}.post_title,{$wpdb->posts}.post_excerpt,{$wpdb->posts}.guid,{$wpdb->posts}.post_mime_type,meta1.meta_value as metadata, meta2.meta_value as alt, meta3.meta_value as path, meta4.meta_value as team, meta5.meta_value as team_social, meta6.meta_value as animated_svg, meta7.meta_value as animated_svg_time FROM {$wpdb->posts} LEFT OUTER JOIN {$wpdb->postmeta} meta1 ON {$wpdb->posts}.ID = meta1.post_id AND meta1.meta_key = '_wp_attachment_metadata' LEFT OUTER JOIN {$wpdb->postmeta} meta2 ON {$wpdb->posts}.ID = meta2.post_id AND meta2.meta_key = '_wp_attachment_image_alt' LEFT OUTER JOIN {$wpdb->postmeta} meta3 ON {$wpdb->posts}.ID = meta3.post_id AND meta3.meta_key = '_wp_attached_file' LEFT OUTER JOIN {$wpdb->postmeta} meta4 ON {$wpdb->posts}.ID = meta4.post_id AND meta4.meta_key = '_uncode_team_member' LEFT OUTER JOIN {$wpdb->postmeta} meta5 ON {$wpdb->posts}.ID = meta5.post_id AND meta5.meta_key = '_uncode_team_member_social' LEFT OUTER JOIN {$wpdb->postmeta} meta6 ON {$wpdb->posts}.ID = meta6.post_id AND meta6.meta_key = '_uncode_animated_svg'  LEFT OUTER JOIN {$wpdb->postmeta} meta7 ON {$wpdb->posts}.ID = meta7.post_id AND meta7.meta_key = '_uncode_animated_svg_time' WHERE ID IN (%d)", $media_id ));
+		$remove_limit = version_compare($wpdb->db_version(), '5.5', '>=') ? 'SET SESSION SQL_BIG_SELECTS = 1;': 'SET SQL_BIG_SELECTS = 1;';
+		$wpdb->query($remove_limit);
+		$info = $wpdb->get_row($wpdb->prepare("SELECT {$wpdb->posts}.post_content,{$wpdb->posts}.post_title,{$wpdb->posts}.post_excerpt,{$wpdb->posts}.guid,{$wpdb->posts}.post_mime_type,meta1.meta_value as metadata, meta2.meta_value as alt, meta3.meta_value as path, meta4.meta_value as team, meta5.meta_value as team_social, meta6.meta_value as animated_svg, meta7.meta_value as animated_svg_time FROM {$wpdb->posts} LEFT OUTER JOIN {$wpdb->postmeta} meta1 ON {$wpdb->posts}.ID = meta1.post_id AND meta1.meta_key = '_wp_attachment_metadata' LEFT OUTER JOIN {$wpdb->postmeta} meta2 ON {$wpdb->posts}.ID = meta2.post_id AND meta2.meta_key = '_wp_attachment_image_alt' LEFT OUTER JOIN {$wpdb->postmeta} meta3 ON {$wpdb->posts}.ID = meta3.post_id AND meta3.meta_key = '_wp_attached_file' LEFT OUTER JOIN {$wpdb->postmeta} meta4 ON {$wpdb->posts}.ID = meta4.post_id AND meta4.meta_key = '_uncode_team_member' LEFT OUTER JOIN {$wpdb->postmeta} meta5 ON {$wpdb->posts}.ID = meta5.post_id AND meta5.meta_key = '_uncode_team_member_social' LEFT OUTER JOIN {$wpdb->postmeta} meta6 ON {$wpdb->posts}.ID = meta6.post_id AND meta6.meta_key = '_uncode_animated_svg' LEFT OUTER JOIN {$wpdb->postmeta} meta7 ON {$wpdb->posts}.ID = meta7.post_id AND meta7.meta_key = '_uncode_animated_svg_time' WHERE ID IN (%d)", $media_id ));
+		if (isset($info->post_mime_type) && strpos($info->post_mime_type, 'image') !== false) {
+			$file = $info->path;
+			// Get upload directory.
+			if ( ( $uploads = wp_get_upload_dir() ) && false === $uploads['error'] ) {
+				// Check that the upload base exists in the file location.
+				if ( 0 === strpos( $file, $uploads['basedir'] ) ) {
+					// Replace file location with url location.
+					$url = str_replace($uploads['basedir'], $uploads['baseurl'], $file);
+				} elseif ( false !== strpos($file, 'wp-content/uploads') ) {
+					// Get the directory name relative to the basedir (back compat for pre-2.7 uploads)
+					$url = trailingslashit( $uploads['baseurl'] . '/' . _wp_get_attachment_relative_path( $file ) ) . basename( $file );
+				} else {
+					// It's a newly-uploaded file, therefore $file is relative to the basedir.
+					$url = $uploads['baseurl'] . "/$file";
+				}
+			}
+			if ( !empty($url) ) {
+				if ( is_ssl() && ! is_admin() && 'wp-login.php' !== $GLOBALS['pagenow'] ) {
+					$url = set_url_scheme( $url );
+				}
+				$info->guid = $url;
+			}
+		}
 		return $info;
 	} else return;
 }
@@ -423,7 +466,7 @@ function uncode_get_oembed($id, $url, $mime, $with_poster = false, $excerpt = nu
 			preg_match_all('/src="([^"]*)"/i', $media_oembed, $img_src);
 			$media_oembed = (isset($img_src[1][0])) ? str_replace('"', '', $img_src[1][0]) : '';
 			if ($mime === 'oembed/flickr') {
-				$media_oembed = str_replace('_n.', '_b.', $media_oembed);
+				$media_oembed = str_replace(array('_n.','_z.'), '_b.', $media_oembed);
 			}
 		break;
 		case 'oembed/instagram':
@@ -503,7 +546,7 @@ function uncode_get_oembed($id, $url, $mime, $with_poster = false, $excerpt = nu
 					preg_match('/src="([^"]+)"/', $decodeiFrame->html, $iframe_src);
 					$iframe_url = str_replace('visual=true', 'visual=false', $iframe_src[1]);
 					$media_oembed = '<iframe width="100%" scrolling="no" frameborder="no" src="' . $iframe_url . '&color='.$accent_color.'&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false"></iframe>';
-					if (strpos($iframe_url, 'playlist') !== false) $object_class = 'soundcloud-playlist';
+					if (strpos($iframe_url, '%2Fusers%2F') !== false || strpos($iframe_url, '%2Fplaylists%2F') !== false) $object_class = 'soundcloud-playlist';
 					else
 					{
 						$object_class = 'soundcloud-single';
@@ -535,8 +578,9 @@ function uncode_get_oembed($id, $url, $mime, $with_poster = false, $excerpt = nu
 			$id = basename($json_data['url']);
 			$html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $json_data['html']);
 			$html = str_replace("&mdash; ", '', $html);
+			if (function_exists('mb_convert_encoding')) $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
 			$dom = new domDocument;
-			$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
+			$dom->loadHTML($html);
 			$dom->preserveWhiteSpace = false;
 			$twitter_content = $dom->getElementsByTagname('blockquote');
 			$twitter_blockquote = '';
@@ -600,7 +644,7 @@ function uncode_get_oembed($id, $url, $mime, $with_poster = false, $excerpt = nu
 				else
 				{
 					$object_class = 'object-size self-audio';
-					$media_oembed = apply_filters('the_content', '[audio src="' . $url . '"]');
+					$media_oembed = do_shortcode('[audio src="' . $url . '"]');
 					$poster = get_post_meta($id, "_uncode_poster_image", true);
 					$poster_id = $poster;
 				}
@@ -666,7 +710,7 @@ function uncode_get_oembed($id, $url, $mime, $with_poster = false, $excerpt = nu
 					}
 
 					if ($poster_url !== '') $poster_url = ' poster="' . $poster_url . '"';
-					$media_oembed = apply_filters('the_content', '[video' . $video_src . $poster_url . $add_loop . $add_autoplay . ']');
+					$media_oembed = do_shortcode('[video' . $video_src . $poster_url . $add_loop . $add_autoplay . ']');
 				}
 			}
 			else
@@ -805,6 +849,11 @@ function uncode_get_general_header_data($metabox_data, $post_type, $media = '', 
 		$metabox_data['_uncode_header_overlay_pattern'] = array(ot_get_option('_uncode_'.$post_type.'_header_overlay_pattern'));
 
 	} else if ($page_header_type === 'header_uncodeblock') {
+		if ($media !== '') {
+			if (isset($metabox_data['_uncode_header_background'][0])) $metabox_data['_uncode_header_background'] = array(unserialize($metabox_data['_uncode_header_background'][0]));
+			$metabox_data['_uncode_header_background'][0]['background-image'] = $media;
+			$media = '';
+		}
 		$get_uncodeblock_id = ot_get_option('_uncode_'.$post_type.'_blocks');
 		$metabox_data['_uncode_blocks_list'] = array($get_uncodeblock_id);
 	} else if ($page_header_type === 'header_revslider') {

@@ -747,7 +747,7 @@ if ( ! function_exists( 'ot_type_gradientpicker' ) ) {
           $std = $field_std ? 'data-default-color="' . $field_std . '"' : '';
 
           /* input */
-          echo '<input type="text" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" value="' . esc_attr( $field_value ) . '" class="hide-color-picker input-gradient ' . esc_attr( $field_class ) . '" ' . $std . ' />';
+          echo '<input type="text" name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" value="' . esc_attr( str_replace('\n', '', $field_value )) . '" class="hide-color-picker input-gradient ' . esc_attr( $field_class ) . '" ' . $std . ' />';
 
         echo '</div>';
 
@@ -897,6 +897,8 @@ if ( ! function_exists( 'ot_type_custom_post_type_select' ) ) {
 
   function ot_type_custom_post_type_select( $args = array() ) {
 
+    $post_active = '';
+
     /* turns arguments array into variables */
     extract( $args );
 
@@ -926,13 +928,23 @@ if ( ! function_exists( 'ot_type_custom_post_type_select' ) ) {
           echo '<option value="">-- ' . esc_html__( 'Choose One', 'option-tree' ) . ' --</option>';
           foreach( $my_posts as $my_post ) {
             $post_title = '' != $my_post->post_title ? $my_post->post_title : 'Untitled';
-            echo '<option value="' . esc_attr( $my_post->ID ) . '"' . selected( $field_value, $my_post->ID, false ) . '>' . $post_title . '</option>';
+            $post_link = get_edit_post_link($my_post->ID);
+            if (($field_value == $my_post->ID) && $post_link !== '') $post_active = $post_link;
+            $post_link = ($post_link !== '') ? ' data-link="'. $post_link . '"' : '';
+            echo '<option value="' . esc_attr( $my_post->ID ) . '"' . selected( $field_value, $my_post->ID, false ) . $post_link . '>' . $post_title . '</option>';
           }
         } else {
           echo '<option value="">' . esc_html__( 'No Posts Found', 'option-tree' ) . '</option>';
         }
 
         echo '</select>';
+
+        echo '<div class="link-button">';
+
+        if ($post_active !== '') echo '<a class="option-tree-ui-button button button-primary" href="'.$post_active.'" target="_blank">' . esc_html__('Edit','uncode') . '</a>';
+        else echo '<a class="option-tree-ui-button button button-primary hidden" href="" target="_blank">' . esc_html__('Edit','uncode') . '</a>';
+
+        echo '</div>';
 
       echo '</div>';
 
@@ -2131,6 +2143,9 @@ if ( ! function_exists( 'ot_type_select' ) ) {
 
   function ot_type_select( $args = array() ) {
 
+    $posts = false;
+    $post_active = '';
+
     /* turns arguments array into variables */
     extract( $args );
 
@@ -2153,11 +2168,21 @@ if ( ! function_exists( 'ot_type_select' ) ) {
         echo '<select name="' . esc_attr( $field_name ) . '" id="' . esc_attr( $field_id ) . '" class="option-tree-ui-select ' . esc_attr( $field_class ) . '">';
         foreach ( (array) $field_choices as $choice ) {
           if ( isset( $choice['value'] ) && isset( $choice['label'] ) ) {
-            echo '<option value="' . esc_attr( $choice['value'] ) . '"' . selected( $field_value, $choice['value'], false ) . '>' . esc_attr( $choice['label'] ) . '</option>';
+            $post_link = (isset( $choice['postlink'] )) ? ' data-link="'. esc_url( $choice['postlink'] ) . '"' : '';
+            if ($post_link !== '') $posts = true;
+            if ($field_value == $choice['value'] && $post_link !== '') $post_active = $choice['postlink'];
+            echo '<option value="' . esc_attr( $choice['value'] ) . '"' . selected( $field_value, $choice['value'], false ) . $post_link . '>' . esc_attr( $choice['label'] ) . '</option>';
           }
         }
 
         echo '</select>';
+
+        echo '<div class="link-button">';
+
+        if ($posts && $post_active !== '') echo '<a class="option-tree-ui-button button button-primary" href="'.$post_active.'" target="_blank">' . esc_html__('Edit','uncode') . '</a>';
+        else echo '<a class="option-tree-ui-button button button-primary hidden" href="" target="_blank">' . esc_html__('Edit','uncode') . '</a>';
+
+        echo '</div>';
 
       echo '</div>';
 

@@ -364,18 +364,24 @@ function uncode_export_wp( $args = array() ) {
 		$post_guid = get_the_guid();
 		$post_meta_key = '';
 		if ( $post->post_type == 'attachment') :
-			if (strpos($post->post_mime_type,'image/') !== false && $post->post_mime_type !== 'image/url' && strpos($post_guid,'undsgn.com') !== false) {
+			if (strpos($post->post_mime_type,'image/') !== false && $post->post_mime_type !== 'image/url' && $post->post_mime_type !== 'image/url' && strpos($post_guid,'undsgn.com') !== false) {
 				$random_value = rand();
 				$post_title = 'Demo media ' . $random_value;
 				$post_name = 'demo-media-' . $random_value;
-				$upload_dir = wp_upload_dir();
-				if (strpos($media_url,'product-') !== false) {
-					$media_name = 'product-placeholder.jpg';
+				if ($post->post_mime_type === 'image/svg+xml') {
+					$media_name = basename($post_guid);
+				} else if ($post->post_mime_type === 'image/png') {
+					$media_name = basename($post_guid);
 				} else {
-					$media_name = 'photo-placeholder-'.rand(1,20).'.jpg';
+					$upload_dir = wp_upload_dir();
+					if (strpos($media_url,'product-') !== false) {
+						$media_name = 'product-placeholder.jpg';
+					} else {
+						$media_name = 'photo-placeholder-'.rand(1,20).'.jpg';
+					}
 				}
-				$media_url = 'http://static.undsgn.com/uncode/dummy_placeholders/' . $media_name;
-				$post_guid = 'http://static.undsgn.com/uncode/dummy_placeholders/' . $media_name;
+				$media_url = 'http://static.undsgn.com/uncode/placeholder/' . $media_name;
+				$post_guid = 'http://static.undsgn.com/uncode/placeholder/' . $media_name;
 				$post_meta_key = trailingslashit(ltrim($upload_dir['subdir'], '/')).$media_name;
 			}
 		endif; ?>

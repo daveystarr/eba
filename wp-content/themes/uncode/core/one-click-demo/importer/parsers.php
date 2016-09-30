@@ -60,8 +60,9 @@ class WXR_Parser_SimpleXML {
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
 		}
+		$creds = request_filesystem_credentials($file, '', false, false);
+		WP_Filesystem($creds);
 		$response = $wp_filesystem->get_contents($file);
 		$xml  		= simplexml_load_string($response);
 
@@ -265,8 +266,9 @@ class WXR_Parser_XML {
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
 		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
 		}
+		$creds = request_filesystem_credentials($file, '', false, false);
+		WP_Filesystem($creds);
 		$response = $wp_filesystem->get_contents($file);
 		if ( ! xml_parse( $xml, $response, true ) ) {
 			$current_line = xml_get_current_line_number( $xml );

@@ -278,7 +278,9 @@
 				icons.setIcons(icomoon_json_icons, icomoon_json_search);
 			});
 		}
-		$('.button_icon_container').loadIcons();
+		$('.button_icon_container').focus(function() {
+			$(this).loadIcons();
+		});
 		// detect mousedown and store all checked radio buttons
 		$('.hndle').on('mousedown', function() {
 			// get parent element of .hndle selected.

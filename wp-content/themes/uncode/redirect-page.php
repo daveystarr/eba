@@ -23,6 +23,7 @@ if (isset($metabox_data['_uncode_specific_style'][0]) && $metabox_data['_uncode_
 $bg_color = ($bg_color == '') ? ' style-'.$style.'-bg' : ' style-'.$bg_color.'-bg';
 
 $redirect_page = ot_get_option('_uncode_redirect_page');
+$redirect_page = apply_filters( 'wpml_object_id', $redirect_page, 'post' );
 $the_content = get_post_field('post_content', $redirect_page);
 if (has_shortcode($the_content, 'vc_row'))
 {

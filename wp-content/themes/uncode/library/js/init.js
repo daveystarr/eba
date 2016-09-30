@@ -309,6 +309,7 @@ function onYouTubeIframeAPIReady() {
 		if (jQuery(this).attr('data-provider') == 'youtube') {
 			var id = jQuery(this).attr('data-id');
 			options = jQuery(window).data('okoptions-' + id);
+			options.time = jQuery(this).attr('data-t');
 			playerY = new YT.Player('okplayer-' + id, {
 				videoId: options.video ? options.video.id : null,
 				playerVars: {
@@ -335,6 +336,7 @@ function onYouTubeIframeAPIReady() {
 				}
 			});
 			YTplayers[id] = playerY;
+			playerY.videoId = id;
 		}
 	});
 }
@@ -376,16 +378,18 @@ function vimeoPlayerReady(id) {
 OKEvents = {
 	yt: {
 		ready: function(event) {
-			var iframe = jQuery(event.target)[0].c,
-				id = jQuery(iframe).closest('.uncode-video-container').attr('data-id');
+			var id = event.target.videoId;
 			youtubePlayers[id] = event.target;
 			event.target.setVolume(options.volume);
 			if (options.autoplay === 1) {
 				if (options.playlist.list) {
 					player.loadPlaylist(options.playlist.list, options.playlist.index, options.playlist.startSeconds, options.playlist.suggestedQuality);
 				} else {
-					var inCarousel = jQuery(iframe).closest('.owl-item');
+					var inCarousel = jQuery('#okplayer-' + id).closest('.owl-item');
 					if (!inCarousel.length || (inCarousel.length && inCarousel.hasClass('active'))) {
+						if (options.time != null) {
+							event.target.seekTo(parseInt(options.time));
+						}
 						event.target.playVideo();
 					} else {
 						event.target.pauseVideo();
@@ -395,6 +399,7 @@ OKEvents = {
 			OKEvents.utils.isFunction(options.onReady) && options.onReady(event.target);
 		},
 		onStateChange: function(event) {
+			var id = event.target.videoId;
 			switch (event.data) {
 				case -1:
 					OKEvents.utils.isFunction(options.unstarted) && options.unstarted();
@@ -405,7 +410,10 @@ OKEvents = {
 					break;
 				case 1:
 					OKEvents.utils.isFunction(options.onPlay) && options.onPlay();
-					jQuery(event.target.c).closest('.uncode-video-container').css('opacity', '1');
+					setTimeout(function() {
+						UNCODE.initVideoComponent(document.body, '.uncode-video-container.video, .uncode-video-container.self-video');
+						jQuery('#okplayer-' + id).closest('.uncode-video-container').css('opacity', '1');
+					}, 300);
 					break;
 				case 2:
 					OKEvents.utils.isFunction(options.onPause) && options.onPause();
@@ -546,6 +554,8 @@ function whichTransitionEvent() {
 		scrollbarWidth,
 		noScroll = false,
 		boxEvent = new CustomEvent('boxResized'),
+		bodyBorder = 0,
+		adminBarHeight = 0,
 		boxWidth = 0,
 		boxLeft = 0,
 		parallaxRows,
@@ -553,14 +563,17 @@ function whichTransitionEvent() {
 		parallaxHeaders,
 		headerWithOpacity,
 		speedDivider = 0.25,
+		adminBar,
 		pageHeader,
 		masthead,
+		mastheadMobile,
 		menuwrapper,
 		menuhide,
 		menusticky,
 		menuHeight = 0,
-		mainmenu,
-		secmenu,
+		menuMobileHeight = 0,
+		mainmenu = new Array(),
+		secmenu = new Array(),
 		secmenuHeight = 0,
 		transmenuHeight = 0,
 		header,
@@ -570,8 +583,6 @@ function whichTransitionEvent() {
 		logolink,
 		logoMinScale,
 		lastScrollValue = 0,
-		deltaY,
-		overHtml = true,
 		wwidth = window.innerWidth || document.documentElement.clientWidth,
 		wheight = window.innerHeight || document.documentElement.clientHeight,
 		boxWrapper,
@@ -583,8 +594,20 @@ function whichTransitionEvent() {
 		footerScroller = false,
 		mediaQuery = 959,
 		mediaQueryMobile = 569,
+		menuOpened = false,
+		menuMobileTriggerEvent = new CustomEvent('menuMobileTrigged'),
 		resizeTimer,
+		isSplitMenu = false,
+		mainNavMenu,
+		mainNavWrapper,
 	initBox = function() {
+			bodyBorder = Number((typeof (document.body).getAttribute('data-border') !== 'undefined' && (document.body).getAttribute('data-border')) || 0);
+			if (bodyBorder > 9 && wwidth < mediaQuery) bodyBorder = 9;
+			UNCODE.bodyBorder = bodyBorder;
+			if (bodyBorder != 0) {
+				document.documentElement.style.marginTop = bodyBorder + 'px';
+				wheight = (window.innerHeight || document.documentElement.clientHeight) - (bodyBorder * 2);
+			}
 			if (!isMobile && scrollbarWidth == undefined) {
 				// Create the measurement node
 				var scrollDiv = document.createElement("div");
@@ -597,18 +620,18 @@ function whichTransitionEvent() {
 					// Delete the DIV
 					dombody.removeChild(scrollDiv);
 				}
-			}
-			if (!isMobile) {
+			} else scrollbarWidth = 0;
+			if (bodyBorder > 0) {
 				forEachElement('.box-container', function(el, i) {
 					if (!classie.hasClass(el, 'limit-width')) {
 						var elWidth = outerWidth(el),
 							newWidth = 12 * Math.ceil((wwidth - scrollbarWidth) / 12);
-						boxWidth = newWidth;
-						boxLeft = Math.ceil(((newWidth) - wwidth) / 2);
+						boxWidth = newWidth - (bodyBorder * 2);
+						boxLeft = (bodyBorder) - Math.ceil(((newWidth) - wwidth) / 2);
 						el.style.width = boxWidth + 'px';
-						el.style.marginLeft = '-' + (boxLeft + (scrollbarWidth / 2)) + 'px';
+						el.style.marginLeft = (boxLeft + (scrollbarWidth / 2)) + 'px';
 						if (mainmenu != undefined && mainmenu[0] != undefined) {
-							mainmenu[0].style.width = newWidth + 'px';
+							mainmenu[0].style.width = boxWidth + 'px';
 						}
 					}
 				});
@@ -618,15 +641,24 @@ function whichTransitionEvent() {
 			if (!classie.hasClass(document.body, 'vmenu')) noScroll = true;
 			menuwrapper = document.querySelectorAll(".menu-wrapper");
 			masthead = document.getElementById("masthead");
-			menuhide = document.querySelector('#masthead .menu-hide');
-			menusticky = document.querySelectorAll('.menu-sticky');
+			if (classie.hasClass(document.body, 'hmenu-center-split')) {
+				mastheadMobile = new Array(document.getElementById("logo-container-mobile"), document.getElementById("main-logo").parentNode);
+			} else mastheadMobile = document.getElementById("logo-container-mobile");
+			menuhide = document.querySelector('#masthead .menu-hide, .main-header .menu-hide, #masthead .menu-hide-vertical');
+			menusticky = document.querySelectorAll('.menu-sticky, .menu-sticky-vertical');
 			transmenuel = document.querySelectorAll('.menu-transparent:not(.vmenu-container)');
 			var menuItemsButton = document.querySelectorAll('.menu-item-button .menu-btn-table');
 			logo = document.querySelector('#main-logo');
 			if (logo != undefined) logolink = (logo.firstElementChild || logo.firstChild);
 			if (logolink != undefined) logoMinScale = logolink.getAttribute("data-minheight");
 			logoel = document.querySelectorAll('.menu-shrink .logo-container');
-			mainmenu = (wwidth > mediaQuery) ? document.querySelectorAll('.menu-primary .menu-container') : document.querySelectorAll('.menu-primary .menu-container, .vmenu-container .logo-container');
+			mainmenu = document.querySelectorAll('.vmenu .vmenu-container, .menu-primary .menu-container');
+			if (classie.hasClass(document.body, 'hmenu-center')) {
+				var mainmenucenter = document.querySelectorAll('.hmenu-center .menu-container-mobile');
+				var first_array = Array.prototype.slice.call(mainmenu);
+				var second_array = Array.prototype.slice.call(mainmenucenter);
+				mainmenu = first_array.concat(second_array);
+			}
 			secmenu = document.querySelectorAll('.menu-secondary');
 			calculateMenuHeight(true);
 			for (var k = 0; k < menuItemsButton.length; k++) {
@@ -634,30 +666,74 @@ function whichTransitionEvent() {
 					buttonHeight = outerHeight(menuItemsButton[k]);
 				a_item.style.height = buttonHeight + 'px';
 			}
+			if (classie.hasClass(document.body, 'hmenu-center-split')) {
+				mainNavMenu = document.querySelector('#masthead .navbar-main .menu-primary-inner');
+				mainNavWrapper = document.querySelector('#masthead > .menu-container');
+				isSplitMenu = true;
+			}
 		},
 		calculateMenuHeight = function(first) {
 			menuHeight = transmenuHeight = secmenuHeight = 0;
-			for (var i = 0; i < mainmenu.length; i++) {
-				menuHeight = menuHeight + outerHeight(mainmenu[i]);
-				if (isIE && first) {
-					getDivChildren(mainmenu[i], '.menu-horizontal-inner', function(innerMenu, i) {
-						innerMenu.style.height = menuHeight + 'px';
-					});
+
+			if (mastheadMobile != null) {
+				if (mastheadMobile.length === 2) {
+					if (wwidth > mediaQuery) UNCODE.menuMobileHeight = outerHeight(mastheadMobile[1]);
+					else UNCODE.menuMobileHeight = outerHeight(mastheadMobile[0]);
+				} else UNCODE.menuMobileHeight = outerHeight(mastheadMobile);
+			}
+
+			if (wwidth > mediaQuery) {
+				for (var i = 0; i < mainmenu.length; i++) {
+					if (classie.hasClass(document.body, 'hmenu-center') && i === 1) continue;
+					if (!classie.hasClass(masthead, 'masthead-vertical')) {
+						menuHeight = menuHeight + outerHeight(mainmenu[i]);
+					} else menuHeight = 0;
+
+					if (isIE && first) {
+						getDivChildren(mainmenu[i], '.menu-horizontal-inner', function(innerMenu, i) {
+							innerMenu.style.height = menuHeight + 'px';
+						});
+					}
+
+					if (classie.hasClass(mainmenu[i].parentNode, 'menu-transparent')) {
+						transmenuHeight += menuHeight;
+					}
 				}
 
-				if (classie.hasClass(mainmenu[i].parentNode, 'menu-transparent')) {
-					transmenuHeight += menuHeight;
+				for (var j = 0; j < secmenu.length; j++) {
+					secmenuHeight += outerHeight(secmenu[j]);
+				}
+				menuHeight += secmenuHeight;
+			} else {
+				menuHeight = UNCODE.menuMobileHeight;
+			}
+
+			if (classie.hasClass(document.documentElement, 'admin-mode')) {
+				adminBar = document.getElementById("wpadminbar");
+				if (wwidth > 600) {
+					if (adminBar != null) adminBarHeight = outerHeight(adminBar);
+					else {
+						if (wwidth > 782) adminBarHeight = 32;
+						else adminBarHeight = 46;
+					}
+				} else adminBarHeight = 0;
+			}
+			UNCODE.adminBarHeight = adminBarHeight;
+			UNCODE.menuHeight = menuHeight;
+
+			if (masthead != undefined) { // && first && !classie.hasClass(masthead, 'masthead-vertical')) {
+				masthead.parentNode.style.height = menuHeight + 'px';
+			}
+		},
+		centerSplitMenu = function() {
+			if (wwidth > mediaQuery && mainNavMenu) {
+				if (mainNavMenu.style.left == '') {
+					mainNavMenu.style.left = '0px';
+					var logoPos = logo.getBoundingClientRect();
+					mainNavMenu.style.left = (wwidth / 2) - (logoPos.left + (logoPos.width / 2) ) + 'px';
+					mainNavWrapper.style.opacity = '1';
 				}
 			}
-			for (var j = 0; j < secmenu.length; j++) {
-				secmenuHeight = outerHeight(secmenu[j]);
-			}
-			menuHeight += secmenuHeight;
-			if (masthead != undefined && first) {
-				if (wwidth > mediaQuery) masthead.parentNode.style.height = menuHeight + 'px';
-			}
-			if (classie.hasClass(document.documentElement, 'admin-mode')) menuHeight += 32;
-			UNCODE.menuHeight = menuHeight;
 		},
 		initHeader = function() {
 			UNCODE.adaptive();
@@ -706,9 +782,10 @@ function whichTransitionEvent() {
 					}
 				}
 			}
-			if (masthead != undefined) {
+
+			if (masthead != undefined && !classie.hasClass(masthead, 'masthead-vertical')) {
 				if (header.length) {
-					classie.addClass(menuwrapper[0], 'with-header');
+					if (menuwrapper[0] != undefined) classie.addClass(menuwrapper[0], 'with-header');
 					for (var j = 0; j < header.length; j++) {
 						var headerel = header[j],
 							closestStyle = getClosest(headerel, 'style-light');
@@ -718,8 +795,8 @@ function whichTransitionEvent() {
 							if (masthead.style.opacity !== 1) masthead.style.opacity = 1;
 						}
 						if (classie.hasClass(masthead, 'menu-transparent')) {
-							masthead.parentNode.style.height = '0px';
 							if (wwidth > mediaQuery) {
+								masthead.parentNode.style.height = '0px';
 								if (classie.hasClass(masthead, 'menu-add-padding')) {
 									var headerBlock = getClosest(headerel, 'header-uncode-block');
 									if (headerBlock != null) {
@@ -739,13 +816,13 @@ function whichTransitionEvent() {
 						}
 					}
 				} else {
-					classie.addClass(menuwrapper[0], 'no-header');
+					if (menuwrapper[0] != undefined) classie.addClass(menuwrapper[0], 'no-header');
 					classie.removeClass(masthead, 'menu-transparent');
 					transmenuHeight = 0;
 				}
 			}
 			bodyTop = document.documentElement['scrollTop'] || document.body['scrollTop'];
-			if (wwidth > mediaQuery) scrollFunction();
+			scrollFunction();
 			showHideScrollup(bodyTop);
 		},
 		initRow = function(currentRow) {
@@ -798,7 +875,7 @@ function whichTransitionEvent() {
 				parallaxRowCol(bodyTop);
 			}
 		},
-		setRowHeight = function(container, forced) {
+		setRowHeight = function(container, forced, resized) {
 			var currentTallest = 0,
 				percentHeight = 0,
 				minHeight = 0,
@@ -933,12 +1010,12 @@ function whichTransitionEvent() {
 								parseFloat(computedStyleCol.marginTop);
 								getMargin = parseFloat(computedStyleCol.marginTop);
 								newHeight -= (getMargin);
+								$colPercDiff -= (percentHeight != null) ? percentHeight : 0;
 								if (currentTallest > newHeight) {
 									var getColHeight = outerHeight($colChild);
 									if (getColHeight > newHeight) {
 										$colHeight += getColHeight;
 										$colDiff += getColHeight;
-										$colPercDiff -= (percentHeight != null) ? percentHeight : 0;
 										$colChild.oversized = true;
 										$col.oversized = true;
 										$row.oversized = true;
@@ -1040,16 +1117,29 @@ function whichTransitionEvent() {
 							}
 						});
 					}
-					getDivChildren(el, '.row-child > .row-inner', function(obj, k, total) {
-						if (obj.style.height == '') {
-							if (wwidth > mediaQueryMobile) {
-								var getStyle = (window.getComputedStyle((obj.parentNode), null)),
-								getInnerHeight = (parseInt(getStyle.height) - parseInt(getStyle.paddingTop) - parseInt(getStyle.paddingBottom));
-								obj.style.height = getInnerHeight + 1 + 'px';
-								obj.style.marginBottom = '-1px';
+					if (resized) {
+						getDivChildren(el, '.row-child > .row-inner', function(obj, k, total) {
+							if (obj.style.height == '') {
+								if (wwidth > mediaQueryMobile) {
+									var getStyle = (window.getComputedStyle((obj.parentNode), null)),
+									getInnerHeight = (parseInt(obj.parentNode.clientHeight) - parseInt(getStyle.paddingTop) - parseInt(getStyle.paddingBottom));
+									obj.style.height = getInnerHeight + 1 + 'px';
+									obj.style.marginBottom = '-1px';
+								}
 							}
-						}
-					});
+						});
+						getDivChildren(el, '.row-parent > .row-inner', function(obj, k, total) {
+							if (obj.style.height != '') {
+								var getStyle = (window.getComputedStyle((obj.parentNode), null)),
+								getInnerHeight = (parseInt(obj.parentNode.clientHeight) - parseInt(getStyle.paddingTop) - parseInt(getStyle.paddingBottom)),
+								getTempHeight = parseInt(obj.style.height);
+								if (getInnerHeight > getTempHeight) {
+									obj.style.height = getInnerHeight + 1 + 'px';
+									obj.style.marginBottom = '-1px';
+								}
+							}
+						});
+					}
 				} else {
 					if (isFF) {
 						getDivChildren(el, '.uncoltable', function(col, i, total) {
@@ -1083,8 +1173,7 @@ function whichTransitionEvent() {
 				var getHeight = el.getAttribute("data-height"),
 					newHeight = ((wheight * getHeight) / 100);
 				if (getHeight != 'fixed' && newHeight != 0) {
-					if (wwidth > mediaQuery) newHeight -= menuHeight - transmenuHeight;
-					else newHeight -= menuHeight - secmenuHeight;
+					newHeight -= UNCODE.menuMobileHeight;
 					el.style.height = newHeight + 'px';
 				}
 			});
@@ -1092,6 +1181,7 @@ function whichTransitionEvent() {
 				if (header != undefined && header.length) {
 					if (classie.hasClass(masthead, 'menu-transparent')) {
 						if (wwidth > mediaQuery) {
+							masthead.parentNode.style.height = '0px';
 							if (classie.hasClass(masthead, 'menu-add-padding')) {
 								for (var j = 0; j < header.length; j++) {
 									var headerel = header[j];
@@ -1147,29 +1237,8 @@ function whichTransitionEvent() {
 		},
 		init_overlay = function() {
 			var triggerButton,
-			closeButton;
+			closeButtons = new Array();
 			function toggleOverlay(btn) {
-				if (!classie.hasClass(triggerButton, 'search-icon')) {
-					if (classie.hasClass(triggerButton, 'close')) {
-						classie.removeClass(closeButton, 'close');
-						classie.removeClass(triggerButton, 'close');
-						classie.addClass(closeButton, 'closing');
-						classie.addClass(triggerButton, 'closing');
-						setTimeout(function() {
-							classie.removeClass(closeButton, 'closing');
-							classie.removeClass(triggerButton, 'closing');
-							triggerButton.style.opacity = 1;
-							closeButton.style.opacity = 0;
-						}, 800);
-					} else {
-						var getBtnRect = triggerButton.getBoundingClientRect();
-						closeButton.parentNode.setAttribute('style', 'top:' + getBtnRect.top + 'px; left:'+getBtnRect.left + 'px !important');
-						classie.addClass(closeButton, 'close');
-						classie.addClass(triggerButton, 'close');
-						triggerButton.style.opacity = 0;
-						closeButton.style.opacity = 1;
-					}
-				}
 				Array.prototype.forEach.call(document.querySelectorAll('div.overlay'), function(overlay) {
 					if (btn.getAttribute('data-area') == overlay.getAttribute('data-area')) {
 						var container = document.querySelector('div.' + btn.getAttribute('data-container')),
@@ -1205,17 +1274,55 @@ function whichTransitionEvent() {
 						}
 					}
 				});
+
+				if (classie.hasClass(btn, 'search-icon') || classie.hasClass(btn, 'menu-close-search')) return;
+
+				if (classie.hasClass(triggerButton, 'close')) {
+					UNCODE.menuOpened = false;
+					classie.removeClass(triggerButton, 'close');
+					classie.addClass(triggerButton, 'closing');
+					Array.prototype.forEach.call(closeButtons, function(closeButton) {
+						if (!classie.hasClass(closeButton, 'menu-close-search')) {
+							classie.removeClass(closeButton, 'close');
+							classie.addClass(closeButton, 'closing');
+						}
+					});
+					setTimeout(function() {
+						classie.removeClass(triggerButton, 'closing');
+						triggerButton.style.opacity = 1;
+						Array.prototype.forEach.call(closeButtons, function(closeButton) {
+							if (!classie.hasClass(closeButton, 'menu-close-search')) {
+								classie.removeClass(closeButton, 'closing');
+								closeButton.style.opacity = 0;
+							}
+						});
+					}, 800);
+				} else {
+					UNCODE.menuOpened = true;
+					triggerButton.style.opacity = 0;
+					var getBtnRect = !classie.hasClass(triggerButton, 'search-icon') ? triggerButton.getBoundingClientRect() : null;
+					Array.prototype.forEach.call(closeButtons, function(closeButton) {
+						if (!classie.hasClass(closeButton, 'menu-close-search')) {
+							classie.addClass(triggerButton, 'close');
+							if (getBtnRect != null) closeButton.setAttribute('style', 'top:' + getBtnRect.top + 'px; left:'+ getBtnRect.left + 'px !important');
+							classie.addClass(closeButton, 'close');
+							closeButton.style.opacity = 1;
+						}
+					});
+				}
 			}
 			Array.prototype.forEach.call(document.querySelectorAll('.trigger-overlay'), function(triggerBttn) {
-				triggerButton = triggerBttn;
+				if (UNCODE.menuOpened) return;
 				triggerBttn.addEventListener('click', function(e) {
-					if (wwidth > mediaQuery) toggleOverlay(triggerBttn);
+					e.stopPropagation();
+					triggerButton = e.currentTarget;
+					if (wwidth > mediaQuery) toggleOverlay(triggerButton);
 					e.preventDefault();
 					return false;
 				}, false);
 			});
 			Array.prototype.forEach.call(document.querySelectorAll('.overlay-close'), function(closeBttn) {
-				closeButton = closeBttn;
+				closeButtons.push(closeBttn);
 				closeBttn.addEventListener('click', function(e) {
 					if (wwidth > mediaQuery) toggleOverlay(closeBttn);
 					e.preventDefault();
@@ -1402,34 +1509,63 @@ function whichTransitionEvent() {
 		},
 		/** Hide Menu **/
 		hideMenu = function(bodyTop) {
-			if (typeof menuhide == 'object' && menuhide != null) {
-				var translate;
+			if (UNCODE.menuOpened) return;
+			if (classie.hasClass(document.body, 'vmenu')) {
+				if (wwidth < mediaQuery) menuhide = document.querySelector('#masthead .menu-hide-vertical');
+				else menuhide = null;
+			}
+			if (classie.hasClass(document.body, 'hmenu-center')) {
+				if (wwidth > mediaQuery) menuhide = document.querySelector('#masthead .menu-hide');
+				else menuhide = document.querySelector('.menu-container-mobile.menu-hide');
+			}
+			if (typeof menuhide == 'object' && menuhide != null && mainmenu[0] != undefined) {
+				var translate,
+				topOffset = 0;
+				/** fix for hmenu-center **/
+				var sticky_element = (typeof mainmenu.item === 'undefined' ? ((wwidth > mediaQuery) ? mainmenu[0] : mainmenu[1]) : mainmenu[0]);
 				if (lastScrollValue > bodyTop) {
 					if (!UNCODE.scrolling) {
 						if (classie.hasClass(menuhide, 'menu-hided')) {
 							classie.removeClass(menuhide, 'menu-hided');
 							translateElement(menuhide, 0);
-							if (mainmenu[0].style.position != 'fixed') {
-								classie.addClass(mainmenu[0].parentNode, 'is_stuck');
-								mainmenu[0].style.position = 'fixed';
-								mainmenu[0].style.top = '0';
-								if (!classie.hasClass(document.body, 'boxed-width')) mainmenu[0].style.width = boxWidth + 'px';
+							if (sticky_element.style.position != 'fixed') {
+								classie.addClass(sticky_element.parentNode, 'is_stuck');
+								sticky_element.style.position = 'fixed';
+								if (bodyBorder > 0) topOffset += bodyBorder;
+								if (adminBar != null && window.getComputedStyle(adminBar,null).getPropertyValue("position") != 'fixed') adminBarHeight = 0;
+								if (adminBarHeight > 0) topOffset += adminBarHeight;
+								sticky_element.style.top = topOffset + 'px';
+								if (!classie.hasClass(document.body, 'boxed-width') && boxWidth > 0) sticky_element.style.width = boxWidth + 'px';
 							}
 						} else {
 							if ((secmenuHeight == 0) ? bodyTop == 0 : bodyTop == secmenuHeight) {
-								if (mainmenu[0].style.position == 'fixed') {
-									classie.removeClass(mainmenu[0].parentNode, 'is_stuck');
-									mainmenu[0].style.position = '';
-									mainmenu[0].style.top = '';
+								if (sticky_element.style.position == 'fixed') {
+									classie.removeClass(sticky_element.parentNode, 'is_stuck');
+									if (menusticky == undefined && !classie.hasClass(menuhide, 'menu-hided')) sticky_element.style.position = '';
+									sticky_element.style.top = '';
 								}
 							}
 						}
 					}
 				} else if (lastScrollValue < bodyTop) {
+					if (bodyTop < 1) {
+						if (classie.hasClass(sticky_element.parentNode, 'menu-hided')) {
+							classie.removeClass(sticky_element.parentNode, 'is_stuck');
+							sticky_element.style.top = '';
+						}
+					}
+					if (bodyTop > 0) {
+						if (menusticky == undefined && !classie.hasClass(menuhide, 'menu-hided')) sticky_element.style.position = '';
+					}
 					if (bodyTop > wheight / 2 || UNCODE.scrolling) {
 						if (!classie.hasClass(menuhide, 'menu-hided')) {
+							classie.addClass(sticky_element.parentNode, 'is_stuck');
+							if (sticky_element.style.position != 'fixed') {
+								sticky_element.style.position = 'fixed';
+								sticky_element.style.top = '';
+							}
 							classie.addClass(menuhide, 'menu-hided');
-							translateElement(menuhide, -menuHeight);
+							translateElement(menuhide, -UNCODE.menuMobileHeight - 1);
 						}
 					}
 				}
@@ -1438,20 +1574,25 @@ function whichTransitionEvent() {
 		},
 		/** Stick Menu **/
 		stickMenu = function(bodyTop) {
-			if (header) {
-				if ((secmenuHeight == 0) ? bodyTop > 0 : bodyTop > secmenuHeight) {
-					if (mainmenu[0].style.position != 'fixed') {
-						classie.addClass(mainmenu[0].parentNode, 'is_stuck');
-						mainmenu[0].style.position = 'fixed';
-						if (document.documentElement.style.marginTop !== '') mainmenu[0].style.top = document.documentElement.style.marginTop;
-						else mainmenu[0].style.top = '0';
-						if (!classie.hasClass(document.body, 'boxed-width')) mainmenu[0].style.width = boxWidth + 'px';
+			if (header && mainmenu[0] != undefined) {
+				if (classie.hasClass(mainmenu[0], 'vmenu-container') && wwidth > mediaQuery) return;
+				/** fix for hmenu-center **/
+				var sticky_element = (typeof mainmenu.item === 'undefined' ? ((wwidth > mediaQuery) ? mainmenu[0] : mainmenu[1]) : mainmenu[0]);
+				if ((secmenuHeight == 0 && wwidth > mediaQuery) ? bodyTop > (0 + adminBarHeight)  : bodyTop > (secmenuHeight + adminBarHeight)) {
+					if (sticky_element.style.position != 'fixed') {
+						classie.addClass(sticky_element.parentNode, 'is_stuck');
+						sticky_element.style.position = 'fixed';
+						var getAnchorTop = bodyBorder;
+						if (adminBar != null && window.getComputedStyle(adminBar,null).getPropertyValue("position") != 'fixed') adminBarHeight = 0;
+						if (adminBarHeight > 0) getAnchorTop += adminBarHeight;
+						sticky_element.style.top = getAnchorTop + 'px';
+						if (!classie.hasClass(document.body, 'boxed-width') && boxWidth > 0) sticky_element.style.width = boxWidth + 'px';
 					}
 				} else {
-					if (mainmenu[0].style.position != 'absolute') {
-						classie.removeClass(mainmenu[0].parentNode, 'is_stuck');
-						mainmenu[0].style.position = 'absolute';
-						mainmenu[0].style.top = '';
+					if (sticky_element.style.position != 'absolute' || wwidth < mediaQuery) {
+						classie.removeClass(sticky_element.parentNode, 'is_stuck');
+						sticky_element.style.position = 'fixed';
+						sticky_element.style.top = '';
 					}
 				}
 			}
@@ -1466,19 +1607,19 @@ function whichTransitionEvent() {
 		},
 		scrollFunction = function() {
 			if (logoel != undefined && logoel.length) shrinkMenu(bodyTop);
-			if (menusticky != undefined && menusticky.length && !isMobile) stickMenu(bodyTop);
-			if (!isMobile) hideMenu(bodyTop);
-			if (header && menusticky != undefined && menusticky.length) switchColorsMenu(bodyTop);
-			parallaxRowCol(bodyTop);
-			parallaxHeader(bodyTop);
-			headerOpacity(bodyTop);
+			if (menusticky != undefined && menusticky.length) stickMenu(bodyTop);
+			hideMenu(bodyTop);
+			if (!isMobile) {
+				if (header && menusticky != undefined && menusticky.length) switchColorsMenu(bodyTop);
+				parallaxRowCol(bodyTop);
+				parallaxHeader(bodyTop);
+				headerOpacity(bodyTop);
+			}
 		};
 	if (!noScroll) {
 		window.addEventListener('scroll', function(e) {
 			bodyTop = document.documentElement.scrollTop || document.body.scrollTop;
-			if (wwidth > mediaQuery && !isMobile) {
-				scrollFunction();
-			}
+			scrollFunction();
 			showHideScrollup(bodyTop);
 		}, false);
 	}
@@ -1552,29 +1693,29 @@ function whichTransitionEvent() {
 	window.addEventListener("resize", function() {
 		docheight = (boxWrapper != undefined && boxWrapper[0] != undefined) ? boxWrapper[0].offsetHeight : 0;
 		var oldWidth = wwidth;
-		wwidth = window.innerWidth || document.documentElement.clientWidth;
-		wheight = window.innerHeight || document.documentElement.clientHeight;
-		if (isMobile && (oldWidth == wwidth)) return false;
+		UNCODE.wwidth = wwidth = window.innerWidth || document.documentElement.clientWidth;
+		UNCODE.wheight = wheight = (window.innerHeight || document.documentElement.clientHeight) - (bodyBorder * 2);
+		calculateMenuHeight(false);
+		if ((isMobile && bodyBorder == 0) && (oldWidth == wwidth)) return false;
 		initBox();
 		headerHeight('.header-wrapper');
 		window.dispatchEvent(boxEvent);
 		clearTimeout(resizeTimer);
 		resizeTimer = setTimeout(function() {
+			UNCODE.wheight = wheight = (window.innerHeight || document.documentElement.clientHeight) - (bodyBorder * 2);
 			Array.prototype.forEach.call(document.querySelectorAll('.row-inner'), function(el) {
 				el.style.height = '';
 				el.style.marginBottom = '';
 			});
-			setRowHeight(document.querySelectorAll('.page-wrapper .row-parent'));
+			setRowHeight(document.querySelectorAll('.page-wrapper .row-parent'), false, true);
 		}, 500);
-
+		if (isSplitMenu) centerSplitMenu();
 		if (!isMobile) {
 			setTimeout(function() {
 				initVideoComponent(document.body, '.uncode-video-container.video, .uncode-video-container.self-video');
 			}, 100);
 		}
-		if (wwidth > mediaQuery) {
-			scrollFunction();
-		}
+		scrollFunction();
 		showHideScrollup(bodyTop);
 	});
 
@@ -1583,23 +1724,22 @@ function whichTransitionEvent() {
 	 */
 	window.addEventListener("load", function(){
 		if (!UNCODE.isMobile) {
-			if (wwidth > mediaQuery) {
-				scrollFunction();
-			}
 			setTimeout(function() {
 				window.dispatchEvent(UNCODE.boxEvent);
 				Waypoint.refreshAll();
 			}, 2000);
 		}
 		showHideScrollup(bodyTop);
-		calculateMenuHeight(false);
-		jQuery(window).trigger('resize');
+		window.dispatchEvent(new Event('resize'));
 	}, false);
 
 	var UNCODE = {
 		boxEvent: boxEvent,
+		bodyBorder: bodyBorder,
 		initBox: initBox,
+		adminBarHeight: 0,
 		menuHeight: 0,
+		menuMobileHeight: 0,
 		fixMenuHeight: fixMenuHeight,
 		initHeader: initHeader,
 		initRow: initRow,
@@ -1607,8 +1747,12 @@ function whichTransitionEvent() {
 		switchColorsMenu: switchColorsMenu,
 		isMobile: isMobile,
 		scrolling: false,
+		menuOpened: false,
+		menuMobileTriggerEvent: menuMobileTriggerEvent,
 		mediaQuery: mediaQuery,
-		initVideoComponent: initVideoComponent
+		initVideoComponent: initVideoComponent,
+		wwidth: wwidth,
+		wheight: wheight,
 	};
 	// transport
 	if (typeof define === 'function' && define.amd) {
@@ -1672,8 +1816,6 @@ function whichTransitionEvent() {
 								replaceImg.onload = function () {
 									if (this.source !== null) {
 										(this.el).src = this.src;
-										// (this.el).removeAttribute('width');
-										// (this.el).removeAttribute('height');
 									} else {
 										(this.el).style.backgroundImage = 'url("'+this.src+'")';
 									}
@@ -1717,7 +1859,7 @@ function whichTransitionEvent() {
 
 /**
  * vivus - JavaScript library to make drawing animation on SVG
- * @version v0.3.0
+ * @version v0.3.1
  * @link https://github.com/maxwellito/vivus
  * @license MIT
  */
@@ -2034,8 +2176,8 @@ function Vivus (element, options, callback) {
 
 /**
  * Timing functions
- ************************************** 
- * 
+ **************************************
+ *
  * Default functions to help developers.
  * It always take a number as parameter (between 0 to 1) then
  * return a number (between 0 and 1)
@@ -2100,7 +2242,7 @@ Vivus.prototype.setElement = function (element, options) {
   case window.HTMLObjectElement:
     // If we have to wait for it
     var onLoad, self;
-    
+
     self = this;
     onLoad = function (e) {
       if (self.isReady) {
@@ -2171,7 +2313,6 @@ Vivus.prototype.setOptions = function (options) {
   this.isIE        = (window.navigator.userAgent.indexOf('MSIE') !== -1 || window.navigator.userAgent.indexOf('Trident/') !== -1 || window.navigator.userAgent.indexOf('Edge/') !== -1 );
   this.duration    = parsePositiveInt(options.duration, 120);
   this.delay       = parsePositiveInt(options.delay, null);
-  this.delayStart  = parsePositiveInt(options.delayStart, null);
   this.dashGap     = parsePositiveInt(options.dashGap, 1);
   this.forceRender = options.hasOwnProperty('forceRender') ? !!options.forceRender : this.isIE;
   this.selfDestroy = !!options.selfDestroy;
@@ -2283,7 +2424,7 @@ Vivus.prototype.mapping = function () {
       break;
 
     case 'scenario-sync':
-      path = paths[i];
+      path = pathObj.el;
       pAttrs = this.parseAttr(path);
       pathObj.startAt = timePoint + (parsePositiveInt(pAttrs['data-delay'], this.delayUnit) || 0);
       pathObj.duration = parsePositiveInt(pAttrs['data-duration'], this.duration);
@@ -2292,7 +2433,7 @@ Vivus.prototype.mapping = function () {
       break;
 
     case 'scenario':
-      path = paths[i];
+      path = pathObj.el;
       pAttrs = this.parseAttr(path);
       pathObj.startAt = parsePositiveInt(pAttrs['data-start'], this.delayUnit) || 0;
       pathObj.duration = parsePositiveInt(pAttrs['data-duration'], this.duration);
@@ -2379,14 +2520,16 @@ Vivus.prototype.trace = function () {
  * ressources, too much DOM manupulation..
  * but it's the only way to let the magic happen on IE.
  * By default, this fallback is only applied on IE.
- * 
+ *
  * @param  {Number} index Path index
  */
 Vivus.prototype.renderPath = function (index) {
   if (this.forceRender && this.map && this.map[index]) {
     var pathObj = this.map[index],
         newPath = pathObj.el.cloneNode(true);
-    pathObj.el.parentNode.replaceChild(newPath, pathObj.el);
+    try {
+    	pathObj.el.parentNode.replaceChild(newPath, pathObj.el);
+    } catch(err) {}
     pathObj.el = newPath;
   }
 };
@@ -2398,7 +2541,7 @@ Vivus.prototype.renderPath = function (index) {
  * This this mainly due to the case of passing an
  * object tag in the constructor. It will wait
  * the end of the loading to initialise.
- * 
+ *
  */
 Vivus.prototype.init = function () {
   // Set object variables
@@ -2438,11 +2581,7 @@ Vivus.prototype.starter = function () {
     var self = this,
     listener = function () {
       if (self.isInViewport(self.parentEl, 1)) {
-        if (self.delayStart != null) {
-        	setTimeout(function() {
-        		self.play();
-        	}, self.delayStart);
-        } else self.play();
+        self.play();
         window.removeEventListener('scroll', listener);
       }
     };
@@ -2491,7 +2630,7 @@ Vivus.prototype.finish = function () {
 
 /**
  * Set the level of progress of the drawing.
- * 
+ *
  * @param {number} progress Level of progress to set
  */
 Vivus.prototype.setFrameProgress = function (progress) {
@@ -2544,6 +2683,7 @@ Vivus.prototype.stop = function () {
  *
  */
 Vivus.prototype.destroy = function () {
+  this.stop();
   var i, path;
   for (i = 0; i < this.map.length; i++) {
     path = this.map[i];

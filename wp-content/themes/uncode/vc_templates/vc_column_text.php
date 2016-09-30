@@ -31,7 +31,7 @@ if ($css_animation !== '') {
 }
 
 $output.= '<div class="' . esc_attr(trim($css_class)) . '" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))) . $el_style . '>';
-$output.= apply_filters('the_content', $content);
+$output.= uncode_the_content($content);
 $output.= '</div>';
 
 echo $output;

@@ -59,14 +59,9 @@ function uncode_init_admin_css()
 	$resources_version = ($production_mode === 'on') ? null : rand();
 	wp_enqueue_style('ot-admin', get_template_directory_uri() . '/core/theme-options/assets/css/ot-admin.css', false, $resources_version);
 	wp_enqueue_style('admin-uncode-icons', get_template_directory_uri() . '/library/css/uncode-icons.css', false, $resources_version);
-	global $wp_filesystem;
-	if (empty($wp_filesystem)) {
-	    require_once (ABSPATH . '/wp-admin/includes/file.php');
-	    WP_Filesystem();
-	}
-	$access_type = get_filesystem_method();
-	if ($access_type === 'direct') {
-		$ot_id = is_multisite() ? get_current_blog_id() : '';
+	$back_css = get_template_directory() . '/core/assets/css/';
+	$ot_id = is_multisite() ? get_current_blog_id() : '';
+	if (file_exists($back_css . 'admin-custom'.$ot_id.'.css')) {
 		wp_enqueue_style('uncode-custom-style', get_template_directory_uri() . '/core/assets/css/admin-custom'.$ot_id.'.css', false, $resources_version);
 	} else {
 		$styles = uncode_create_dynamic_css();
@@ -232,10 +227,161 @@ function uncode_add_additional_fields($form_fields, $post)
 		);
 	}
 
+	$taxonomies = apply_filters( 'media-taxonomies', get_object_taxonomies( 'attachment', 'objects' ) );
+
+	if ( !$taxonomies )
+			return $form_fields;
+
+	foreach ( $taxonomies as $taxonomyname => $taxonomy ) :
+		$form_fields[$taxonomyname] = array(
+			'label' => $taxonomy->labels->singular_name,
+			'input' => 'html',
+			'html' => uncode_terms_checkboxes( $taxonomy, $post->ID ),
+			'show_in_edit' => true,
+		);
+	endforeach;
+
 	return $form_fields;
 }
 
+function uncode_terms_checkboxes( $taxonomy, $post_id ) {
+	if ( !is_object( $taxonomy ) ) :
+		$taxonomy = get_taxonomy( $taxonomy );
+	endif;
+	$terms = get_terms( $taxonomy->name, array(
+		'hide_empty' => FALSE,
+	));
+	$attachment_terms = wp_get_object_terms( $post_id, $taxonomy->name, array(
+		'fields' => 'ids'
+	));
+	ob_start();
+	?>
+	<div class="media-term-section">
+
+		<div class="media-terms" data-id="<?php echo $post_id ?>" data-taxonomy="<?php echo $taxonomy->name ?>">
+
+			<ul>
+				<?php
+				wp_terms_checklist( 0, array(
+					'selected_cats'         => $attachment_terms,
+					'taxonomy'              => $taxonomy->name,
+					'checked_ontop'         => FALSE
+				));
+				?>
+			</ul>
+
+		</div><!-- .media-terms -->
+
+		<a href="#" class="toggle-add-media-term taxonomy-add-new"><?php echo $taxonomy->labels->add_new_item ?></a>
+
+		<div class="add-new-term">
+
+			<input type="text" value="">
+
+			<?php
+			if ( 1 == $taxonomy->hierarchical ) :
+				wp_dropdown_categories( array(
+					'taxonomy' => $taxonomy->name,
+					'class' => 'parent-' . $taxonomy->name,
+					'id' => 'parent-' . $taxonomy->name,
+					'name' => 'parent-' . $taxonomy->name,
+					'show_option_none' => '- ' . $taxonomy->labels->parent_item . ' -',
+					'hide_empty' => FALSE,
+				) );
+			endif;
+			?>
+
+			<a class="button save-media-category" data-taxonomy="<?php echo $taxonomy->name ?>" data-id="<?php echo $post_id ?>"><?php echo $taxonomy->labels->add_new_item ?></a>
+
+		</div><!-- .add-new-term -->
+
+	</div><!-- .media-term-section -->
+
+	<?php
+	$output = ob_get_contents();
+	ob_end_clean();
+	return apply_filters( 'media-checkboxes', $output, $taxonomy, $terms );
+}
+
 add_filter("attachment_fields_to_edit", "uncode_add_additional_fields", 10, 2);
+
+function uncode_admin_head() {
+	$taxonomies = apply_filters( 'media-taxonomies', get_object_taxonomies( 'attachment', 'objects' ) );
+	if ( !$taxonomies )
+		return;
+	$attachment_taxonomies = $attachment_terms = array();
+	foreach ( $taxonomies as $taxonomyname => $taxonomy ) :
+		$terms = get_terms( $taxonomy->name, array(
+			'orderby'       => 'name',
+			'order'         => 'ASC',
+			'hide_empty'    => true,
+		) );
+		if ( !$terms )
+			break;
+		$attachment_taxonomies[$taxonomy->name] = $taxonomy->labels->name;
+		$attachment_terms[ $taxonomy->name ][] = array( 'id' => 0, 'label' => esc_html__('All', 'uncode') . ' ' . $taxonomy->labels->name, 'slug' => 'all' );
+		foreach ( $terms as $term )
+			$attachment_terms[ $taxonomy->name ][] = array( 'id' => $term->term_id, 'label' => $term->name, 'slug' => $term->slug );
+	endforeach;
+	?>
+	<script type="text/javascript">
+		var mediaTaxonomies = <?php echo json_encode( $attachment_taxonomies ) ?>,
+			mediaTerms = <?php echo json_encode( $attachment_terms ) ?>;
+	</script>
+	<?php
+}
+
+function uncode_save_media_terms() {
+	$post_id = intval( $_REQUEST['attachment_id'] );
+	if ( !current_user_can( 'edit_post', $post_id ) )
+		die();
+	$term_ids = array_map( 'intval', $_REQUEST['term_ids'] );
+	$response = wp_set_post_terms( $post_id, $term_ids, sanitize_text_field( $_REQUEST['taxonomy'] ) );
+	wp_update_term_count_now( $term_ids, sanitize_text_field( $_REQUEST['taxonomy'] ) );
+}
+
+function uncode_add_media_term() {
+	$response = array();
+	$attachment_id = intval( $_REQUEST['attachment_id'] );
+	$taxonomy = get_taxonomy( sanitize_text_field( $_REQUEST['taxonomy'] ) );
+	$parent = ( intval( $_REQUEST['parent'] ) > 0 ) ? intval( $_REQUEST['parent'] ) : 0;
+	// Check if term already exists
+	$term = get_term_by( 'name', sanitize_text_field( $_REQUEST['term'] ), $taxonomy->name );
+	// No, so lets add it
+	if ( !$term ) :
+		$term = wp_insert_term( sanitize_text_field( $_REQUEST['term'] ), $taxonomy->name, array( 'parent' => $parent ) );
+		$term = get_term_by( 'id', $term['term_id'], $taxonomy->name );
+	endif;
+	// Connect attachment with term
+	wp_set_object_terms( $attachment_id, $term->term_id, $taxonomy->name, TRUE );
+	$attachment_terms = wp_get_object_terms( $attachment_id, $taxonomy->name, array(
+		'fields' => 'ids'
+	));
+	ob_start();
+	wp_terms_checklist( 0, array(
+		'selected_cats'         => $attachment_terms,
+		'taxonomy'              => $taxonomy->name,
+		'checked_ontop'         => FALSE
+	));
+	$checklist = ob_get_contents();
+	ob_end_clean();
+	$response['checkboxes'] = $checklist;
+	$response['selectbox'] = wp_dropdown_categories( array(
+		'taxonomy' => $taxonomy->name,
+		'class' => 'parent-' . $taxonomy->name,
+		'id' => 'parent-' . $taxonomy->name,
+		'name' => 'parent-' . $taxonomy->name,
+		'show_option_none' => '- ' . $taxonomy->labels->parent_item . ' -',
+		'hide_empty' => FALSE,
+		'echo' => FALSE,
+	) );
+	die( json_encode( $response ) );
+}
+
+add_action( 'wp_ajax_save-media-terms', 'uncode_save_media_terms', 0, 1 );
+add_action( 'wp_ajax_add-media-term', 'uncode_add_media_term', 0, 1 );
+
+add_action( 'admin_head', 'uncode_admin_head' );
 
 function uncode_taxonomy_add_meta_field() {
 	/* create localized JS array */
@@ -438,7 +584,7 @@ function uncode_update_custom_nav_fields($menu_id, $menu_item_db_id, $args)
 	} else update_post_meta($menu_item_db_id, '_menu_item_button', '');
 }
 
-function uncode_edit_walker($walker, $menu_id)
+function uncode_edit_walker()
 {
 	wp_enqueue_script( 'menu-iconpicker', get_template_directory_uri() . '/core/assets/js/menu-iconpicker.js', false, UNCODE_VERSION , false);
 	wp_enqueue_script( 'menu-fontpicker', get_template_directory_uri() . '/core/assets/js/jquery.fonticonpicker.min.js', array('menu-iconpicker'), UNCODE_VERSION , false);
@@ -447,7 +593,7 @@ function uncode_edit_walker($walker, $menu_id)
 
 add_filter('wp_setup_nav_menu_item', 'uncode_add_custom_nav_fields');
 add_action('wp_update_nav_menu_item', 'uncode_update_custom_nav_fields', 10, 3);
-add_filter('wp_edit_nav_menu_walker', 'uncode_edit_walker', 10, 2);
+add_filter('wp_edit_nav_menu_walker', 'uncode_edit_walker', 10);
 
 require_once ('edit_custom_walker.php');
 
@@ -511,9 +657,9 @@ function uncode_display_metabox() {
 }
 
 function uncode_register_metabox() {
-	$post_types = array( 'post', 'page' , 'portfolio' );
+	$uncode_post_types = uncode_get_post_types(true);
 
-	foreach ( $post_types as $post_type ) {
+	foreach ( $uncode_post_types as $post_type ) {
 		add_meta_box( 'uncode_gallery_div', esc_html__( 'Medias', 'uncode' ), 'uncode_display_metabox', $post_type, 'normal', 'default' );
 	}
 }
@@ -918,7 +1064,7 @@ function uncode_get_current_post_type() {
     return $current_screen->post_type;
   } elseif(isset($_REQUEST['post_type'])) {
     return sanitize_key( $_REQUEST['post_type'] );
-  } elseif(isset($_GET['post'])) {
+  } elseif(isset($_GET['post']) && $_GET['post'] != -1) {
     $thispost = get_post($_GET['post']);
     return $thispost->post_type;
   } else {
@@ -1039,6 +1185,34 @@ if (function_exists('is_plugin_active')) {
 	}
 }
 
+function uncode_transparent_header_nag() {
+	if (!is_admin()) return false;
+	if (!isset($_GET['post'])) return false;
+	$uncode_post_types = uncode_get_post_types(true);
+	$uncode_current_post_type = uncode_get_current_post_type();
+	if (in_array($uncode_current_post_type, $uncode_post_types)) {
+		$general_style = ot_get_option( '_uncode_general_style');
+		$stylemain = ot_get_option( '_uncode_primary_menu_style');
+		if ($stylemain === '') $stylemain = $general_style;
+		$transpmainheader = ot_get_option('_uncode_menu_bg_alpha_' . $stylemain);
+		if ($transpmainheader !== '100') {
+			$post_id = $_GET['post'];
+			$metabox_data = get_post_custom($post_id);
+			if (!isset($metabox_data['_uncode_header_type']) || (isset($metabox_data['_uncode_header_type'][0]) && ($metabox_data['_uncode_header_type'][0] === '' || $metabox_data['_uncode_header_type'][0] === 'none'))) {
+				if (isset($metabox_data['_uncode_specific_menu_opaque'][0]) && $metabox_data['_uncode_specific_menu_opaque'][0] !== 'on') {
+				?>
+				<div class="notice notice-success notice-warning is-dismissible">
+					<p><?php echo sprintf( wp_kses(__( 'The menu transparency will not be visible without a declared header <a class="page-options-header-section" href="%s">here</a>.', 'uncode' ), array( 'a' => array( 'href' => array(),'class' => array(),'target' => array() ) ) ), '#_uncode_page_options' ); ?></p>
+				</div>
+				<?php
+				}
+			}
+		}
+	}
+}
+
+add_action( 'admin_notices', 'uncode_transparent_header_nag' );
+
 /**
  * Deactivate js_composer.
  */
@@ -1051,6 +1225,27 @@ function deactivate_js_composer() {
 
 add_action('wp_ajax_deactivate_js_composer','deactivate_js_composer');
 add_action('wp_ajax_nopriv_deactivate_js_composer','deactivate_js_composer');
+
+function uncode_get_post_types($built_in = false) {
+	$args = array(
+    'public'                => true,
+    '_builtin'              => false
+	);
+	$output = 'names'; // names or objects, note names is the default
+	$operator = 'and'; // 'and' or 'or'
+	$get_post_types = get_post_types($args,$output,$operator);
+	$uncode_post_types = array();
+	if (($key = array_search('uncodeblock', $get_post_types)) !== false) {
+    unset($get_post_types[$key]);
+	}
+	if ($built_in) $uncode_post_types[] = 'post';
+	if ($built_in) $uncode_post_types[] = 'page';
+	foreach ($get_post_types as $key => $value) {
+		$uncode_post_types[] = $key;
+	}
+
+	return $uncode_post_types;
+}
 
 /**
  * Convert HEX color to RGB

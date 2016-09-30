@@ -22,7 +22,12 @@ get_header();
 $limit_width = $limit_content_width = $the_content = $main_content = $layout = $sidebar_style = $sidebar_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $title_content = $navigation_content = $page_custom_width = $row_classes = $main_classes = $footer_classes = $generic_body_content_block = '';
 $index_has_navigation = false;
 
-$post_type = $post->post_type . '_index';
+if (isset($post->post_type)) $post_type = $post->post_type . '_index';
+else {
+	global $wp_taxonomies;
+	$get_object = $wp_taxonomies[$wp_query->get_queried_object()->taxonomy];
+	$post_type = $get_object->object_type[0] . '_index';
+}
 $tax = (isset(get_queried_object()->term_id)) ? get_queried_object()->term_id : '';
 $single_post_width = ot_get_option('_uncode_' . $post_type . '_single_width');
 $single_text_length = ot_get_option('_uncode_' . $post_type . '_single_text_length');
@@ -47,12 +52,17 @@ if ($boxed !== 'on')
 	}
 	else
 	{
-		if ($generic_content_full === 'limit')
-		{
-			$generic_custom_width = ot_get_option('_uncode_' . $post_type . '_layout_width_custom');
-			if (is_array($generic_custom_width) && !empty($generic_custom_width))
-			{
-				$page_custom_width = ' style="max-width: ' . implode("", $generic_custom_width) . ';"';
+		if ($generic_content_full === 'limit') {
+			$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
+			if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
+				if ($generic_custom_width[1] === 'px') {
+					$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
+				}
+				if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
+					$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
+				}
+			} else {
+				$limit_content_width = ' limit-width';
 			}
 		}
 	}
@@ -108,13 +118,13 @@ $posts_counter = $wp_query->post_count;
 if ($page_header_type !== '' && $page_header_type !== 'none')
 {
 	$get_title = uncode_archive_title();
-	$get_subtitle = get_queried_object()->description;
+	$get_subtitle = isset(get_queried_object()->description) ? get_queried_object()->description : '';
 	$page_header = new unheader($metabox_data, $get_title, $get_subtitle);
 
 	$header_html = $page_header->html;
 	if ($header_html !== '') {
 		echo '<div id="page-header">';
-		echo do_shortcode( shortcode_unautop( $page_header->html ) );
+		echo uncode_remove_wpautop( $page_header->html );
 		echo '</div>';
 	}
 }
@@ -124,14 +134,12 @@ echo '<script type="text/javascript">UNCODE.initHeader();</script>';
 
 if ($show_breadcrumb)
 {
-	if ($breadcrumb_align !== '') $breadcrumb_align = ' text-' . $breadcrumb_align;
-	else
-	{
-		$breadcrumb_align = ' text-right';
-	}
+	if ($breadcrumb_align === '') $breadcrumb_align = 'right';
+	$breadcrumb_align = ' text-' . $breadcrumb_align;
+
 	$content_breadcrumb = uncode_breadcrumbs();
 	$breadcrumb_title = '<div class="breadcrumb-title h5 text-bold">' . uncode_archive_title() . '</div>';
-	echo uncode_get_row_template(($breadcrumb_align === 'left' ? $content_breadcrumb . $breadcrumb_title : $breadcrumb_title . $content_breadcrumb) , '', ($page_custom_width !== '' ? ' limit-width' : $limit_content_width), $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
+	echo uncode_get_row_template($breadcrumb_title . $content_breadcrumb, '', ($page_custom_width !== '' ? ' limit-width' : $limit_content_width), $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
 }
 
 /** Build title **/
@@ -176,6 +184,7 @@ if (have_posts()):
 			</div>';
 	} else {
 
+		$generic_body_content_block = apply_filters( 'wpml_object_id', $generic_body_content_block, 'post' );
 		$uncode_block = get_post_field('post_content', $generic_body_content_block);
 		$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:date|post_type:'.(!is_date() ? $post->post_type : 'post');
 
@@ -187,8 +196,21 @@ if (have_posts()):
 			if (isset($wp_query->query_vars['day'])) $archive_query .= '|day:'.$wp_query->query_vars['day'];
 			$archive_query .= '"';
 		} else {
-			$tax_query = ($post->post_type === 'post') ? ((get_queried_object()->taxonomy === 'category') ? 'categories' : 'tags')  : 'tax_query';
+			if ($post->post_type === 'post') {
+				switch (get_queried_object()->taxonomy) {
+					case 'category':
+						$tax_query = 'categories';
+						break;
+					case 'post_tag':
+						$tax_query = 'tags';
+						break;
+					default:
+						$tax_query = 'tax_query';
+						break;
+				}
+			} else $tax_query = 'tax_query';
 			if ($tax !== '') $archive_query .= '|'.$tax_query.':'.$tax.'"';
+			else $archive_query .= '"';
 		}
 
 		$regex = '/\[uncode_index(.*?)\]/';

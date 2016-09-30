@@ -15,4 +15,4 @@ $output .= '<div id="tab-'. (empty($tab_id) ? sanitize_title( $title ) : $tab_id
 $output .= ($content=='' || $content==' ') ? esc_html__("Empty tab. Edit page to add content here.", "uncode") : "\n\t\t\t\t" . $content;
 $output .= '</div> ';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

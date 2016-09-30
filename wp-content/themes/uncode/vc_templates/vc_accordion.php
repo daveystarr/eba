@@ -36,8 +36,8 @@ $output.= wpb_widget_title(array(
 	'title' => $title,
 	'extraclass' => 'wpb_accordion_heading'
 ));
-$output.= wpb_js_remove_wpautop($content);
+$output.= $content;
 $output.= '</div>';
 $output.= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

@@ -31,4 +31,4 @@ $output .= '<div class="uncode-wrapper '.$css_class.'" '.implode(' ', array_map(
 $output .= $content;
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

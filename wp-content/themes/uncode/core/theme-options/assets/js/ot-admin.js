@@ -540,7 +540,7 @@
           step: hidden.data("step"),
           value: value,
           slide: function(event, ui) {
-            hidden.add(helper).val(ui.value).trigger('change');
+            hidden.add(helper).val(ui.value);//.trigger('change');
           },
           create: function() {
             hidden.val($(this).slider('value'));
@@ -573,6 +573,9 @@
           $(obj).val(url);
         }
       });
+      $('.page-options-header-section').on("click", function(event, ui) {
+        $('li[aria-controls="setting__uncode_header_tab"] a').trigger('click');
+      });
     },
     init_radio_image_select: function() {
       $(document).on('click', '.option-tree-ui-radio-image', function() {
@@ -592,6 +595,9 @@
     },
     bind_select_wrapper: function() {
       $(document).on('change', '.option-tree-ui-select', function () {
+        var get_link = $(this).find('option:selected').data('link');
+        if (get_link != undefined) $(this).closest('.format-setting-inner').find('.link-button a').attr('href',get_link).removeClass('hidden');
+        else $(this).closest('.format-setting-inner').find('.link-button a').addClass('hidden');
         $(this).prev('span').replaceWith('<span>' + $(this).find('option:selected').text() + '</span>');
       });
     },

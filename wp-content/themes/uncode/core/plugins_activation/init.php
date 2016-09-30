@@ -50,7 +50,7 @@ function uncode_register_required_plugins() {
 			'slug'               => 'uncode-core', // The plugin slug (typically the folder name).
 			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/uncode-core.zip', // The plugin source.
 			'required'           => true, // If false, the plugin is only 'recommended' instead of required.
-			'version'            => '1.1.3', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+			'version'            => '1.2', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
 			'force_activation'   => true, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 			'force_deactivation' => true, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
 			'external_url'       => '', // If set, overrides default API URL and points to an external URL.
@@ -61,7 +61,18 @@ function uncode_register_required_plugins() {
 			'slug'               => 'uncode-js_composer', // The plugin slug (typically the folder name).
 			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/uncode-js_composer.zip', // The plugin source.
 			'required'           => true, // If false, the plugin is only 'recommended' instead of required.
-			'version'            => '4.11.2.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+			'version'            => '4.12.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
+			'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
+			'external_url'       => '', // If set, overrides default API URL and points to an external URL.
+			'is_callable'        => '', // If set, this callable will be be checked for availability to determine if a plugin is active.
+		),
+		array(
+			'name'               => 'Uncode Related Posts for WordPress', // The plugin name.
+			'slug'               => 'uncode-related-posts-for-wp', // The plugin slug (typically the folder name).
+			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/uncode-related-posts-for-wp.zip', // The plugin source.
+			'required'           => false, // If false, the plugin is only 'recommended' instead of required.
+			'version'            => '1.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
 			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 			'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
 			'external_url'       => '', // If set, overrides default API URL and points to an external URL.
@@ -117,7 +128,7 @@ function uncode_register_required_plugins() {
 			'slug'               => 'revslider', // The plugin slug (typically the folder name).
 			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/revslider.zip', // The plugin source.
 			'required'           => false, // If false, the plugin is only 'recommended' instead of required.
-			'version'            => '5.2.5', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+			'version'            => '5.2.6', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
 			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 			'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
 			'external_url'       => '', // If set, overrides default API URL and points to an external URL.
@@ -127,9 +138,9 @@ function uncode_register_required_plugins() {
 		array(
 			'name'               => 'Layer Slider', // The plugin name.
 			'slug'               => 'LayerSlider', // The plugin slug (typically the folder name).
-			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/layersliderwp-5.6.2.installable.zip', // The plugin source.
+			'source'             => get_template_directory_uri() . '/core/plugins_activation/plugins/layersliderwp-5.6.10.installable.zip', // The plugin source.
 			'required'           => false, // If false, the plugin is only 'recommended' instead of required.
-			'version'            => '5.6.2', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
+			'version'            => '5.6.10', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
 			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 			'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
 			'external_url'       => '', // If set, overrides default API URL and points to an external URL.
@@ -150,6 +161,11 @@ function uncode_register_required_plugins() {
 		array(
 			'name'      => 'WooCommerce',
 			'slug'      => 'woocommerce',
+			'required'  => false,
+		),
+		array(
+			'name'      => 'Category Order and Taxonomy Terms Order',
+			'slug'      => 'taxonomy-terms-order',
 			'required'  => false,
 		),
 	);

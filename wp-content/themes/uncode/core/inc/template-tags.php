@@ -66,7 +66,7 @@ if ( ! function_exists( 'uncode_post_navigation' ) ) :
 		$prev_label = ($nextprev_title === 'on') ? (isset($previous->post_title) ? $previous->post_title : '') : __('Prev','uncode');
 		$next_label = ($nextprev_title === 'on') ? (isset($next->post_title) ? $next->post_title : '') : __('Next','uncode');
 
-		$output =	'<nav class="post-navigation" role="navigation">
+		$output =	'<nav class="post-navigation">
 									<ul class="navigation">';
 
 		$prev = get_previous_post_link( '<li class="page-prev"><span class="btn-container">%link</span></li>', '<i class="fa fa-angle-left"></i><span>'. esc_html($prev_label) . '</span>');
@@ -202,7 +202,7 @@ function uncode_archive_title( $before = '', $after = '' ) {
 	} elseif ( is_tag() ) {
 		$title = single_tag_title( '', false );
 	} elseif ( is_author() ) {
-		$title = sprintf( esc_html__( 'Author: %s', 'uncode' ), '<span class="vcard">' . get_the_author() . '</span>' );
+		$title = '<span class="vcard">' . get_the_author() . '</span>';
 	} elseif ( is_year() ) {
 		$title = sprintf( esc_html__( 'Year: %s', 'uncode' ), get_the_date( esc_html_x( 'Y', 'yearly archives date format', 'uncode' ) ) );
 	} elseif ( is_month() ) {
@@ -230,7 +230,7 @@ function uncode_archive_title( $before = '', $after = '' ) {
 			$title = esc_html_x( 'Chats', 'post format archive title', 'uncode' );
 		}
 	} elseif ( is_post_type_archive() ) {
-		$title = sprintf( esc_html__( 'Archives: %s', 'uncode' ), post_type_archive_title( '', false ) );
+		$title = sprintf( esc_html__( 'Archives %s', 'uncode' ), post_type_archive_title( '', false ) );
 	} elseif ( is_tax() ) {
 		$tax = get_taxonomy( get_queried_object()->taxonomy );
 		/* translators: 1: Taxonomy singular name, 2: Current taxonomy term */

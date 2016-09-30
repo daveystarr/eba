@@ -63,12 +63,8 @@ function uncode_add_uncode_cart() {
 	$resources_version = ($production_mode === 'on') ? null : rand();
 
 	wp_enqueue_style( 'uncode-woocommerce', get_template_directory_uri() . '/library/css/woocommerce.css', array() , $resources_version, 'all');
-	wp_register_script( 'uncode-menucart', get_template_directory_uri() . '/library/js/min/woocommerce-uncode.min.js', array() , $resources_version, 'all');
-
-	wp_localize_script(
-		'uncode-menucart',
-		'uncode_menucart_ajax',array('nonce' => wp_create_nonce('uncode-menucart'))
-	);
+	if ($production_mode === 'on') wp_register_script( 'uncode-menucart', get_template_directory_uri() . '/library/js/min/woocommerce-uncode.min.js', array() , $resources_version, 'all');
+	else wp_register_script( 'uncode-menucart', get_template_directory_uri() . '/library/js/woocommerce-uncode.js', array() , $resources_version, 'all');
 
 	wp_enqueue_script( 'uncode-menucart' );
 
@@ -120,15 +116,14 @@ function uncode_get_cart_items() {
 								<a href="'.$woocommerce->cart->get_checkout_url().'" class="checkout wc-forward btn btn-link"><i class="fa fa-square-check"></i>'.esc_html__( 'Checkout', 'woocommerce' ).'</a>
 							</li>';
 
+	} else {
+		$cart .= '<li><span>' . esc_html__('Your cart is currently empty','uncode') . '</span></li>';
 	}
 
 	return array('cart' => $cart, 'articles' => $tot_articles);
 }
 
 function uncode_woomenucart_ajax() {
-	if ( !wp_verify_nonce( $_REQUEST['nonce'], "uncode-menucart")) {
-     		exit("No naughty business please");
-  	}
 
 	$cart = uncode_get_cart_items();
 
@@ -141,17 +136,17 @@ add_action( 'wp_ajax_woomenucart_ajax', 'uncode_woomenucart_ajax');
 add_action( 'wp_ajax_nopriv_woomenucart_ajax', 'uncode_woomenucart_ajax' );
 
 
-function uncode_add_cart_in_menu($woo_icon) {
+function uncode_add_cart_in_menu($woo_icon, $woo_cart_class) {
 	global $woocommerce, $menutype;
 
 	$horizontal_menu = (strpos($menutype ,'hmenu') !== false) ? true : false;
 	$tot_articles = $woocommerce->cart->cart_contents_count;
 	$get_cart_items = uncode_get_cart_items();
 
-	$vertical = (strpos($menutype, 'vmenu') !== false || $menutype === 'menu-overlay') ? true : false;
+	$vertical = (strpos($menutype, 'vmenu') !== false || $menutype === 'menu-overlay' || $menutype === 'menu-overlay-center') ? true : false;
 
 	$cart_container = '<ul role="menu" class="drop-menu sm-nowrap cart_list product_list_widget uncode-cart-dropdown">'.((isset($get_cart_items['cart']) && $get_cart_items['cart'] !=='') ? $get_cart_items['cart'] : '<li><span>' . esc_html__('Your cart is currently empty','uncode') . '</span></li>').'</ul>';
-	$items =						'<li class="uncode-cart menu-item-link menu-item menu-item-has-children dropdown">
+	$items =						'<li class="'.$woo_cart_class.'uncode-cart menu-item-link menu-item menu-item-has-children dropdown">
 												<a href="#" data-toggle="dropdown" class="dropdown-toggle" data-type="title" title="cart">
 													<span class="cart-icon-container">';
 	$items .= $horizontal_menu ?

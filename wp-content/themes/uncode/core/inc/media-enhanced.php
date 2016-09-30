@@ -177,7 +177,8 @@ function uncode_addScripts() {
 		arrayRegex[16] = {domain: '((http|https):\/\/)?(www\.)?(flic\.kr)(\/)?([a-zA-Z0-9\-\.]+)\/?', type: 'oembed/flickr'};
 		arrayRegex[17] = {domain: '((http|https):\/\/.+?\.jpg|jpeg|png|gif|tiff/gi)/?', type: 'image/url'};
 		arrayRegex[18] = {domain: '((http|https):\/\/)?(www\.)?(spotify\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?', type: 'oembed/spotify'};
-		arrayRegex[19] = {domain: '(.*?<\/svg>)\/?', type: 'oembed/svg'};
+		arrayRegex[18] = {domain: '((http|https):\/\/)?(www\.)?(facebook\.com)(\/)?([a-zA-Z0-9\-\.]+)\/?', type: 'oembed/facebook'};
+		arrayRegex[20] = {domain: '(.*?<\/svg>)\/?', type: 'oembed/svg'};
 
 		jQuery(document).ready(function($) {
 			"use strict";

@@ -115,7 +115,7 @@ if ($page_header_type !== '' && $page_header_type !== 'none')
 	$header_html = $page_header->html;
 	if ($header_html !== '') {
 		echo '<div id="page-header">';
-		echo do_shortcode( shortcode_unautop( $page_header->html ) );
+		echo uncode_remove_wpautop( $page_header->html );
 		echo '</div>';
 	}
 }
@@ -125,14 +125,12 @@ echo '<script type="text/javascript">UNCODE.initHeader();</script>';
 
 if ($show_breadcrumb)
 {
-	if ($breadcrumb_align !== '') $breadcrumb_align = ' text-' . $breadcrumb_align;
-	else
-	{
-		$breadcrumb_align = ' text-right';
-	}
+	if ($breadcrumb_align === '') $breadcrumb_align = 'right';
+	$breadcrumb_align = ' text-' . $breadcrumb_align;
+
 	$content_breadcrumb = uncode_breadcrumbs();
 	$breadcrumb_title = '<div class="breadcrumb-title h5 text-bold">' . uncode_archive_title() . '</div>';
-	echo uncode_get_row_template(($breadcrumb_align === 'left' ? $content_breadcrumb . $breadcrumb_title : $breadcrumb_title . $content_breadcrumb) , '', ($page_custom_width !== '' ? ' limit-width' : $limit_content_width), $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
+	echo uncode_get_row_template($breadcrumb_title . $content_breadcrumb, '', ($page_custom_width !== '' ? ' limit-width' : $limit_content_width), $style, ' row-breadcrumb row-breadcrumb-' . $style . $breadcrumb_align, 'half', true, 'half');
 }
 
 /** Build title **/
@@ -151,12 +149,14 @@ if (have_posts()):
 
 	if ($generic_body_content_block === '') {
 
+		remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+
 		ob_start();
 		woocommerce_result_count();
 		$counter_content = ob_get_clean();
 
 		ob_start();
-		woocommerce_catalog_ordering();
+		do_action( 'woocommerce_before_shop_loop' );
 		$ordering_content = ob_get_clean();
 
 		$body_head =
@@ -211,8 +211,9 @@ if (have_posts()):
 
 		$tax = $wp_query->get_queried_object();
 		$tax_query = (isset($tax->term_id)) ? '|tax_query:'.$tax->term_id : '';
+		$generic_body_content_block = apply_filters( 'wpml_object_id', $generic_body_content_block, 'post' );
 		$uncode_block = get_post_field('post_content', $generic_body_content_block);
-		$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:date|post_type:product' . $tax_query.'"';
+		$archive_query = '';
 		$regex = '/\[uncode_index(.*?)\]/';
 		$regex_attr = '/(.*?)=\"(.*?)\"/';
 		preg_match_all($regex, $uncode_block, $matches, PREG_SET_ORDER);
@@ -233,10 +234,20 @@ if (have_posts()):
 						case 'infinite':
 							if ($value_attr[2] === 'yes') $index_infinite = true;
 							break;
+						case 'loop':
+							$archive_query = $value_attr[2];
+							break;
 					}
 				}
 			}
 			if ($index_found) {
+				if ($archive_query === '') $archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:date|post_type:product' . $tax_query.'"';
+				else {
+					$parse_query = uncode_parse_loop_data($archive_query);
+					$parse_query['post_type'] = 'product';
+					if (isset($tax->term_id)) $parse_query['tax_query'] = $tax->term_id;
+					$archive_query = ' loop="' . uncode_unparse_loop_data($parse_query) . '"';
+				}
 				$value[1] = preg_replace('#\s(loop)="([^"]+)"#', $archive_query, $value[1], -1, $index_count);
 				if ($index_count === 0) {
 					$value[1] .= $archive_query;

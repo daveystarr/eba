@@ -1,7 +1,7 @@
 <?php
 
 global $uncode_post_types;
-$title = $index_type = $isotope_mode = $index_back_color = $items = $filtering = $filter_style = $filter_back_color = $filtering_full_width = $filtering_position = $filtering_uppercase = $filter_all_opposite = $filter_mobile = $filter_scroll = $footer_style = $footer_back_color = $footer_full_width = $pagination = $infinite = $infinite_button = $infinite_button_text = $infinite_button_shape = $infinite_button_outline = $infinite_button_color = $style_preset = $images_size = $thumb_size = $single_width = $single_height = $single_back_color = $single_shape = $single_text = $single_elements_click = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_h_align_mobile = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_weight = $single_title_family = $single_title_dimension = $single_title_height = $single_title_space = $single_text_lead = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_height = $carousel_v_align = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $gutter_size = $inner_padding = $post_items = $portfolio_items = $page_items = $product_items = $screen_lg = $screen_md = $screen_sm = $filter = $el_id = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $el_class = $orderby = $order = $custom_order = $order_ids = $css_class = $filter = $filter_background = $filter_sticky = '';
+$title = $index_type = $isotope_mode = $index_back_color = $items = $filtering = $filter_style = $filter_back_color = $filtering_full_width = $filtering_position = $filtering_uppercase = $filter_all_opposite = $filter_mobile = $filter_scroll = $footer_style = $footer_back_color = $footer_full_width = $pagination = $infinite = $infinite_button = $infinite_button_text = $infinite_button_shape = $infinite_button_outline = $infinite_button_color = $style_preset = $images_size = $thumb_size = $single_width = $single_height = $single_back_color = $single_shape = $single_text = $single_elements_click = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_h_align_mobile = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_weight = $single_title_family = $single_title_dimension = $single_title_height = $single_title_space = $single_text_lead = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_height = $carousel_v_align = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $gutter_size = $inner_padding = $post_items = $portfolio_items = $page_items = $product_items = $screen_lg = $screen_md = $screen_sm = $filter = $el_id = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $el_class = $orderby = $order = $custom_order = $order_ids = $css_class = $filter = $filter_background = $filter_sticky = $offset = '';
 $post_types = array();
 $wc_filtered = array();
 
@@ -113,11 +113,13 @@ $attributes_first = array(
   'custom_order' => '',
   'order_ids' => '',
   'loop' => 'size:10|order_by:date|post_type:post',
+  'offset' => '',
   'css_class' => ''
 );
 
 $attributes_second = array();
 
+if (!isset($uncode_post_types)) $uncode_post_types = uncode_get_post_types();
 if (isset($uncode_post_types) && !empty($uncode_post_types)) {
   foreach ($uncode_post_types as $key => $value) {
     $post_types[] = $value;
@@ -130,7 +132,6 @@ if (isset($uncode_post_types) && !empty($uncode_post_types)) {
     $attributes_second[$value . '_items'] = 'media|featured,title,type,category,text';
   }
 }
-
 
 $post_types[] = 'post';
 $post_types[] = 'page';
@@ -209,18 +210,25 @@ $general_animation_speed = $single_animation_speed;
 
 $this->resetTaxonomies();
 if ( empty( $loop ) ) return;
+$loop_parse = uncode_parse_loop_data($loop);
 
 global $wp_query, $temp_index_id;
 $temp_index_id = $el_id;
 $paged = (get_query_var('paged')) ? get_query_var('paged') : (isset($wp_query->query['paged']) ? $wp_query->query['paged'] : 1);
 
-if (class_exists('WC_Query')) {
-  $instanceWC_Query = new WC_Query();
-  $wc_filtered = $instanceWC_Query->price_filter();
-  if (!empty($wc_filtered)) {
-    $wc_filtered = (implode(',', array_filter($wc_filtered)));
-    $loop .= '|by_id:' . $wc_filtered;
+if (class_exists('WC_Query') && ( isset( $_GET['max_price'] ) || isset( $_GET['min_price'] ) )) {
+  global $woocommerce;
+  if( version_compare( $woocommerce->version, '2.6', "<" ) ) {
+    $instanceWC_Query = new WC_Query();
+    $wc_filtered = $instanceWC_Query->price_filter();
+    if (!empty($wc_filtered)) {
+      $wc_filtered = (implode(',', array_filter($wc_filtered)));
+    }
+  } else {
+    $products_ids = wp_list_pluck( $wp_query->posts, 'ID' );
+    $wc_filtered = (implode(',', array_filter($products_ids)));
   }
+  $loop .= '|by_id:' . $wc_filtered;
 }
 
 if (isset($_GET['upage'])) $paged = $_GET['upage'];
@@ -230,10 +238,14 @@ if ($infinite !== 'yes') {
 }
 $loop .= '|paged:' . $paged;
 
-$this->getLoop( $loop );
+$this->getLoop( $loop, $offset );
 $my_query = $this->query;
 
 $args = $this->loop_args;
+if (isset($loop_parse['by_id']) && isset($loop_parse['order']) && $loop_parse['order'] === 'none') {
+  $custom_order = 'yes';
+  $order_ids = $loop_parse['by_id'];
+}
 
 if ($custom_order === 'yes') {
   if ($order_ids !== '') {
@@ -268,7 +280,7 @@ while ( $my_query->have_posts() ) {
   $post->format = ($post->type === 'post') ? get_post_format( $post->id ) : '';
   $post->link = get_permalink( $post->id );
   $post->content = get_the_content();
-  $post_category = $this->getCategoriesCss( $post->id);
+  $post_category = $this->getCategoriesCss( $post->id );
   $post->categories_css = $post_category['cat_css'];
   $post->categories_name = $post_category['cat_name'];
   $post->categories_id = $post_category['cat_id'];
@@ -793,7 +805,7 @@ $main_container_classes[] = trim($this->getExtraClass( $el_class ));
                 if ($infinite_button_outline === 'yes') $load_more_classes .= ' btn-outline';
                 if ($infinite_button_shape !== '') $load_more_classes .= ' ' . $infinite_button_shape;
                 $load_more_button = str_replace('class="btn"', 'class="btn' . $load_more_classes . '" data-label="' . esc_attr($infinite_button_text) . '"', $load_more_button);
-                echo wpb_js_remove_wpautop($load_more_button);
+                echo uncode_remove_wpautop($load_more_button);
               ?>
             </nav>
             <?php else:

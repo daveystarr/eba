@@ -93,7 +93,7 @@ if ($page_header_type !== '' && $page_header_type !== 'none')
 	$header_html = $page_header->html;
 	if ($header_html !== '') {
 		echo '<div id="page-header">';
-		echo do_shortcode( shortcode_unautop( $page_header->html ) );
+		echo uncode_remove_wpautop( $page_header->html );
 		echo '</div>';
 	}
 }
@@ -119,7 +119,7 @@ if (have_posts()):
 		endwhile;
 
 	} else {
-
+		$generic_body_content_block = apply_filters( 'wpml_object_id', $generic_body_content_block, 'post' );
 		$uncode_block = get_post_field('post_content', $generic_body_content_block);
 		$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:relevance|search:' . get_search_query() . '"';
 		$regex = '/\[uncode_index(.*?)\]/';

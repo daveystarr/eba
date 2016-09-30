@@ -12,6 +12,11 @@ if ( is_multisite() ) {
 	$uncode_option = get_option(uncode_id());
 }
 
+if (empty($uncode_option)) {
+	echo 'exit';
+	return;
+}
+
 $cs_logo_color_light = $uncode_option['_uncode_logo_color_light'];
 $cs_menu_color_light = $uncode_option['_uncode_menu_color_light'];
 $cs_menu_bg_color_light = $uncode_option['_uncode_menu_bg_color_light'];
@@ -45,28 +50,45 @@ $cs_buttons_font_family = $uncode_option['_uncode_buttons_font_family'];
 /** Loop colors **/
 foreach ($front_background_colors as $key => $value)
 {
+	if (!isset($value) || $value === '') continue;
+	$value = str_replace(';nb',';b',$value);
+	$value = str_replace(';n}',';}',$value);
 	echo "\n\n" . '/*----------------------------------------------------------';
 	echo "\n" . '#'.$key;
 	echo "\n" . '----------------------------------------------------------*/';
 	if (strpos($value, 'background') !== false) {
 		echo "\n" . '.style-' . $key . '-bg { ' . $value . ' }';
+		echo "\n" . '.btn-' . $key . ' { color: #ffffff !important; ' . $value . str_replace('background','border-image',$value) . '}';
+		echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):hover, .btn-' . $key . ':not(.btn-hover-nobg):focus,btn-' . $key . ':active { ' . $value . str_replace('background','border-image',$value) . '}';
+		echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):focus,btn-' . $key . ':active { ' . $value . '-webkit-background-clip: text;-webkit-text-fill-color: transparent; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline { background-color: transparent !important; ' . str_replace('background','border-image',$value) . '}';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-text-skin) { ' . $value . '-webkit-background-clip: text;-webkit-text-fill-color: transparent; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):focus, btn-' . $key . '.btn-outline:active { ' . $value . str_replace('background','border-image',$value) . '}';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):focus, btn-' . $key . '.btn-outline:active { color: #ffffff !important; }';
+		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline, .style-light .btn-' . $key . '.btn-text-skin:not(.btn-outline):hover { color: ' . $cs_heading_color_light . ' !important; }';
+		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline:hover { color: #ffffff !important; }';
+		echo "\n" . '.text-' . $key . '-color { background-color: white; position: relative; }';
+		echo "\n" . '.text-' . $key . '-color::before, .text-' . $key . '-color::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none; }';
+		echo "\n" . '.text-' . $key . '-color::before { ' . $value . 'content: "";display: block;mix-blend-mode: screen;}';
+		echo "\n" . '.text-' . $key . '-color::after { color: white; mix-blend-mode: multiply; }';
+		echo "\n" . '.border-' . $key . '-color {'.str_replace('background','border-image',$value).'}';
 	} else {
 		echo "\n" . '.style-' . $key . '-bg { background-color: ' . $value . '; }';
-	if ($key !== 'white') {
-		echo "\n" . '.btn-' . $key . ' { color: #ffffff !important; background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
-	} else echo "\n" . '.btn-' . $key . ' { color: #1a1b1c !important; background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
-	echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):hover, .btn-' . $key . ':not(.btn-hover-nobg):focus,btn-' . $key . ':active { background-color: transparent !important; border-color: ' . $value . ' !important;}';
-	echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):focus,btn-' . $key . ':active { color: ' . $value . ' !important; }';
-	echo "\n" . '.btn-' . $key . '.btn-outline { background-color: transparent !important; border-color: ' . $value . ' !important; }';
-	echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-text-skin) { color: ' . $value . ' !important; }';
-	echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):focus, btn-' . $key . '.btn-outline:active { background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
-	echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):focus, btn-' . $key . '.btn-outline:active { color: #ffffff !important; }';
-	echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline, .style-light .btn-' . $key . '.btn-text-skin:not(.btn-outline):hover { color: ' . $cs_heading_color_light . ' !important; }';
-	echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline:hover { color: #ffffff !important; }';
-	echo "\n" . '.text-' . $key . '-color { color: ' . $value . ' !important; }';
-	echo "\n" . '.border-' . $key . '-color { border-color: ' . $value . ' !important; }';
-	echo "\n" . '.tmb-overlay-gradient-top .style-' . $key . '-bg { background-color: transparent !important; background-image: -webkit-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: -moz-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: -o-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: linear-gradient(to bottom, ' . $value . ' 0%, transparent 50%) !important;}';
-	echo "\n" . '.tmb-overlay-gradient-bottom .style-' . $key . '-bg { background-color: transparent !important; background-image: -webkit-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: -moz-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: -o-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: linear-gradient(to top, ' . $value . ' 0%, transparent 50%) !important;}';
+		if ($key !== 'white') {
+			echo "\n" . '.btn-' . $key . ' { color: #ffffff !important; background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
+		} else echo "\n" . '.btn-' . $key . ' { color: #1a1b1c !important; background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
+		echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):hover, .btn-' . $key . ':not(.btn-hover-nobg):focus,btn-' . $key . ':active { background-color: transparent !important; border-color: ' . $value . ' !important;}';
+		echo "\n" . '.btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . ':not(.btn-hover-nobg):not(.btn-text-skin):focus,btn-' . $key . ':active { color: ' . $value . ' !important; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline { background-color: transparent !important; border-color: ' . $value . ' !important; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-text-skin) { color: ' . $value . ' !important; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):focus, btn-' . $key . '.btn-outline:active { background-color: ' . $value . ' !important; border-color: ' . $value . ' !important; }';
+		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):focus, btn-' . $key . '.btn-outline:active { color: #ffffff !important; }';
+		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline, .style-light .btn-' . $key . '.btn-text-skin:not(.btn-outline):hover { color: ' . $cs_heading_color_light . ' !important; }';
+		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline:hover { color: #ffffff !important; }';
+		echo "\n" . '.text-' . $key . '-color { color: ' . $value . ' !important; fill: ' . $value . ' !important; }';
+		echo "\n" . '.border-' . $key . '-color { border-color: ' . $value . ' !important; }';
+		echo "\n" . '.tmb-overlay-gradient-top .style-' . $key . '-bg { background-color: transparent !important; background-image: -webkit-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: -moz-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: -o-linear-gradient(top, ' . $value . ' 0%, transparent 50%) !important; background-image: linear-gradient(to bottom, ' . $value . ' 0%, transparent 50%) !important;}';
+		echo "\n" . '.tmb-overlay-gradient-bottom .style-' . $key . '-bg { background-color: transparent !important; background-image: -webkit-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: -moz-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: -o-linear-gradient(bottom, ' . $value . ' 0%, transparent 50%) !important; background-image: linear-gradient(to top, ' . $value . ' 0%, transparent 50%) !important;}';
 	}
 
 	if ($key === $cs_logo_color_light) $cs_logo_color_light = $value;
@@ -96,13 +118,23 @@ if ($cs_bg_color_light !== '') {
 	echo "\n\n" . '/*----------------------------------------------------------';
 	echo "\n" . '#Style light';
 	echo "\n" . '----------------------------------------------------------*/';
-	echo "\n" . '.style-light-bg { background-color: '.$cs_bg_color_light.'; }';
+	if (strpos($cs_bg_color_light, 'background') !== false) {
+		echo "\n" . '.style-light-bg { ' . $cs_bg_color_light . ' }';
+	} else {
+		echo "\n" . '.style-light-bg { background-color: ' . $cs_bg_color_light . '; }';
+		echo "\n" . '.border-light-bg { border-color: ' . $cs_bg_color_light . '; }';
+	}
 }
 if ($cs_bg_color_dark !== '') {
 	echo "\n\n" . '/*----------------------------------------------------------';
 	echo "\n" . '#Style dark';
 	echo "\n" . '----------------------------------------------------------*/';
-	echo "\n" . '.style-dark-bg { background-color: '.$cs_bg_color_dark.'; }';
+	if (strpos($cs_bg_color_dark, 'background') !== false) {
+		echo "\n" . '.style-dark-bg { ' . $cs_bg_color_dark . ' }';
+	} else {
+		echo "\n" . '.style-dark-bg { background-color: ' . $cs_bg_color_dark . '; }';
+		echo "\n" . '.border-dark-bg { border-color: ' . $cs_bg_color_dark . '; }';
+	}
 }
 
 echo "\n\n" . '/*----------------------------------------------------------';

@@ -17,6 +17,7 @@ extract(shortcode_atts(array(
 
 global $front_background_colors;
 
+if ($bar_color !== '' && $col_icon === 'yes') $icon_color = ' text-'.$bar_color.'-color';
 if ($bar_color !== '') {
     $bar_color = (isset($front_background_colors[$bar_color])) ? $front_background_colors[$bar_color] : $front_background_colors['accent'];
 }
@@ -30,10 +31,10 @@ if ($css_animation !== '') {
     if ($animation_speed !== '') $div_data['data-speed'] = $animation_speed;
 }
 
-if ($bar_color !== '' && $col_icon === 'yes') $icon_color = ' text-'.$bar_color.'-color';
 if ($icon !== '') $label_value = htmlentities('<i class="' . esc_attr($icon) . ' fa-3x'.esc_attr($icon_color).'" style="line-height: inherit;"></i>');
 $el_class = $this->getExtraClass($el_class);
 $container_class[] = $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'vc_pie_chart wpb_content_element' . $el_class, $this->settings['base'], $atts);
+
 $output = '<div class= "'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).' data-pie-value="' . esc_attr($value) . '" data-pie-label-value="' . esc_attr($label_value) . '" data-pie-units="' . esc_attr($units) . '" data-pie-color="' . esc_attr($bar_color) . '" data-pie-width="' . esc_attr($arc_width) . '">';
 $output.= '<div class="wpb_wrapper">';
 $output.= '<div class="vc_pie_wrapper">';
@@ -48,4 +49,4 @@ if ($title != '')
 $output.= '</div>';
 $output.= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

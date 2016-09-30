@@ -125,7 +125,7 @@
 			self.id = domNode.id;
 			self.options = [];
 			self.$options = self.$select.find('option');
-			self.isTouch = 'ontouchend' in document;
+			self.isTouch = ('ontouchstart' in window || navigator.maxTouchPoints);
 			self.$select.removeClass(self.wrapperClass + ' dropdown');
 			if (self.$select.is(':disabled')) {
 				self.disabled = true;
@@ -170,6 +170,7 @@
 			var self = this,
 				touchClass = self.isTouch && self.nativeTouch ? ' touch' : '',
 				disabledClass = self.disabled ? ' disabled' : '';
+
 			self.$container = self.$select.wrap('<div class="' + self.wrapperClass + touchClass + disabledClass + '"><span class="old"/></div>').parent().parent();
 			self.$active = $('<span class="selected">' + self.selected.title + (self.selected.color != '' ? ' <small>: '+ self.selected.color +' </small>' : '') + '<span class="color style-' + self.selected.color + '-bg"></span></span>').appendTo(self.$container);
 			self.$carat = $('<span class="carat"/>').appendTo(self.$container);
@@ -688,4 +689,130 @@
 			$placeholder.remove();
 		});
 	};
+
+
+	var media = wp.media;
+
+	/**
+	 * Extended Filters dropdown with taxonomy term selection values
+	 */
+	if ( media ) {
+
+		$.each(mediaTaxonomies,function(key,label){
+
+			media.view.AttachmentFilters[key] = media.view.AttachmentFilters.extend({
+				className: 'attachment-filters',
+
+				createFilters: function() {
+					var filters = {};
+
+					_.each( mediaTerms[key] || {}, function( term ) {
+
+						var query = {};
+
+						query[key] = {
+							taxonomy: key,
+							term_id: parseInt( term.id, 10 ),
+							term_slug: term.slug
+						};
+
+						filters[ term.slug ] = {
+							text: term.label,
+							props: query
+						};
+					});
+
+					this.filters = filters;
+				}
+
+
+			});
+
+			/**
+			 * Replace the media-toolbar with our own
+			 */
+			var myDrop = media.view.AttachmentsBrowser;
+
+			media.view.AttachmentsBrowser = media.view.AttachmentsBrowser.extend({
+				createToolbar: function() {
+
+					media.model.Query.defaultArgs.filterSource = 'filter-media-taxonomies';
+
+					myDrop.prototype.createToolbar.apply(this,arguments);
+
+					this.toolbar.set( key, new media.view.AttachmentFilters[key]({
+						controller: this.controller,
+						model:      this.collection.props,
+						priority:   -80
+						}).render()
+					);
+				}
+			});
+
+		});
+	}
+
+	/* Save taxonomy */
+	$('html').delegate( '.media-terms input', 'change', function(){
+
+		var obj = $(this),
+			container = obj.parents('.media-terms'),
+			row = container.parent(),
+			data = {
+				action: 'save-media-terms',
+				term_ids: [],
+				attachment_id: container.data('id'),
+				taxonomy: container.data('taxonomy')
+			};
+
+		container.find('input:checked').each(function(){
+			data.term_ids.push( $(this).val() );
+		});
+
+		row.addClass('media-save-terms');
+		container.find('input').prop('disabled', 'disabled');
+
+		$.post( ajaxurl, data, function( response ){
+			row.removeClass('media-save-terms');
+			container.find('input').removeProp('disabled');
+		});
+
+	});
+
+	// Add new taxonomy
+	$('html').delegate('.toggle-add-media-term', 'click', function(e){
+		e.preventDefault();
+		$(this).parent().find('.add-new-term').toggle();
+	});
+
+	// Save new taxnomy
+	$('html').delegate('.save-media-category', 'click', function(e){
+
+		var obj = $(this),
+			termField = obj.parent().find('input'),
+			termParent = obj.parent().find('select'),
+			data = {
+				action: 'add-media-term',
+				attachment_id: obj.data('id'),
+				taxonomy: obj.data('taxonomy'),
+				parent: termParent.val(),
+				term: termField.val()
+			};
+
+		// No val
+		if ( '' == data.term ) {
+			termField.focus();
+			return;
+		}
+
+		$.post(ajaxurl, data, function(response){
+
+			obj.parents('.field').find('.media-terms ul:first').html( response.checkboxes );
+			obj.parents('.field').find('select').replaceWith( response.selectbox );
+
+			termField.val('');
+
+		}, 'json' );
+
+	});
 })(jQuery);

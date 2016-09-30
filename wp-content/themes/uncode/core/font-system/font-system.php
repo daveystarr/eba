@@ -7,7 +7,7 @@ class UncodeFont {
 
 		if (!isset($this->options) || !is_array($this->options)) {
 			$this->options = array(
-    		'font_stack' => '[{&quot;family&quot;:&quot;Poppins&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;300,regular,500,600,700&quot;,&quot;selvariants&quot;:&quot;300,regular,500,600,700&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;devanagari,latin-ext,latin-ext&quot;,&quot;selsubsets&quot;:&quot;devanagari,latin-ext,latin-ext&quot;},{&quot;family&quot;:&quot;Hind&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;300,regular,500,600,700&quot;,&quot;selvariants&quot;:&quot;300,regular,500,600,700&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin,latin-ext,devanagari&quot;,&quot;selsubsets&quot;:&quot;latin,latin-ext,devanagari&quot;}]'
+    		'font_stack' => '[{&quot;family&quot;:&quot;Poppins&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;300,regular,500,600,700&quot;,&quot;selvariants&quot;:&quot;300,regular,500,600,700&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;devanagari,latin-ext,latin-ext&quot;,&quot;selsubsets&quot;:&quot;devanagari,latin-ext,latin-ext&quot;},{&quot;family&quot;:&quot;Hind&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;300,regular,500,600,700&quot;,&quot;selvariants&quot;:&quot;300,regular,500,600,700&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin,latin-ext,devanagari&quot;,&quot;selsubsets&quot;:&quot;latin,latin-ext,devanagari&quot;},{&quot;family&quot;:&quot;Droid Serif&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;regular,italic,700,700italic&quot;,&quot;selvariants&quot;:&quot;regular,italic,700,700italic&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin&quot;,&quot;selsubsets&quot;:&quot;latin&quot;},{&quot;family&quot;:&quot;Dosis&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;200,300,regular,500,600,700,800&quot;,&quot;selvariants&quot;:&quot;200,300,regular,500,600,700,800&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin,latin-ext&quot;,&quot;selsubsets&quot;:&quot;latin,latin-ext&quot;},{&quot;family&quot;:&quot;Playfair Display&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;regular,italic,700,700italic,900,900italic&quot;,&quot;selvariants&quot;:&quot;regular,italic,700,700italic,900,900italic&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin,latin-ext,cyrillic&quot;,&quot;selsubsets&quot;:&quot;latin,latin-ext,cyrillic&quot;},{&quot;family&quot;:&quot;Oswald&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;300,regular,700&quot;,&quot;selvariants&quot;:&quot;300,regular,700&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;latin,latin-ext&quot;,&quot;selsubsets&quot;:&quot;latin,latin-ext&quot;},{&quot;family&quot;:&quot;Roboto&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;100,100italic,300,300italic,regular,italic,500,500italic,700,700italic,900,900italic&quot;,&quot;selvariants&quot;:&quot;100,100italic,300,300italic,regular,italic,500,500italic,700,700italic,900,900italic&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;vietnamese,greek,cyrillic-ext,cyrillic,greek-ext,latin,latin-ext&quot;,&quot;selsubsets&quot;:&quot;vietnamese,greek,cyrillic-ext,cyrillic,greek-ext,latin,latin-ext&quot;},{&quot;family&quot;:&quot;Source Sans Pro&quot;,&quot;familyID&quot;:&quot;&quot;,&quot;source&quot;:&quot;Google Web Fonts&quot;,&quot;stub&quot;:&quot;&quot;,&quot;generic&quot;:&quot;&quot;,&quot;variants&quot;:&quot;200,200italic,300,300italic,regular,italic,600,600italic,700,700italic,900,900italic&quot;,&quot;selvariants&quot;:&quot;200,200italic,300,300italic,regular,italic,600,600italic,700,700italic,900,900italic&quot;,&quot;variantselectors&quot;:&quot;&quot;,&quot;files&quot;:&quot;&quot;,&quot;subsets&quot;:&quot;vietnamese,latin,latin-ext&quot;,&quot;selsubsets&quot;:&quot;vietnamese,latin,latin-ext&quot;}]'
     	);
     	add_option('uncode_font_options', $this->options);
     }
@@ -30,6 +30,8 @@ class UncodeFont {
 			$this->download_font();
 			die();
 		}
+
+		$this->mod_file = (defined('FS_CHMOD_FILE')) ? FS_CHMOD_FILE : false;
 
 		add_action('admin_menu', array(&$this, 'add_admin_menu'), 50);
 		add_action('admin_enqueue_scripts', array(&$this, 'add_admin_scripts'));
@@ -76,7 +78,7 @@ class UncodeFont {
 			foreach ($font_stack as $font) {
 				if (isset($font['source']) && $font['source'] == 'Google Web Fonts') {
 					$google_font_counter++;
-					wp_enqueue_style('uf-google-font-'.$google_font_counter, 'http://fonts.googleapis.com/css?family='.urlencode($font['family']), array(), UNCODE_VERSION);
+					wp_enqueue_style('uf-google-font-'.$google_font_counter, '//fonts.googleapis.com/css?family='.urlencode($font['family']), array(), UNCODE_VERSION);
 				}
 
 				if (isset($font['source']) && $font['source'] == 'Font Squirrel') {
@@ -111,6 +113,7 @@ class UncodeFont {
 				$url = "https://typekit.com/api/v1/json/kits/" . $this->options['typekit_kit_ID'];
 				$curl_args = array(
 					'sslverify' => false,
+					'timeout' => 20000,
 				);
 				$script = '';
 				$response = wp_remote_request($url."?token=$api_key", $curl_args);
@@ -285,6 +288,7 @@ class UncodeFont {
 								$url = "http://f.fontdeck.com/s/css/json/$domain/$project.json";
 								$curl_args = array(
 									'sslverify' => false,
+									'timeout' => 20000,
 								);
 
 								$response = wp_remote_request($url, $curl_args);
@@ -535,7 +539,7 @@ class UncodeFont {
 		if (!(isset($this->options['fontsquirrel_combine']) && $this->options['fontsquirrel_combine'] == 'dont-combine')) {
 			$this->setup_wp_filesystem();
 			global $wp_filesystem;
-			if (isset($wp_filesystem) && !$wp_filesystem->put_contents(trailingslashit($this->font_directory).'uncodefont.css', $css, FS_CHMOD_FILE)) {
+			if (isset($wp_filesystem) && !$wp_filesystem->put_contents(trailingslashit($this->font_directory).'uncodefont.css', $css, $this->mod_file)) {
 				echo "<div class='error'><p>Failed to save file uncodefont.css. Please check your folder permissions.</p></div>";
 			}
 		}
@@ -560,6 +564,7 @@ class UncodeFont {
 			$url = "http://f.fontdeck.com/s/css/json/$domain/$project.json";
 			$curl_args = array(
 				'sslverify' => false,
+				'timeout' => 20000,
 			);
 
 			$response = wp_remote_request($url, $curl_args);
@@ -606,63 +611,75 @@ class UncodeFont {
 
 		global $wp_filesystem;
 		if (empty($wp_filesystem)) {
-		  require_once (ABSPATH . '/wp-admin/includes/file.php');
-		  WP_Filesystem();
+			require_once (ABSPATH . '/wp-admin/includes/file.php');
 		}
 		$file = get_template_directory() . '/core/font-system/include/js/google_fonts.json';
+		$can_read_file = true;
+		if (false === ($creds = request_filesystem_credentials($file, '', false, false))) {
+			$can_read_file = false;
+		}
+		/* initialize the API */
+		if ( ! WP_Filesystem($creds) ) {
+			/* any problems and we exit */
+			$can_read_file = false;
+		}
     /* Will result in $api_response being an array of data,
     parsed from the JSON response of the API listed above */
-    $response = $wp_filesystem->get_contents($file);
+    if ($can_read_file) {
+	    $response = $wp_filesystem->get_contents($file);
 
-		if ($response) {
+			if ($response) {
 
-			$fonts = json_decode($response);
+				$fonts = json_decode($response);
 
-			if (isset($fonts) && is_array($fonts)) {
-				$font_map = array();
-				foreach ($fonts as $font) {
-					$first_char = substr($font->family, 0, 1);
-					if (!isset($font_map[$first_char])) {
-						$first_char_fonts = array();
+				if (isset($fonts) && is_array($fonts)) {
+					$font_map = array();
+					foreach ($fonts as $font) {
+						$first_char = substr($font->family, 0, 1);
+						if (!isset($font_map[$first_char])) {
+							$first_char_fonts = array();
+						}
+						else {
+							$first_char_fonts = $font_map[$first_char];
+						}
+						$first_char_fonts[] = $font;
+						$font_map[$first_char] = $first_char_fonts;
 					}
-					else {
-						$first_char_fonts = $font_map[$first_char];
+
+					$first_char_index = "";
+					$fonts_by_first_letter = "";
+					$first_char_position = 0;
+					foreach ($font_map as $first_char => $first_char_fonts) {
+						$first_char_position++;
+						$first_char_index .= "<a href='#' id='uf-gf-$first_char' class='uf-group-key uf-group-key-$first_char uf-group-key-gf'>$first_char</a> | ";
+						$fonts_by_first_letter .= "<div id='uf-gf-$first_char-fonts' class='uf-fonts-for uf-fonts-for-$first_char uf-group-key-position-$first_char_position uf-group-key-for-gf'><ul>\n";
+						foreach ($first_char_fonts as $font) {
+							$fonts_by_first_letter .= $this->create_font_line_item(
+								'Google Web Fonts',
+								'gf',
+								$font,
+								array(
+									'family' => 'family',
+									'generic' => '',
+									'stub' => '',
+									'variants' => 'variants',
+									'subsets' => 'subsets',
+								)
+							);
+						}
+						$fonts_by_first_letter .= "</ul></div>\n";
 					}
-					$first_char_fonts[] = $font;
-					$font_map[$first_char] = $first_char_fonts;
-				}
 
-				$first_char_index = "";
-				$fonts_by_first_letter = "";
-				$first_char_position = 0;
-				foreach ($font_map as $first_char => $first_char_fonts) {
-					$first_char_position++;
-					$first_char_index .= "<a href='#' id='uf-gf-$first_char' class='uf-group-key uf-group-key-$first_char uf-group-key-gf'>$first_char</a> | ";
-					$fonts_by_first_letter .= "<div id='uf-gf-$first_char-fonts' class='uf-fonts-for uf-fonts-for-$first_char uf-group-key-position-$first_char_position uf-group-key-for-gf'><ul>\n";
-					foreach ($first_char_fonts as $font) {
-						$fonts_by_first_letter .= $this->create_font_line_item(
-							'Google Web Fonts',
-							'gf',
-							$font,
-							array(
-								'family' => 'family',
-								'generic' => '',
-								'stub' => '',
-								'variants' => 'variants',
-								'subsets' => 'subsets',
-							)
-						);
+					if ($first_char_index != '') {
+						$first_char_index = substr($first_char_index, 0, -2);
 					}
-					$fonts_by_first_letter .= "</ul></div>\n";
-				}
 
-				if ($first_char_index != '') {
-					$first_char_index = substr($first_char_index, 0, -2);
+					echo "<div>".$first_char_index."</div>";
+					echo do_shortcode($fonts_by_first_letter);
 				}
-
-				echo "<div>".$first_char_index."</div>";
-				echo do_shortcode($fonts_by_first_letter);
 			}
+		} else {
+			echo "<div>Error to read file: " . $file . "</div>";
 		}
 	}
 
@@ -673,7 +690,10 @@ class UncodeFont {
 		}
 		echo "<p>Fonts will be downloaded from <a href='http://fontsquirrel.com'>Font Squirrel</a> to ".$this->font_directory.". Only downloaded fonts are available for addition to the stack.</p>";
 		$url = "http://www.fontsquirrel.com/api/classifications";
-		$response = wp_remote_request($url);
+		$args = array(
+			'timeout' => 20000,
+		);
+		$response = wp_remote_request($url, $args);
 		if (!is_wp_error($response)) {
 			$response = wp_remote_retrieve_body($response);
 			$classifications = json_decode($response);
@@ -689,7 +709,7 @@ class UncodeFont {
 
 			$family_string = '';
 			$family_url = 'http://www.fontsquirrel.com/api/fontlist/all';
-			$family_response = wp_remote_request($family_url);
+			$family_response = wp_remote_request($family_url, $args);
 			if (!is_wp_error($family_response)) {
 				$family_response = wp_remote_retrieve_body($family_response);
 				$fonts = json_decode($family_response);
@@ -928,7 +948,10 @@ class UncodeFont {
 
 	function font_squirrel_get_font_information($family) {
 		$font_info_url = 'http://www.fontsquirrel.com/api/familyinfo/'.$family;
-		$font_info = wp_remote_request($font_info_url);
+		$args = array(
+			'timeout' => 20000,
+		);
+		$font_info = wp_remote_request($font_info_url, $args);
 		if (!is_wp_error($font_info)) {
 			$font_info = wp_remote_retrieve_body($font_info);
 			$font_variants = json_decode($font_info);
@@ -1157,18 +1180,6 @@ class UncodeFont {
 				}
 			}
 
-			$url = wp_nonce_url(admin_url('admin.php?page=uncodefont'));
-
-			global $wp_filesystem;
-			if (empty($wp_filesystem)) {
-				require_once (ABSPATH . '/wp-admin/includes/file.php');
-			}
-
-			$access_type = get_filesystem_method();
-
-			//$this->setup_wp_filesystem();
-			//global $wp_filesystem;
-
 			$file_path = parse_url($font_url);
 			$remote_file_info = pathinfo($file_path['path']);
 
@@ -1181,46 +1192,24 @@ class UncodeFont {
 
 			$zip_file_name = $remote_file_info['basename'].'.'.$remote_file_extension;
 
-			$file_response = wp_remote_request($font_url, array('sslverify' => false));
-			if (!is_wp_error($file_response)) {
-				$zip_file = wp_remote_retrieve_body($file_response);
+			$this->setup_wp_filesystem();
 
-				if ($access_type !== 'direct') {
-					if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'uncodefont' && isset($_REQUEST['fileaccess']) && $_REQUEST['fileaccess'] === 'other') {
+			global $uncodefont_file_response;
+			$args = array(
+				'sslverify' => false,
+				'timeout' => 20000,
+			);
+			if (!isset($uncodefont_file_response)) $uncodefont_file_response = wp_remote_request($font_url, $args);
 
-						if (false === ($creds = request_filesystem_credentials($url, '', false, false))) {
-							return true;
-						}
-
-						if (!WP_Filesystem($creds)) {
-							request_filesystem_credentials($url, '', true, false);
-							return true;
-						}
-
-						if (isset($wp_filesystem) && !$wp_filesystem->put_contents(trailingslashit($this->font_directory).$zip_file_name, $zip_file, FS_CHMOD_FILE)) {
-							echo json_encode(array(
-								'error' => "Failed to save $zip_file_name to {$this->font_directory}. Please ensure that the directory exists and is writable.",
-							));
-							die();
-						}
-
-					} else {
-						if (false === ($creds = request_filesystem_credentials($url, '', false, false))) {
-							die();
-						}
-					}
-				} else {
-					$creds = request_filesystem_credentials($url, '', false, false, array());
-					/* initialize the API */
-					if ( ! WP_Filesystem($creds) ) {
-						/* any problems and we exit */
-						return false;
-					}
-
-					/* do our file manipulations below */
-					$wp_filesystem->put_contents(trailingslashit($this->font_directory).$zip_file_name, $zip_file, FS_CHMOD_FILE );
+			if (!is_wp_error($uncodefont_file_response)) {
+				$zip_file = wp_remote_retrieve_body($uncodefont_file_response);
+				global $wp_filesystem;
+				if (isset($wp_filesystem) && !$wp_filesystem->put_contents(trailingslashit($this->font_directory).$zip_file_name, $zip_file, $this->mod_file)) {
+					echo json_encode(array(
+						'error' => "Failed to save $zip_file_name to {$this->font_directory}. Please ensure that the directory exists and is writable.",
+					));
+					die();
 				}
-
 			}
 			else {
 				echo json_encode(array(
@@ -1230,9 +1219,11 @@ class UncodeFont {
 			}
 
 			$zip = new ZipArchive;
-			if ( @file_exists(trailingslashit($this->font_directory).$zip_file_name) && $zip->open( trailingslashit($this->font_directory).$zip_file_name ) )
+			if ( @file_exists(trailingslashit($this->font_directory).$zip_file_name) && $zip->open( trailingslashit($this->font_directory).$zip_file_name, ZIPARCHIVE::CHECKCONS ) )
 			{
-				wp_mkdir_p(trailingslashit($this->font_directory).$remote_file_info['basename']);
+				if ( !$wp_filesystem->is_dir( trailingslashit($this->font_directory).$remote_file_info['basename'] )) {
+					$wp_filesystem->mkdir( trailingslashit($this->font_directory).$remote_file_info['basename'], FS_CHMOD_DIR );
+				}
 
 				for ( $i=0; $i < $zip->numFiles; $i++ )
 				{
@@ -1241,20 +1232,7 @@ class UncodeFont {
 					if ( substr( $entry, -1 ) == '/' ) continue; // skip directories
 					if ( strpos($entry,'/._') !== false ) continue; // skip mac files
 
-					$fp = $zip->getStream( $entry );
-					$ofp = fopen( trailingslashit($this->font_directory).$remote_file_info['basename'].'/'.basename($entry), 'w' );
-
-					if ( ! $fp ) {
-						echo json_encode(array(
-							'error' => "Failed to unzip the downloaded file.",
-						));
-					}
-
-					while ( ! feof( $fp ) )
-						fwrite( $ofp, fread($fp, 8192) );
-
-					fclose($fp);
-					fclose($ofp);
+					$wp_filesystem->put_contents(trailingslashit($this->font_directory).$remote_file_info['basename'].'/'.basename($entry),$zip->getFromName($entry),$this->mod_file);
 
 				}
 
@@ -1318,13 +1296,7 @@ class UncodeFont {
 	 * @return bool
 	 */
 	private function setup_wp_filesystem() {
-		$url = wp_nonce_url(admin_url('admin.php?page=uncodefont'));
-
-		global $wp_filesystem;
-		if (empty($wp_filesystem)) {
-			require_once (ABSPATH . '/wp-admin/includes/file.php');
-		}
-
+		$url = wp_nonce_url($this->fonts_page_name);
 		if (false === ($creds = request_filesystem_credentials($url, '', false, false))) {
 			return true;
 		}

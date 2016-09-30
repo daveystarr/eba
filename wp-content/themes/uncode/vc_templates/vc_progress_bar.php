@@ -64,4 +64,4 @@ foreach ( $graph_lines_data as $line ) {
 
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

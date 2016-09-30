@@ -57,15 +57,21 @@ UNCODE.utils = function() {
 		var hash = (e.currentTarget).hash,
 		is_scrolltop = $(e.currentTarget).hasClass('scroll-top') ? true : false,
 		anchor = '';
-		if ($(e.currentTarget).data('toggle') == 'tab') return;
+		if ($(e.currentTarget).data('toggle') == 'tab' || $(e.currentTarget).data('toggle') == 'collapse') return;
 		if ($(e.currentTarget).hasClass('woocommerce-review-link')) {
 			e.preventDefault();
 			if (!$('#tab-reviews').is(':visible')) {
 				$('a[href="#tab-reviews"]').trigger('click');
 			}
+			var calc_scroll = $('.wootabs .tab-content').offset().top - (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0),
+			scroll_offset = UNCODE.bodyBorder;
+			if (scroll_offset) {
+				if (UNCODE.wwidth < UNCODE.mediaQueryMobile) scroll_offset = 9;
+				calc_scroll -= scroll_offset;
+			}
 			setTimeout(function(){
 				$('html, body').animate({
-					scrollTop: $('.wootabs .tab-content').offset().top - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0)
+					scrollTop: calc_scroll
 				}, 1000, 'easeInOutCubic');
 			}, 200);
 			return;
@@ -76,6 +82,7 @@ UNCODE.utils = function() {
 	      anchor = anchor.length ? anchor : this.hash.slice(1);
 	    }
 		}
+
 		if (is_scrolltop || anchor != '') {
 			if (is_scrolltop) {
 				e.preventDefault();
@@ -95,13 +102,41 @@ UNCODE.utils = function() {
 				});
 				if (scrollSection.length) {
 					e.preventDefault();
+
+					if (UNCODE.menuOpened) {
+						if (UNCODE.wwidth < UNCODE.mediaQuery) window.dispatchEvent(UNCODE.menuMobileTriggerEvent);
+						else $('.overlay-close').trigger('click');
+					}
+
 					UNCODE.scrolling = true;
 					var bodyTop = document.documentElement['scrollTop'] || document.body['scrollTop'],
 						delta = bodyTop - scrollSection.offset().top,
 						scrollSpeed = Math.abs(delta) / 2;
 					if (scrollSpeed < 1000) scrollSpeed = 1000;
+
+					var calc_scroll = scrollSection.offset().top;
+
+					if (($('.menu-sticky').length && !$('.menu-hide').length) || ($('.menu-sticky-vertical').length && !$('.menu-hide-vertical').length)) {
+						if ($('body.vmenu').length) {
+							if (UNCODE.wwidth < UNCODE.mediaQuery) calc_scroll -= UNCODE.menuMobileHeight;
+						} else {
+							calc_scroll -= UNCODE.menuMobileHeight;
+						}
+					} else {
+						if (UNCODE.wwidth < UNCODE.mediaQuery) {
+							if (!$('.menu-hide').length && !$('.menu-hide-vertical').length) calc_scroll -= $('.main-menu-container').height() - 1;
+							else calc_scroll -= UNCODE.menuMobileHeight;
+						}
+					}
+
+					scroll_offset = UNCODE.bodyBorder;
+					if (scroll_offset) {
+						if (UNCODE.wwidth < UNCODE.mediaQuery) scroll_offset = 9;
+						calc_scroll -= scroll_offset;
+					}
+
 					$('html, body').animate({
-						scrollTop: scrollSection.offset().top - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0)
+						scrollTop: calc_scroll
 					}, scrollSpeed, 'easeInOutCubic', function() {
 						UNCODE.scrolling = false;
 					});
@@ -116,8 +151,14 @@ UNCODE.utils = function() {
 			pageHeaderHeight = pageHeader.outerHeight(),
 			scrollSpeed = Math.abs(pageHeaderTop + pageHeaderHeight) / 2;
 		if (scrollSpeed < 1000) scrollSpeed = 1000;
+		var calc_scroll = pageHeaderTop + pageHeaderHeight - (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0),
+		scroll_offset = UNCODE.bodyBorder;
+		if (scroll_offset) {
+			if (UNCODE.wwidth < UNCODE.mediaQueryMobile) scroll_offset = 9;
+			calc_scroll -= scroll_offset;
+		}
 		$('html, body').animate({
-			scrollTop: pageHeaderTop + pageHeaderHeight - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0)
+			scrollTop: calc_scroll
 		}, scrollSpeed, 'easeInOutCubic');
 
 	});
@@ -144,12 +185,16 @@ UNCODE.utils = function() {
 		var $title = $(this).parent()
 		if ($parent) {
 			$parent.find('[data-toggle="collapse"][data-parent="' + parent + '"]').not($this).addClass('collapsed')
-			$parent.find('.panel-title').removeClass('active')
-			$title[!$target.hasClass('in') ? 'addClass' : 'removeClass']('active')
+			if ($title.hasClass('active')) {
+				$title.removeClass('active');
+			} else {
+				$parent.find('.panel-title').removeClass('active')
+				$title[!$target.hasClass('in') ? 'addClass' : 'removeClass']('active')
+			}
 		}
 		$this[$target.hasClass('in') ? 'addClass' : 'removeClass']('collapsed')
-			// }
-		$target.collapse(option)
+
+		//$target.collapse(option)
 	});
 	// FitText
 	// =================
@@ -204,7 +249,7 @@ UNCODE.utils = function() {
 
 	// REVSLIDER API
 	// ============
-	$(window).load(function() {
+	$(window).on("load", function() {
 		$('.rev_slider_wrapper').each(function(){
 			var $this = jQuery(this),
    		id_array = $this.attr("id").split("_"),
@@ -221,10 +266,14 @@ UNCODE.utils = function() {
 		if ($('html').hasClass('admin-mode')) {
 			var getAdminBar = $('#wpadminbar');
 			if (getAdminBar.length) {
-				if (getAdminBar.css('visibility') !== 'hidden') {
-					if (getAdminBar.css('top') === '0px') {
-						if ($(window).width() > 600) $('html').css({'margin-top':getAdminBar.height() + 'px','padding-top':'0'});
-						else $('html').css({'padding-top':getAdminBar.height() + 'px','margin-top':'0'});
+				if (getAdminBar.css('position') !== 'hidden') {
+					var getAdminBarHeight = getAdminBar.height();
+					if (getAdminBar.css('position') === 'fixed') {
+						$('html').css({'margin-top':getAdminBarHeight + 'px','padding-top': UNCODE.bodyBorder+'px'});
+						$('.body-borders .top-border').css({'margin-top':getAdminBarHeight+'px'});
+					} else {
+						$('html').css({'padding-top':UNCODE.bodyBorder + 'px','margin-top':'0px'});
+						$('.body-borders .top-border').css({'margin-top':'0px'});
 					}
 				}
 			}
@@ -233,27 +282,30 @@ UNCODE.utils = function() {
 }
 
 UNCODE.menuSystem = function() {
-	function menuMobileButton() {
-		var $mobileToggleButton = $('.mobile-menu-button')
-		var open = false;
-		$mobileToggleButton.on('click', function(event) {
-			var btn = this;
-			event.preventDefault();
-			if ($(window).width() < 960) {
-				if (!open) {
-					btn.classList.add('close');
-					open = true;
-				} else {
-					btn.classList.remove('close');
-					btn.classList.add('closing');
-					setTimeout(function() {
-						btn.classList.remove('closing');
-					}, 500);
-					open = false;
-				}
-			}
-		});
-	};
+	// function menuMobileButton() {
+	// 	var $mobileToggleButton = $('.mobile-menu-button')
+	// 	var open = false;
+	// 	UNCODE.menuOpened = false;
+	// 	$mobileToggleButton.on('click', function(event) {
+	// 		var btn = this;
+	// 		event.preventDefault();
+	// 		if ($(window).width() < UNCODE.mediaQuery) {
+	// 			if (!open) {
+	// 				UNCODE.menuOpened = true;
+	// 				btn.classList.add('close');
+	// 				open = true;
+	// 			} else {
+	// 				UNCODE.menuOpened = false;
+	// 				btn.classList.remove('close');
+	// 				btn.classList.add('closing');
+	// 				setTimeout(function() {
+	// 					btn.classList.remove('closing');
+	// 				}, 500);
+	// 				open = false;
+	// 			}
+	// 		}
+	// 	});
+	// };
 
 	function menuMobile() {
 		var $mobileToggleButton = $('.mobile-menu-button'),
@@ -261,41 +313,99 @@ UNCODE.menuSystem = function() {
 			$el,
 			elHeight,
 			check,
-			animating = false;
+			animating = false,
+			stickyMobile = false;
+		UNCODE.menuOpened = false;
+			//browserToolbar = 56;
 		$mobileToggleButton.on('click', function(event) {
+			var btn = this;
+			if ($(btn).hasClass('overlay-close')) return;
 			event.preventDefault();
-			if ($(window).width() < UNCODE.mediaQuery) {
+			if (UNCODE.wwidth < UNCODE.mediaQuery) {
 				$box = $(this).closest('.box-container').find('.main-menu-container'),
 					$el = $(this).closest('.box-container').find('.menu-horizontal-inner, .menu-sidebar-inner');
-				elHeight = 0;
-				$.each($el, function(index, val) {
-					elHeight += $(val).outerHeight();
-				});
+				if (UNCODE.isMobile && $('.menu-wrapper.menu-sticky, .menu-wrapper.menu-hide-only, .main-header .menu-sticky-vertical, .main-header .menu-hide-only-vertical').length) {
+					stickyMobile = true;
+					elHeight = window.innerHeight - UNCODE.menuMobileHeight - (UNCODE.bodyBorder * 2) - UNCODE.adminBarHeight + 1;
+				} else {
+					elHeight = 0;
+					$.each($el, function(index, val) {
+						elHeight += $(val).outerHeight();
+					});
+				}
 				var open = function() {
 					if (!animating) {
 						animating = true;
+						UNCODE.menuOpened = true;
+						if ($('body[class*="vmenu-"], body.hmenu-center').length && ($('.menu-hide, .menu-sticky').length)) {
+							$('.main-header > .vmenu-container').css({position:'fixed', top: ($('.menu-container').outerHeight() + UNCODE.bodyBorder + UNCODE.adminBarHeight) + 'px'});
+							$('.menu-container:not(.sticky-element)').css({position:'fixed'});
+						}
+						if ($('body.hmenu-center').length && ($('.menu-hide, .menu-sticky').length)) {
+							$('.menu-container:not(.sticky-element)').css({position:'fixed', top: (UNCODE.menuMobileHeight + UNCODE.bodyBorder + UNCODE.adminBarHeight) + 'px'});
+						}
+						btn.classList.add('close');
+						$box.addClass('open-items');
 						$box.animate({
 							height: elHeight
-						}, 400, "easeInOutCirc", function() {
-							$box.css('height', 'auto');
+						}, 600, "easeInOutCirc", function() {
+							animating = false;
+							if (!stickyMobile) $box.css('height', 'auto');
 						});
 					}
 				};
 
 				var close = function() {
-					$box.animate({
-						height: 0
-					}, {
-						duration: 400,
-						easing: "easeInOutCirc",
-						complete: function(elements) {
-							$(elements).css('height', '');
-							animating = false;
-						}
-					});
+					if (!animating) {
+						animating = true;
+						UNCODE.menuOpened = false;
+						btn.classList.remove('close');
+						btn.classList.add('closing');
+						$box.addClass('close');
+						setTimeout(function() {
+							$box.removeClass('close');
+							$box.removeClass('open-items');
+							btn.classList.remove('closing');
+						}, 500);
+						$box.animate({
+							height: 0
+						}, {
+							duration: 600,
+							easing: "easeInOutCirc",
+							complete: function(elements) {
+								$(elements).css('height', '');
+								animating = false;
+								if ($('body[class*="vmenu-"]').length) $('.main-header > .vmenu-container').css('position','relative');
+							}
+						});
+					}
 				};
-
-				check = ($box.height() == 0) ? open() : close();
+				check = (!UNCODE.menuOpened) ? open() : close();
+			}
+		});
+		window.addEventListener('menuMobileTrigged', function(e) {
+			$mobileToggleButton.trigger('click');
+		});
+		window.addEventListener("resize", function() {
+			if ($(window).width() < UNCODE.mediaQuery) {
+				if (UNCODE.isMobile) {
+					var $box = $('.box-container .main-menu-container'),
+						$el = $('.box-container .menu-horizontal-inner, .box-container .menu-sidebar-inner');
+					if ($($box).length && $($box).hasClass('open-items') && $($box).css('height') != 'auto') {
+						if ($('.menu-wrapper.menu-sticky, .menu-wrapper.menu-hide-only').length) {
+							elHeight = 0;
+							$.each($el, function(index, val) {
+								elHeight += $(val).outerHeight();
+							});
+							elHeight = window.innerHeight - $('.menu-wrapper.menu-sticky .menu-wrapper.menu-sticky .menu-container .row-menu-inner, .menu-wrapper.menu-hide-only .menu-wrapper.menu-sticky .menu-container .row-menu-inner').height() - (UNCODE.bodyBorder * 2) + 1;
+							$($box).css('height', elHeight + 'px');
+						}
+					}
+				}
+			} else {
+				$('.menu-hide-vertical').removeAttr('style');
+				$('.menu-container-mobile').removeAttr('style');
+				$('.vmenu-container.menu-container').removeAttr('style');
 			}
 		});
 	};
@@ -341,22 +451,19 @@ UNCODE.menuSystem = function() {
 				collapsibleHideFunction: function($ul, complete) {
 					$ul.slideUp(200, 'easeInOutCirc', complete);
 				},
-				hideOnClick: false
+				hideOnClick: true
 			});
 		}
 	};
 	function menuOverlay() {
-		if ($('.overlay-sequential').length > 0) {
-			$('.overlay-sequential .menu-smart > li').each(function(index, el) {
-				$(this).css('-webkit-transition-delay', (index / 12) + 's' )
-			   .css('-moz-transition-delay', (index / 12) + 's')
-			   .css('-ms-transition-delay', (index / 12) + 's')
-			   .css('-o-transition-delay', (index / 12) + 's')
-			   .css('transition-delay', (index / 12) + 's');
+		if ($('.overlay-sequential, .menu-mobile-animated').length > 0) {
+			$('.overlay-sequential .menu-smart > li, .menu-sticky .menu-container .menu-smart > li, .vmenu-container .menu-smart > li').each(function(index, el) {
+				var transDelay = (index / 20) + 0.1;
+				$(this)[0].setAttribute('style', '-webkit-transition-delay:' + transDelay + 's; -moz-transition-delay:' + transDelay + 's; -ms-transition-delay:' + transDelay + 's; -o-transition-delay:' + transDelay + 's; transition-delay:' + transDelay + 's');
 			});
 		}
 	};
-	menuMobileButton();
+	//menuMobileButton();
 	menuMobile();
 	menuOffCanvas();
 	menuSmart();
@@ -583,6 +690,11 @@ UNCODE.okvideo = function() {
 							$(mediaElement).closest('.uncode-video-container').css('opacity', '1');
 						}
 					});
+					if (!UNCODE.isMobile) {
+						setTimeout(function() {
+							UNCODE.initVideoComponent(document.body, '.uncode-video-container.video, .uncode-video-container.self-video');
+						}, 100);
+					}
 					mediaElement.play();
 				},
 				// fires when a problem is detected
@@ -671,8 +783,9 @@ UNCODE.isotopeLayout = function() {
 					var $item = $($items[i]),
 						multiplier_w = $item.attr('class').match(/tmb-iso-w(\d{0,2})/),
 						multiplier_h = $item.attr('class').match(/tmb-iso-h(\d{0,2})/);
+
 					if (widthAvailable >= screenMdArray[index] && widthAvailable < screenLgArray[index]) {
-						if (multiplier_w[1] !== undefined) {
+						if (multiplier_w != null && multiplier_w[1] !== undefined) {
 							switch (parseInt(multiplier_w[1])) {
 								case (5):
 								case (4):
@@ -692,7 +805,7 @@ UNCODE.isotopeLayout = function() {
 							}
 						}
 					} else if (widthAvailable >= screenSmArray[index] && widthAvailable < screenMdArray[index]) {
-						if (multiplier_w[1] !== undefined) {
+						if (multiplier_w != null && multiplier_w[1] !== undefined) {
 							switch (parseInt(multiplier_w[1])) {
 								case (5):
 								case (4):
@@ -709,7 +822,7 @@ UNCODE.isotopeLayout = function() {
 							}
 						}
 					} else if (widthAvailable < screenSmArray[index]) {
-						if (multiplier_w[1] !== undefined) {
+						if (multiplier_w != null && multiplier_w[1] !== undefined) {
 							//if (typeGridArray[index]) multiplier_h[1] = (12 * multiplier_h[1]) / multiplier_w[1];
 							multiplier_w[1] = 12;
 							if (typeGridArray[index]) multiplier_h[1] = 12;
@@ -887,9 +1000,15 @@ UNCODE.isotopeLayout = function() {
 			var filterHeight = ($filters != undefined) ? $filters.outerHeight(true) - $('a', $filters).first().height() : 0;
 			$('.isotope-system').on('click', '.pagination a', function(evt) {
 				evt.preventDefault();
-				var container = $(this).closest('.isotope-system');
+				var container = $(this).closest('.isotope-system'),
+				calc_scroll = container.offset().top - filterHeight  - (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0),
+				scroll_offset = $('body').data('border');
+				if (scroll_offset) {
+					if (UNCODE.wwidth < UNCODE.mediaQuery) scroll_offset = 9;
+					calc_scroll -= scroll_offset;
+				}
 				$('html, body').animate({
-					scrollTop: container.offset().top - filterHeight  - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0)
+					scrollTop: scroll_offset
 				}, 1000, 'easeInOutQuad');
 				loadIsotope($(this));
 				evt.preventDefault();
@@ -906,8 +1025,14 @@ UNCODE.isotopeLayout = function() {
 			if (!$filter.hasClass('active')) {
 				/** Scroll top with filtering */
 				if (filterContainer.hasClass('filter-scroll')) {
+					var calc_scroll = container.closest('.uncol').offset().top - (!filterContainer.hasClass('with-bg') ? filterContainer.outerHeight(true) - $filter.height() : 0) - (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0),
+					scroll_offset = $('body').data('border');
+					if (scroll_offset) {
+						if (UNCODE.wwidth < UNCODE.mediaQuery) scroll_offset = 9;
+						calc_scroll -= scroll_offset;
+					}
 					$('html, body').animate({
-						scrollTop: container.closest('.uncol').offset().top - (!filterContainer.hasClass('with-bg') ? filterContainer.outerHeight(true) - $filter.height() : 0) - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0)
+						scrollTop: calc_scroll
 					}, 1000, 'easeInOutQuad');
 				}
 				if (filterValue !== undefined) {
@@ -930,9 +1055,16 @@ UNCODE.isotopeLayout = function() {
 						container.isotope({
 							filter: function() {
 								var block = $(this),
-								filterable = (filterValue == '*') || block.hasClass(filterValue);
+								filterable = (filterValue == '*') || block.hasClass(filterValue),
+								lightboxElements = $('[data-lbox^=ilightbox]', block);
 								if (filterable) {
+									if (lightboxElements.length) {
+										lightboxElements.removeClass('lb-disabled');
+										container.data('lbox', $(lightboxElements[0]).data('lbox'));
+									}
 									filterItems.push(block);
+								} else {
+									if (lightboxElements.length) lightboxElements.addClass('lb-disabled');
 								}
 								return filterable;
 							}
@@ -940,13 +1072,15 @@ UNCODE.isotopeLayout = function() {
 						$('.t-inside.zoom-reverse', container).removeClass('zoom-reverse');
 					}, delay);
 					/** once filtered - start **/
-					if (transitionDuration == 0) {
-						container.isotope('once', 'arrangeComplete', function() {
+					container.isotope('once', 'arrangeComplete', function() {
+						var getLightbox = UNCODE.lightboxArray[container.data('lbox')];
+						if (typeof getLightbox === 'object') getLightbox.refresh();
+						if (transitionDuration == 0) {
 							setTimeout(function() {
 								boxAnimation(filterItems, 0, false, container);
 							}, 100);
-						});
-					}
+						}
+					});
 					/** once filtered - end **/
 				} else {
 					$.each($('> .tmb > .t-inside', container), function(index, val) {
@@ -1068,9 +1202,10 @@ UNCODE.isotopeLayout = function() {
 }
 
 UNCODE.lightbox = function() {
+	UNCODE.lightboxArray = {};
 	setTimeout(function() {
 		var groupsArr = {};
-		$('[data-lbox^=ilightbox]').each(function() {
+		$('[data-lbox^=ilightbox]:not(.lb-disabled)').each(function() {
 			var group = this.getAttribute("data-lbox"),
 				values = $(this).data();
 			groupsArr[group] = values;
@@ -1082,7 +1217,7 @@ UNCODE.lightbox = function() {
 				arrows = !groupsArr[i].noarr || false,
 				social = groupsArr[i].social || false,
 				deeplink = groupsArr[i].deep || false,
-				counter = $('[data-lbox="' + i + '"]').length;
+				counter = $('[data-lbox="' + i + '"]:not(.lb-disabled)').length;
 			if (social) social = {
 				facebook: true,
 				twitter: true,
@@ -1091,7 +1226,7 @@ UNCODE.lightbox = function() {
 				digg: true,
 				delicious: true
 			};
-			$('[data-lbox="' + i + '"]').iLightBox({
+			UNCODE.lightboxArray[i] = $('[data-lbox="' + i + '"]:not(.lb-disabled)').iLightBox({
 				skin: skin,
 				path: path,
 				linkId: deeplink,
@@ -1099,6 +1234,8 @@ UNCODE.lightbox = function() {
 				//fullViewPort: 'fit',
 				smartRecognition: false,
 				fullAlone: false,
+				maxScale: 1,
+				minScale: .02,
 				//fullStretchTypes: 'flash, video',
 				overlay: {
 					opacity: .94
@@ -1242,14 +1379,14 @@ UNCODE.carousel = function(container) {
 				  enter: function(direction) {
 				    var el = $(this.element);
 						if (el.data('autoplay')) {
-							if (!$(el).closest('.uncode-slider').length) {
-								el.trigger('play.owl.autoplay');
-							}
+							el.trigger('play.owl.autoplay');
+							el.data('stopped','false');
 						}
 				  },
 				  exited: function() {
 				    if ($(this.element).data('autoplay')) {
 							$(this.element).trigger('stop.owl.autoplay');
+							$(this.element).data('stopped','true');
 						}
 				  }
 				});
@@ -1288,7 +1425,7 @@ UNCODE.carousel = function(container) {
 						firstLoaded(el.target, event);
 					}, false);
 				}
-				var transHeight = $('.hmenu .menu-transparent.menu-primary .menu-container').height();
+				var transHeight = $('.hmenu .menu-transparent.menu-primary .menu-container').height() - UNCODE.bodyBorder;
 				if (transHeight != null) {
 					setTimeout(function() {
 						$(event.currentTarget).closest('.uncode-slider').find('.owl-prev, .owl-next').css('paddingTop', transHeight / 2 + 'px');
@@ -1349,9 +1486,9 @@ UNCODE.carousel = function(container) {
 		});
 
 		$elSelector.on('translate.owl.carousel', function(event) {
-			//if (UNCODE.isMobile) {
+			if (UNCODE.isMobile) {
 				$(event.currentTarget).addClass('owl-translating');
-			//}
+			}
 		});
 
 		/** Translated */
@@ -1373,7 +1510,7 @@ UNCODE.carousel = function(container) {
 					var maxDelay = Math.max(lastDelayElems, lastDelayThumb);
 					$(event.currentTarget).trigger('stop.owl.autoplay');
 					setTimeout(function() {
-						if (!$(event.currentTarget).hasClass('owl-mouseenter')) $(event.currentTarget).trigger('play.owl.autoplay');
+						if (!$(event.currentTarget).hasClass('owl-mouseenter') && $(event.currentTarget).data('stopped') != 'true') $(event.currentTarget).trigger('play.owl.autoplay');
 					}, maxDelay);
 				}
 			}, 200);
@@ -1392,6 +1529,10 @@ UNCODE.carousel = function(container) {
 					$('.animate_when_almost_visible:not(.t-inside)', val).addClass('start_animation');
 				}
 			});
+
+			if (UNCODE.isMobile) {
+				$(event.currentTarget).removeClass('owl-translating');
+			}
 
 			// } else {
 			// 	$(event.currentTarget).removeClass('owl-translating');
@@ -1722,22 +1863,23 @@ UNCODE.tapHover = function() {
 };
 
 
-UNCODE.onePage = function() {
+UNCODE.onePage = function(isMobile) {
 	var current = 0,
 		last = 0,
 		lastScrollTop = 0,
 		forceScroll = false,
 		lastScrolled = 0,
 		isSectionscroller = ($('.main-onepage').length) ? true : false,
-		getOffset = ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0);
+		getOffset = (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0);
 
 	function init_onepage() {
-		if (isSectionscroller) {
+		if (isSectionscroller && !isMobile) {
 			$("<ul class='onepage-pagination'></ul>").prependTo("body");
 		}
 		last = $('.onepage-section').length - 1;
 		$.each($('div[data-parent=true]'), function(index, val) {
 			$(this).attr('data-section', index);
+			if (isMobile) return;
 			var sectionDown = new Waypoint({
 				element: val,
 				handler: function(direction) {
@@ -1785,6 +1927,7 @@ UNCODE.onePage = function() {
 				goToSection = String(window.location.hash).replace(/^#/, "");
 				goToSection = Number($('[data-name=' + goToSection + ']').attr('data-section'));
 			}
+
 			if (typeof goToSection === 'number' && !isNaN(goToSection)) {
 				current = lastScrolled = goToSection;
 				setTimeout(function() {
@@ -1792,6 +1935,7 @@ UNCODE.onePage = function() {
 				}, 500);
 			}
 		}
+
 	}
 
 	function changeMenuActive(section, index) {
@@ -1846,7 +1990,7 @@ UNCODE.onePage = function() {
 			var body = $("html, body"),
 			bodyTop = document.documentElement['scrollTop'] || document.body['scrollTop'],
 			delta = bodyTop - $('[data-section=' + index + ']').offset().top,
-			scrollTo = $('[data-section=' + index + ']').offset().top  - ($('.menu-sticky .menu-container:not(.menu-hide)').length ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0);
+			scrollTo = $('[data-section=' + index + ']').offset().top  - (($('.menu-sticky .menu-container:not(.menu-hide)').length && ($(window).width() > UNCODE.mediaQuery)) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0);
 			if (index != 0) {
 				UNCODE.scrolling = true;
 			}
@@ -1869,15 +2013,13 @@ UNCODE.stickyElements = function() {
 			if ($('.sticky-element').length) {
 				var getRowPadding = $('.sticky-element.sticky-sidebar').closest('.row-parent').css("padding-top"),
 					sideOffset = (getRowPadding != undefined) ? parseInt(getRowPadding.replace("px", "")) : 0;
-				sideOffset += ($('.menu-sticky .menu-container:not(.menu-hide)').length) ? $('.menu-sticky .menu-container:not(.menu-hide)').outerHeight() : 0;
-				if ($('.menu-sticky').length) {
-					if ($('.sticky-element').hasClass('uncont')) {
-						if ($('.menu-shrink').length) {
-							sideOffset += $('.navbar-brand').data('minheight');
-						} else sideOffset += parseInt(UNCODE.menuHeight);
-					}
+				sideOffset += UNCODE.bodyBorder;
+				if (UNCODE.adminBarHeight > 0) sideOffset += UNCODE.adminBarHeight;
+				if ($('.menu-sticky .menu-container:not(.menu-hide)').length) {
+					if ($('.menu-shrink').length) {
+						sideOffset += $('.navbar-brand').data('minheight') + 36;
+					} else sideOffset += ($('body.hmenu-center').length ? $('#masthead .menu-container').outerHeight() : parseInt(UNCODE.menuMobileHeight));
 				}
-
 				if ($(window).width() > UNCODE.mediaQuery) {
 					$(".sticky-element").stick_in_parent({
 						sticky_class: 'is_stucked',
@@ -1910,17 +2052,17 @@ UNCODE.scrollEnance = function() {
   //
   // Licensed under the terms of the MIT license.
   //
-  // You may use it in your theme if you credit me. 
+  // You may use it in your theme if you credit me.
   // It is also free to use on any individual website.
   //
   // Exception:
-  // The only restriction is to not publish any  
+  // The only restriction is to not publish any
   // extension for browsers or native application
   // without getting a written permission first.
   //
 
   (function () {
-    
+
   // Scroll Variables (tweakable)
   var defaultOptions = {
 
@@ -1945,8 +2087,8 @@ UNCODE.scrollEnance = function() {
 
       // Other
       touchpadSupport   : false, // ignore touchpad by default
-      fixedBackground   : true, 
-      excluded          : ''    
+      fixedBackground   : true,
+      excluded          : ''
   };
 
   var options = defaultOptions;
@@ -1964,7 +2106,7 @@ UNCODE.scrollEnance = function() {
   var deltaBuffer = [];
   var isMac = /^Mac/.test(navigator.platform);
 
-  var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
+  var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32,
               pageup: 33, pagedown: 34, end: 35, home: 36 };
   var arrowKeys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
@@ -1985,20 +2127,20 @@ UNCODE.scrollEnance = function() {
    * Sets up scrolls array, determines if frames are involved.
    */
   function init() {
-    
+
       if (initDone || !document.body) return;
 
       initDone = true;
 
       var body = document.body;
       var html = document.documentElement;
-      var windowHeight = window.innerHeight; 
+      var windowHeight = window.innerHeight;
       var scrollHeight = body.scrollHeight;
-      
+
       // check compat mode for root element
       root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
       activeElement = body;
-      
+
       initTest();
 
       // Checks if this script is running in a frame
@@ -2007,25 +2149,25 @@ UNCODE.scrollEnance = function() {
       }
 
       /**
-       * Please duplicate this radar for a Safari fix! 
+       * Please duplicate this radar for a Safari fix!
        * rdar://22376037
        * https://openradar.appspot.com/radar?id=4965070979203072
-       * 
+       *
        * Only applies to Safari now, Chrome fixed it in v45:
-       * This fixes a bug where the areas left and right to 
+       * This fixes a bug where the areas left and right to
        * the content does not trigger the onmousewheel event
        * on some pages. e.g.: html, body { height: 100% }
        */
       else if (scrollHeight > windowHeight &&
-              (body.offsetHeight <= windowHeight || 
+              (body.offsetHeight <= windowHeight ||
                html.offsetHeight <= windowHeight)) {
 
           var fullPageElem = document.createElement('div');
           fullPageElem.style.cssText = 'position:absolute; z-index:-10000; ' +
-                                       'top:0; left:0; right:0; height:' + 
+                                       'top:0; left:0; right:0; height:' +
                                         root.scrollHeight + 'px';
           document.body.appendChild(fullPageElem);
-          
+
           // DOM changed (throttled) to fix height
           var pendingRefresh;
           refreshSize = function () {
@@ -2037,16 +2179,16 @@ UNCODE.scrollEnance = function() {
                   pendingRefresh = null;
               }, 500); // act rarely to stay fast
           };
-    
+
           setTimeout(refreshSize, 10);
 
           addEvent('resize', refreshSize);
 
           // TODO: attributeFilter?
           var config = {
-              attributes: true, 
-              childList: true, 
-              characterData: false 
+              attributes: true,
+              childList: true,
+              characterData: false
               // subtree: true
           };
 
@@ -2054,7 +2196,7 @@ UNCODE.scrollEnance = function() {
           observer.observe(body, config);
 
           if (root.offsetHeight <= windowHeight) {
-              var clearfix = document.createElement('div');   
+              var clearfix = document.createElement('div');
               clearfix.style.clear = 'both';
               body.appendChild(clearfix);
           }
@@ -2081,9 +2223,9 @@ UNCODE.scrollEnance = function() {
 
 
   /************************************************
-   * SCROLLING 
+   * SCROLLING
    ************************************************/
-   
+
   var que = [];
   var pending = false;
   var lastScroll = Date.now();
@@ -2092,7 +2234,7 @@ UNCODE.scrollEnance = function() {
    * Pushes scroll actions to the scrolling queue.
    */
   function scrollArray(elem, left, top) {
-      
+
       directionCheck(left, top);
 
       if (options.accelerationMax != 1) {
@@ -2107,83 +2249,83 @@ UNCODE.scrollEnance = function() {
               }
           }
           lastScroll = Date.now();
-      }          
-      
+      }
+
       // push a scroll command
       que.push({
-          x: left, 
-          y: top, 
+          x: left,
+          y: top,
           lastX: (left < 0) ? 0.99 : -0.99,
-          lastY: (top  < 0) ? 0.99 : -0.99, 
+          lastY: (top  < 0) ? 0.99 : -0.99,
           start: Date.now()
       });
-          
+
       // don't act if there's a pending queue
       if (pending) {
           return;
-      }  
+      }
 
       var scrollWindow = (elem === document.body);
-      
+
       var step = function (time) {
-          
+
           var now = Date.now();
           var scrollX = 0;
-          var scrollY = 0; 
-      
+          var scrollY = 0;
+
           for (var i = 0; i < que.length; i++) {
-              
+
               var item = que[i];
               var elapsed  = now - item.start;
               var finished = (elapsed >= options.animationTime);
-              
+
               // scroll position: [0, 1]
               var position = (finished) ? 1 : elapsed / options.animationTime;
-              
+
               // easing [optional]
               if (options.pulseAlgorithm) {
                   position = pulse(position);
               }
-              
+
               // only need the difference
               var x = (item.x * position - item.lastX) >> 0;
               var y = (item.y * position - item.lastY) >> 0;
-              
+
               // add this to the total scrolling
               scrollX += x;
-              scrollY += y;            
-              
+              scrollY += y;
+
               // update last values
               item.lastX += x;
               item.lastY += y;
-          
+
               // delete and step back if it's over
               if (finished) {
                   que.splice(i, 1); i--;
-              }           
+              }
           }
 
           // scroll left and top
           if (scrollWindow) {
               window.scrollBy(scrollX, scrollY);
-          } 
+          }
           else {
               if (scrollX) elem.scrollLeft += scrollX;
-              if (scrollY) elem.scrollTop  += scrollY;                    
+              if (scrollY) elem.scrollTop  += scrollY;
           }
-          
+
           // clean up if there's nothing left to do
           if (!left && !top) {
               que = [];
           }
-          
-          if (que.length) { 
-              requestFrame(step, elem, (1000 / options.frameRate + 1)); 
-          } else { 
+
+          if (que.length) {
+              requestFrame(step, elem, (1000 / options.frameRate + 1));
+          } else {
               pending = false;
           }
       };
-      
+
       // start a new queue of actions
       requestFrame(step, elem, 0);
       pending = true;
@@ -2203,19 +2345,19 @@ UNCODE.scrollEnance = function() {
       if (!initDone) {
           init();
       }
-      
+
       var target = event.target;
       var overflowing = overflowingAncestor(target);
 
       // use default if there's no overflowing
-      // element or default action is prevented   
-      // or it's a zooming event with CTRL 
+      // element or default action is prevented
+      // or it's a zooming event with CTRL
       if (!overflowing || event.defaultPrevented || event.ctrlKey) {
           return true;
       }
-      
+
       // leave embedded content alone (flash & pdf)
-      if (isNodeName(activeElement, 'embed') || 
+      if (isNodeName(activeElement, 'embed') ||
          (isNodeName(target, 'embed') && /\.pdf/i.test(target.src)) ||
           isNodeName(activeElement, 'object') ||
           target.shadowRoot) {
@@ -2224,7 +2366,7 @@ UNCODE.scrollEnance = function() {
 
       var deltaX = -event.wheelDeltaX || event.deltaX || 0;
       var deltaY = -event.wheelDeltaY || event.deltaY || 0;
-      
+
       if (isMac) {
           if (event.wheelDeltaX && isDivisible(event.wheelDeltaX, 120)) {
               deltaX = -120 * (event.wheelDeltaX / Math.abs(event.wheelDeltaX));
@@ -2233,7 +2375,7 @@ UNCODE.scrollEnance = function() {
               deltaY = -120 * (event.wheelDeltaY / Math.abs(event.wheelDeltaY));
           }
       }
-      
+
       // use wheelDelta if deltaX/Y is not available
       if (!deltaX && !deltaY) {
           deltaY = -event.wheelDelta || 0;
@@ -2244,7 +2386,7 @@ UNCODE.scrollEnance = function() {
           deltaX *= 40;
           deltaY *= 40;
       }
-      
+
       // check if it's a touchpad scroll that should be ignored
       if (!options.touchpadSupport && isTouchpad(deltaY)) {
           return true;
@@ -2259,9 +2401,13 @@ UNCODE.scrollEnance = function() {
       if (Math.abs(deltaY) > 1.2) {
           deltaY *= options.stepSize / 120;
       }
-      
+
       scrollArray(overflowing, deltaX, deltaY);
-      event.preventDefault();
+
+      if (Math.abs(deltaX) > 10) {
+        if (deltaX > 0) window.history.forward()
+        else window.history.back()
+      } else event.preventDefault();
       scheduleClearCache();
   }
 
@@ -2272,9 +2418,9 @@ UNCODE.scrollEnance = function() {
   function keydown(event) {
 
       var target   = event.target;
-      var modifier = event.ctrlKey || event.altKey || event.metaKey || 
+      var modifier = event.ctrlKey || event.altKey || event.metaKey ||
                     (event.shiftKey && event.keyCode !== key.spacebar);
-      
+
       // our own tracked active element could've been removed from the DOM
       if (!document.body.contains(activeElement)) {
           activeElement = document.activeElement;
@@ -2291,7 +2437,7 @@ UNCODE.scrollEnance = function() {
            isNodeName(target, 'input') && !buttonTypes.test(target.type) ||
            isNodeName(activeElement, 'video') ||
            isInsideYoutubeVideo(event) ||
-           target.isContentEditable || 
+           target.isContentEditable ||
            modifier ) {
         return true;
       }
@@ -2308,7 +2454,7 @@ UNCODE.scrollEnance = function() {
           arrowKeys[event.keyCode])  {
         return true;
       }
-      
+
       var shift, x = 0, y = 0;
       var elem = overflowingAncestor(activeElement);
       var clientHeight = elem.clientHeight;
@@ -2323,7 +2469,7 @@ UNCODE.scrollEnance = function() {
               break;
           case key.down:
               y = options.arrowScroll;
-              break;         
+              break;
           case key.spacebar: // (+ shift)
               shift = event.shiftKey ? 1 : -1;
               y = -shift * clientHeight * 0.9;
@@ -2346,7 +2492,7 @@ UNCODE.scrollEnance = function() {
               break;
           case key.right:
               x = options.arrowScroll;
-              break;            
+              break;
           default:
               return true; // a key we don't care about
       }
@@ -2411,9 +2557,9 @@ UNCODE.scrollEnance = function() {
           if (rootScrollHeight === el.scrollHeight) {
               var topOverflowsNotHidden = overflowNotHidden(root) && overflowNotHidden(body);
               var isOverflowCSS = topOverflowsNotHidden || overflowAutoOrScroll(root);
-              if (isFrame && isContentOverflowing(root) || 
+              if (isFrame && isContentOverflowing(root) ||
                  !isFrame && isOverflowCSS) {
-                  return setCache(elems, getScrollRoot()); 
+                  return setCache(elems, getScrollRoot());
               }
           } else if (isContentOverflowing(el) && overflowAutoOrScroll(el)) {
               return setCache(elems, el);
@@ -2447,7 +2593,7 @@ UNCODE.scrollEnance = function() {
   }
 
   function removeEvent(type, fn) {
-      window.removeEventListener(type, fn, false);  
+      window.removeEventListener(type, fn, false);
   }
 
   function isNodeName(el, tag) {
@@ -2486,7 +2632,7 @@ UNCODE.scrollEnance = function() {
           }
       }, 1000);
       return !allDeltasDivisableBy(120) && !allDeltasDivisableBy(100);
-  } 
+  }
 
   function isDivisible(n, divisor) {
       return (Math.floor(n / divisor) == n / divisor);
@@ -2503,7 +2649,7 @@ UNCODE.scrollEnance = function() {
       var isControl = false;
       if (document.URL.indexOf ('www.youtube.com/watch') != -1) {
           do {
-              isControl = (elem.classList && 
+              isControl = (elem.classList &&
                            elem.classList.contains('html5-video-controls'));
               if (isControl) break;
           } while (elem = elem.parentNode);
@@ -2512,17 +2658,17 @@ UNCODE.scrollEnance = function() {
   }
 
   var requestFrame = (function () {
-        return (window.requestAnimationFrame       || 
-                window.webkitRequestAnimationFrame || 
+        return (window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame    ||
                 function (callback, element, delay) {
                    window.setTimeout(callback, delay || (1000/60));
                });
   })();
 
-  var MutationObserver = (window.MutationObserver || 
+  var MutationObserver = (window.MutationObserver ||
                           window.WebKitMutationObserver ||
-                          window.MozMutationObserver);  
+                          window.MozMutationObserver);
 
   var getScrollRoot = (function() {
     var SCROLL_ROOT;
@@ -2536,7 +2682,7 @@ UNCODE.scrollEnance = function() {
         window.scrollBy(0, 3);
         if (document.body.scrollTop != bodyScrollTop)
           (SCROLL_ROOT = document.body);
-        else 
+        else
           (SCROLL_ROOT = document.documentElement);
         window.scrollBy(0, -3);
         document.body.removeChild(dummy);
@@ -2549,7 +2695,7 @@ UNCODE.scrollEnance = function() {
   /***********************************************
    * PULSE (by Michael Herf)
    ***********************************************/
-   
+
   /**
    * Viscous fluid with a pulse for part and decay for the rest.
    * - Applies a fixed force over an interval (a damped acceleration), and
@@ -2590,8 +2736,8 @@ UNCODE.scrollEnance = function() {
 
   var userAgent = window.navigator.userAgent;
   var isEdge    = /Edge/.test(userAgent); // thank you MS
-  var isChrome  = /chrome/i.test(userAgent) && !isEdge; 
-  var isSafari  = /safari/i.test(userAgent) && !isEdge; 
+  var isChrome  = /chrome/i.test(userAgent) && !isEdge;
+  var isSafari  = /safari/i.test(userAgent) && !isEdge;
   var isMobile  = /mobile/i.test(userAgent);
   var isIEWin7  = /Windows NT 6.1/i.test(userAgent) && /rv:11/i.test(userAgent);
   var isEnabledForBrowser = (isChrome || isSafari || isIEWin7) && !isMobile;
@@ -2615,7 +2761,7 @@ UNCODE.scrollEnance = function() {
 
   function SmoothScroll(optionsToSet) {
       for (var key in optionsToSet)
-          if (defaultOptions.hasOwnProperty(key)) 
+          if (defaultOptions.hasOwnProperty(key))
               options[key] = optionsToSet[key];
   }
   SmoothScroll.destroy = cleanup;
@@ -2635,6 +2781,702 @@ UNCODE.scrollEnance = function() {
   })();
 };
 
+UNCODE.twentytwenty = function() {
+
+  if (!$('.twentytwenty-container').length) return;
+
+  // jquery.event.move
+  //
+  // 1.3.6
+  //
+  // Stephen Band
+  //
+  // Triggers 'movestart', 'move' and 'moveend' events after
+  // mousemoves following a mousedown cross a distance threshold,
+  // similar to the native 'dragstart', 'drag' and 'dragend' events.
+  // Move events are throttled to animation frames. Move event objects
+  // have the properties:
+  //
+  // pageX:
+  // pageY:   Page coordinates of pointer.
+  // startX:
+  // startY:  Page coordinates of pointer at movestart.
+  // distX:
+  // distY:  Distance the pointer has moved since movestart.
+  // deltaX:
+  // deltaY:  Distance the finger has moved since last event.
+  // velocityX:
+  // velocityY:  Average velocity over last few events.
+
+
+  (function (module) {
+    if (typeof define === 'function' && define.amd) {
+      // AMD. Register as an anonymous module.
+      define(['jquery'], module);
+    } else {
+      // Browser globals
+      module(jQuery);
+    }
+  })(function(jQuery, undefined){
+
+    var // Number of pixels a pressed pointer travels before movestart
+        // event is fired.
+        threshold = 6,
+
+        add = jQuery.event.add,
+
+        remove = jQuery.event.remove,
+
+        // Just sugar, so we can have arguments in the same order as
+        // add and remove.
+        trigger = function(node, type, data) {
+          jQuery.event.trigger(type, data, node);
+        },
+
+        // Shim for requestAnimationFrame, falling back to timer. See:
+        // see http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+        requestFrame = (function(){
+          return (
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function(fn, element){
+              return window.setTimeout(function(){
+                fn();
+              }, 25);
+            }
+          );
+        })(),
+
+        ignoreTags = {
+          textarea: true,
+          input: true,
+          select: true,
+          button: true
+        },
+
+        mouseevents = {
+          move: 'mousemove',
+          cancel: 'mouseup dragstart',
+          end: 'mouseup'
+        },
+
+        touchevents = {
+          move: 'touchmove',
+          cancel: 'touchend',
+          end: 'touchend'
+        };
+
+
+    // Constructors
+
+    function Timer(fn){
+      var callback = fn,
+          active = false,
+          running = false;
+
+      function trigger(time) {
+        if (active){
+          callback();
+          requestFrame(trigger);
+          running = true;
+          active = false;
+        }
+        else {
+          running = false;
+        }
+      }
+
+      this.kick = function(fn) {
+        active = true;
+        if (!running) { trigger(); }
+      };
+
+      this.end = function(fn) {
+        var cb = callback;
+
+        if (!fn) { return; }
+
+        // If the timer is not running, simply call the end callback.
+        if (!running) {
+          fn();
+        }
+        // If the timer is running, and has been kicked lately, then
+        // queue up the current callback and the end callback, otherwise
+        // just the end callback.
+        else {
+          callback = active ?
+            function(){ cb(); fn(); } :
+            fn ;
+
+          active = true;
+        }
+      };
+    }
+
+
+    // Functions
+
+    function returnTrue() {
+      return true;
+    }
+
+    function returnFalse() {
+      return false;
+    }
+
+    function preventDefault(e) {
+      e.preventDefault();
+    }
+
+    function preventIgnoreTags(e) {
+      // Don't prevent interaction with form elements.
+      if (ignoreTags[ e.target.tagName.toLowerCase() ]) { return; }
+
+      e.preventDefault();
+    }
+
+    function isLeftButton(e) {
+      // Ignore mousedowns on any button other than the left (or primary)
+      // mouse button, or when a modifier key is pressed.
+      return (e.which === 1 && !e.ctrlKey && !e.altKey);
+    }
+
+    function identifiedTouch(touchList, id) {
+      var i, l;
+
+      if (touchList.identifiedTouch) {
+        return touchList.identifiedTouch(id);
+      }
+
+      // touchList.identifiedTouch() does not exist in
+      // webkit yet… we must do the search ourselves...
+
+      i = -1;
+      l = touchList.length;
+
+      while (++i < l) {
+        if (touchList[i].identifier === id) {
+          return touchList[i];
+        }
+      }
+    }
+
+    function changedTouch(e, event) {
+      var touch = identifiedTouch(e.changedTouches, event.identifier);
+
+      // This isn't the touch you're looking for.
+      if (!touch) { return; }
+
+      // Chrome Android (at least) includes touches that have not
+      // changed in e.changedTouches. That's a bit annoying. Check
+      // that this touch has changed.
+      if (touch.pageX === event.pageX && touch.pageY === event.pageY) { return; }
+
+      return touch;
+    }
+
+
+    // Handlers that decide when the first movestart is triggered
+
+    function mousedown(e){
+      var data;
+
+      if (!isLeftButton(e)) { return; }
+
+      data = {
+        target: e.target,
+        startX: e.pageX,
+        startY: e.pageY,
+        timeStamp: e.timeStamp
+      };
+
+      add(document, mouseevents.move, mousemove, data);
+      add(document, mouseevents.cancel, mouseend, data);
+    }
+
+    function mousemove(e){
+      var data = e.data;
+
+      checkThreshold(e, data, e, removeMouse);
+    }
+
+    function mouseend(e) {
+      removeMouse();
+    }
+
+    function removeMouse() {
+      remove(document, mouseevents.move, mousemove);
+      remove(document, mouseevents.cancel, mouseend);
+    }
+
+    function touchstart(e) {
+      var touch, template;
+
+      // Don't get in the way of interaction with form elements.
+      if (ignoreTags[ e.target.tagName.toLowerCase() ]) { return; }
+
+      touch = e.changedTouches[0];
+
+      // iOS live updates the touch objects whereas Android gives us copies.
+      // That means we can't trust the touchstart object to stay the same,
+      // so we must copy the data. This object acts as a template for
+      // movestart, move and moveend event objects.
+      template = {
+        target: touch.target,
+        startX: touch.pageX,
+        startY: touch.pageY,
+        timeStamp: e.timeStamp,
+        identifier: touch.identifier
+      };
+
+      // Use the touch identifier as a namespace, so that we can later
+      // remove handlers pertaining only to this touch.
+      add(document, touchevents.move + '.' + touch.identifier, touchmove, template);
+      add(document, touchevents.cancel + '.' + touch.identifier, touchend, template);
+    }
+
+    function touchmove(e){
+      var data = e.data,
+          touch = changedTouch(e, data);
+
+      if (!touch) { return; }
+
+      checkThreshold(e, data, touch, removeTouch);
+    }
+
+    function touchend(e) {
+      var template = e.data,
+          touch = identifiedTouch(e.changedTouches, template.identifier);
+
+      if (!touch) { return; }
+
+      removeTouch(template.identifier);
+    }
+
+    function removeTouch(identifier) {
+      remove(document, '.' + identifier, touchmove);
+      remove(document, '.' + identifier, touchend);
+    }
+
+
+    // Logic for deciding when to trigger a movestart.
+
+    function checkThreshold(e, template, touch, fn) {
+      var distX = touch.pageX - template.startX,
+          distY = touch.pageY - template.startY;
+
+      // Do nothing if the threshold has not been crossed.
+      if ((distX * distX) + (distY * distY) < (threshold * threshold)) { return; }
+
+      triggerStart(e, template, touch, distX, distY, fn);
+    }
+
+    function handled() {
+      // this._handled should return false once, and after return true.
+      this._handled = returnTrue;
+      return false;
+    }
+
+    function flagAsHandled(e) {
+      e._handled();
+    }
+
+    function triggerStart(e, template, touch, distX, distY, fn) {
+      var node = template.target,
+          touches, time;
+
+      touches = e.targetTouches;
+      time = e.timeStamp - template.timeStamp;
+
+      // Create a movestart object with some special properties that
+      // are passed only to the movestart handlers.
+      template.type = 'movestart';
+      template.distX = distX;
+      template.distY = distY;
+      template.deltaX = distX;
+      template.deltaY = distY;
+      template.pageX = touch.pageX;
+      template.pageY = touch.pageY;
+      template.velocityX = distX / time;
+      template.velocityY = distY / time;
+      template.targetTouches = touches;
+      template.finger = touches ?
+        touches.length :
+        1 ;
+
+      // The _handled method is fired to tell the default movestart
+      // handler that one of the move events is bound.
+      template._handled = handled;
+
+      // Pass the touchmove event so it can be prevented if or when
+      // movestart is handled.
+      template._preventTouchmoveDefault = function() {
+        e.preventDefault();
+      };
+
+      // Trigger the movestart event.
+      trigger(template.target, template);
+
+      // Unbind handlers that tracked the touch or mouse up till now.
+      fn(template.identifier);
+    }
+
+
+    // Handlers that control what happens following a movestart
+
+    function activeMousemove(e) {
+      var timer = e.data.timer;
+
+      e.data.touch = e;
+      e.data.timeStamp = e.timeStamp;
+      timer.kick();
+    }
+
+    function activeMouseend(e) {
+      var event = e.data.event,
+          timer = e.data.timer;
+
+      removeActiveMouse();
+
+      endEvent(event, timer, function() {
+        // Unbind the click suppressor, waiting until after mouseup
+        // has been handled.
+        setTimeout(function(){
+          remove(event.target, 'click', returnFalse);
+        }, 0);
+      });
+    }
+
+    function removeActiveMouse(event) {
+      remove(document, mouseevents.move, activeMousemove);
+      remove(document, mouseevents.end, activeMouseend);
+    }
+
+    function activeTouchmove(e) {
+      var event = e.data.event,
+          timer = e.data.timer,
+          touch = changedTouch(e, event);
+
+      if (!touch) { return; }
+
+      // Stop the interface from gesturing
+      e.preventDefault();
+
+      event.targetTouches = e.targetTouches;
+      e.data.touch = touch;
+      e.data.timeStamp = e.timeStamp;
+      timer.kick();
+    }
+
+    function activeTouchend(e) {
+      var event = e.data.event,
+          timer = e.data.timer,
+          touch = identifiedTouch(e.changedTouches, event.identifier);
+
+      // This isn't the touch you're looking for.
+      if (!touch) { return; }
+
+      removeActiveTouch(event);
+      endEvent(event, timer);
+    }
+
+    function removeActiveTouch(event) {
+      remove(document, '.' + event.identifier, activeTouchmove);
+      remove(document, '.' + event.identifier, activeTouchend);
+    }
+
+
+    // Logic for triggering move and moveend events
+
+    function updateEvent(event, touch, timeStamp, timer) {
+      var time = timeStamp - event.timeStamp;
+
+      event.type = 'move';
+      event.distX =  touch.pageX - event.startX;
+      event.distY =  touch.pageY - event.startY;
+      event.deltaX = touch.pageX - event.pageX;
+      event.deltaY = touch.pageY - event.pageY;
+
+      // Average the velocity of the last few events using a decay
+      // curve to even out spurious jumps in values.
+      event.velocityX = 0.3 * event.velocityX + 0.7 * event.deltaX / time;
+      event.velocityY = 0.3 * event.velocityY + 0.7 * event.deltaY / time;
+      event.pageX =  touch.pageX;
+      event.pageY =  touch.pageY;
+    }
+
+    function endEvent(event, timer, fn) {
+      timer.end(function(){
+        event.type = 'moveend';
+
+        trigger(event.target, event);
+
+        return fn && fn();
+      });
+    }
+
+
+    // jQuery special event definition
+
+    function setup(data, namespaces, eventHandle) {
+      // Stop the node from being dragged
+      //add(this, 'dragstart.move drag.move', preventDefault);
+
+      // Prevent text selection and touch interface scrolling
+      //add(this, 'mousedown.move', preventIgnoreTags);
+
+      // Tell movestart default handler that we've handled this
+      add(this, 'movestart.move', flagAsHandled);
+
+      // Don't bind to the DOM. For speed.
+      return true;
+    }
+
+    function teardown(namespaces) {
+      remove(this, 'dragstart drag', preventDefault);
+      remove(this, 'mousedown touchstart', preventIgnoreTags);
+      remove(this, 'movestart', flagAsHandled);
+
+      // Don't bind to the DOM. For speed.
+      return true;
+    }
+
+    function addMethod(handleObj) {
+      // We're not interested in preventing defaults for handlers that
+      // come from internal move or moveend bindings
+      if (handleObj.namespace === "move" || handleObj.namespace === "moveend") {
+        return;
+      }
+
+      // Stop the node from being dragged
+      add(this, 'dragstart.' + handleObj.guid + ' drag.' + handleObj.guid, preventDefault, undefined, handleObj.selector);
+
+      // Prevent text selection and touch interface scrolling
+      add(this, 'mousedown.' + handleObj.guid, preventIgnoreTags, undefined, handleObj.selector);
+    }
+
+    function removeMethod(handleObj) {
+      if (handleObj.namespace === "move" || handleObj.namespace === "moveend") {
+        return;
+      }
+
+      remove(this, 'dragstart.' + handleObj.guid + ' drag.' + handleObj.guid);
+      remove(this, 'mousedown.' + handleObj.guid);
+    }
+
+    jQuery.event.special.movestart = {
+      setup: setup,
+      teardown: teardown,
+      add: addMethod,
+      remove: removeMethod,
+
+      _default: function(e) {
+        var event, data;
+
+        // If no move events were bound to any ancestors of this
+        // target, high tail it out of here.
+        if (!e._handled()) { return; }
+
+        function update(time) {
+          updateEvent(event, data.touch, data.timeStamp);
+          trigger(e.target, event);
+        }
+
+        event = {
+          target: e.target,
+          startX: e.startX,
+          startY: e.startY,
+          pageX: e.pageX,
+          pageY: e.pageY,
+          distX: e.distX,
+          distY: e.distY,
+          deltaX: e.deltaX,
+          deltaY: e.deltaY,
+          velocityX: e.velocityX,
+          velocityY: e.velocityY,
+          timeStamp: e.timeStamp,
+          identifier: e.identifier,
+          targetTouches: e.targetTouches,
+          finger: e.finger
+        };
+
+        data = {
+          event: event,
+          timer: new Timer(update),
+          touch: undefined,
+          timeStamp: undefined
+        };
+
+        if (e.identifier === undefined) {
+          // We're dealing with a mouse
+          // Stop clicks from propagating during a move
+          add(e.target, 'click', returnFalse);
+          add(document, mouseevents.move, activeMousemove, data);
+          add(document, mouseevents.end, activeMouseend, data);
+        }
+        else {
+          // We're dealing with a touch. Stop touchmove doing
+          // anything defaulty.
+          e._preventTouchmoveDefault();
+          add(document, touchevents.move + '.' + e.identifier, activeTouchmove, data);
+          add(document, touchevents.end + '.' + e.identifier, activeTouchend, data);
+        }
+      }
+    };
+
+    jQuery.event.special.move = {
+      setup: function() {
+        // Bind a noop to movestart. Why? It's the movestart
+        // setup that decides whether other move events are fired.
+        add(this, 'movestart.move', jQuery.noop);
+      },
+
+      teardown: function() {
+        remove(this, 'movestart.move', jQuery.noop);
+      }
+    };
+
+    jQuery.event.special.moveend = {
+      setup: function() {
+        // Bind a noop to movestart. Why? It's the movestart
+        // setup that decides whether other move events are fired.
+        add(this, 'movestart.moveend', jQuery.noop);
+      },
+
+      teardown: function() {
+        remove(this, 'movestart.moveend', jQuery.noop);
+      }
+    };
+
+    add(document, 'mousedown.move', mousedown);
+    add(document, 'touchstart.move', touchstart);
+
+    // Make jQuery copy touch event properties over to the jQuery event
+    // object, if they are not already listed. But only do the ones we
+    // really need. IE7/8 do not have Array#indexOf(), but nor do they
+    // have touch events, so let's assume we can ignore them.
+    if (typeof Array.prototype.indexOf === 'function') {
+      (function(jQuery, undefined){
+        var props = ["changedTouches", "targetTouches"],
+            l = props.length;
+
+        while (l--) {
+          if (jQuery.event.props.indexOf(props[l]) === -1) {
+            jQuery.event.props.push(props[l]);
+          }
+        }
+      })(jQuery);
+    };
+  });
+
+  $.fn.twentytwenty = function(options) {
+    var options = $.extend({default_offset_pct: 0.5, orientation: 'horizontal'}, options);
+    return this.each(function() {
+
+      var sliderPct = options.default_offset_pct;
+      var container = $(this);
+      var sliderOrientation = options.orientation;
+      var beforeDirection = (sliderOrientation === 'vertical') ? 'down' : 'left';
+      var afterDirection = (sliderOrientation === 'vertical') ? 'up' : 'right';
+
+      container.wrap("<div class='twentytwenty-wrapper twentytwenty-" + sliderOrientation + "'></div>");
+      container.append("<div class='twentytwenty-overlay'></div>");
+      var beforeImg = container.find("img:first");
+      var afterImg = container.find("img:last");
+      container.append("<div class='twentytwenty-handle style-accent-bg border-accent-color'></div>");
+      var slider = container.find(".twentytwenty-handle");
+      slider.append("<span class='twentytwenty-" + beforeDirection + "-arrow'></span>");
+      slider.append("<span class='twentytwenty-" + afterDirection + "-arrow'></span>");
+      container.addClass("twentytwenty-container");
+      beforeImg.addClass("twentytwenty-before");
+      afterImg.addClass("twentytwenty-after");
+
+      var overlay = container.find(".twentytwenty-overlay");
+      overlay.append("<div class='twentytwenty-before-label'></div>");
+      overlay.append("<div class='twentytwenty-after-label'></div>");
+
+      var calcOffset = function(dimensionPct) {
+        var w = beforeImg.width();
+        var h = beforeImg.height();
+        return {
+          w: w+"px",
+          h: h+"px",
+          cw: (dimensionPct*w)+"px",
+          ch: (dimensionPct*h)+"px"
+        };
+      };
+
+      var adjustContainer = function(offset) {
+      	if (sliderOrientation === 'vertical') {
+      	  beforeImg.css("clip", "rect(0,"+offset.w+","+offset.ch+",0)");
+      	}
+      	else {
+          beforeImg.css("clip", "rect(0,"+offset.cw+","+offset.h+",0)");
+    	}
+        container.css("height", offset.h);
+      };
+
+      var adjustSlider = function(pct) {
+        var offset = calcOffset(pct);
+        slider.css((sliderOrientation==="vertical") ? "top" : "left", (sliderOrientation==="vertical") ? offset.ch : offset.cw);
+        adjustContainer(offset);
+      }
+
+      $(window).on("resize.twentytwenty", function(e) {
+        adjustSlider(sliderPct);
+      });
+
+      var offsetX = 0,
+      offsetY = 0,
+      imgWidth = 0,
+      imgHeight = 0;
+
+      slider.on("movestart", function(e) {
+        if (((e.distX > e.distY && e.distX < -e.distY) || (e.distX < e.distY && e.distX > -e.distY)) && sliderOrientation !== 'vertical') {
+          e.preventDefault();
+        }
+        else if (((e.distX < e.distY && e.distX < -e.distY) || (e.distX > e.distY && e.distX > -e.distY)) && sliderOrientation === 'vertical') {
+          e.preventDefault();
+        }
+        container.addClass("active");
+        offsetX = container.offset().left;
+        offsetY = container.offset().top;
+        imgWidth = beforeImg.width();
+        imgHeight = beforeImg.height();
+      });
+
+      slider.on("moveend", function(e) {
+        container.removeClass("active");
+      });
+
+      slider.on("move", function(e) {
+        if (container.hasClass("active")) {
+          sliderPct = (sliderOrientation === 'vertical') ? (e.pageY-offsetY)/imgHeight : (e.pageX-offsetX)/imgWidth;
+          if (sliderPct < 0) {
+            sliderPct = 0;
+          }
+          if (sliderPct > 1) {
+            sliderPct = 1;
+          }
+          adjustSlider(sliderPct);
+        }
+      });
+
+      container.find("img").on("mousedown", function(event) {
+        event.preventDefault();
+      });
+
+      $(window).trigger("resize.twentytwenty");
+    });
+  };
+
+  $('.twentytwenty-container').twentytwenty();
+
+}
+
 	UNCODE.init = function() {
 		UNCODE.utils();
 		UNCODE.menuSystem();
@@ -2646,10 +3488,9 @@ UNCODE.scrollEnance = function() {
 		UNCODE.carousel($('body'));
 		UNCODE.animations();
 		UNCODE.stickyElements();
+		UNCODE.twentytwenty();
 		UNCODE.disableHoverScroll();
-		if (!UNCODE.isMobile) {
-			UNCODE.onePage();
-		}
+		UNCODE.onePage(UNCODE.isMobile);
 		if ($('body.smooth-scroller').length) {
 			setTimeout(function(){
 				UNCODE.scrollEnance();

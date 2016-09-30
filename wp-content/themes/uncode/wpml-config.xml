@@ -15,6 +15,10 @@
       <key name="_uncode_post_navigation_index_label"/>
       <key name="_uncode_portfolio_navigation_index_label"/>
       <key name="_uncode_product_navigation_index_label"/>
+      <key name="_uncode_post_index_content_block"/>
+      <key name="_uncode_page_index_content_block"/>
+      <key name="_uncode_portfolio_index_content_block"/>
+      <key name="_uncode_product_index_content_block"/>
     </key>
   </admin-texts>
 </wpml-config>

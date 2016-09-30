@@ -7,6 +7,7 @@ extract(shortcode_atts(array(
 	'inside_column' => '',
 ) , $atts));
 
+$id = apply_filters( 'wpml_object_id', $id, 'post' );
 $the_content = get_post_field('post_content', $id);
 
 if ($inside_column === 'yes') {
@@ -15,4 +16,4 @@ if ($inside_column === 'yes') {
 	$output = $the_content;
 }
 
-echo apply_filters('the_content', $output);
+echo uncode_remove_wpautop($output);

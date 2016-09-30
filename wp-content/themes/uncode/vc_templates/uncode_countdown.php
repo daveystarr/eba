@@ -41,4 +41,4 @@ if ($separator === 'yes') $output .= '<hr class="separator-break separator-accen
 if ($text !== '') $output .= '<div class="counter-text"><p>'.$text.'</p></div>';
 $output .= '</div>';
 
-echo wpb_js_remove_wpautop($output);
+echo uncode_remove_wpautop($output);

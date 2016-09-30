@@ -18,15 +18,18 @@
  * @package WordPress
  */
 
+define('WP_HOME','http://www.eba.trumfiodesigns.com');
+define('WP_SITEURL','http://www.eba.trumfiodesigns.com');
+
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'eba');
+define('DB_NAME', 'btrumfio_eba');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'btrumfio_master');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'root');
+define('DB_PASSWORD', 'Jasmine5858!');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');

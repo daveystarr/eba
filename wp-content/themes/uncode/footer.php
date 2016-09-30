@@ -9,7 +9,7 @@
 
 global $metabox_data, $is_redirect, $menutype;
 
-$limit_width = $limit_content_width = $footer_content = $footer_text_content = $footer_icons = $footer_full_width = '';
+$limit_width = $limit_content_width = $footer_content = $footer_text_content = $footer_icons = $footer_full_width = $body_border_frame = '';
 $alignArray = array('left','right');
 
 $general_style = ot_get_option('_uncode_general_style');
@@ -19,8 +19,9 @@ $footer_last_bg = ot_get_option('_uncode_footer_bg_color');
 $footer_last_bg = ($footer_last_bg == '') ? ' style-'.$footer_last_style.'-bg' : ' style-'.$footer_last_bg.'-bg';
 
 $post_type = isset( $post->post_type ) ? $post->post_type : 'post';
-if (is_archive()) $post_type .= '_index';
+if (is_archive() || is_home()) $post_type .= '_index';
 if (is_404()) $post_type = '404';
+if (is_search()) $post_type = 'search_index';
 
 /** Get page width info **/
 $boxed = ot_get_option('_uncode_boxed');
@@ -41,6 +42,14 @@ if ($boxed !== 'on') {
 		}
 	}
 	if (!$footer_full_width) $limit_content_width = ' limit-width';
+
+	$body_border = ot_get_option('_uncode_body_border');
+	if ($body_border !== '' && $body_border !== 0) {
+		$body_border_color = ot_get_option('_uncode_body_border_color');
+		if ($body_border_color === '') $body_border_color = ' style-' . $general_style . '-bg';
+		else $body_border_color = ' style-' . $body_border_color . '-bg';
+		$body_border_frame ='<div class="body-borders" data-border="'.$body_border.'"><div class="top-border body-border-shadow"></div><div class="right-border body-border-shadow"></div><div class="bottom-border body-border-shadow"></div><div class="left-border body-border-shadow"></div><div class="top-border'.$body_border_color.'"></div><div class="right-border'.$body_border_color.'"></div><div class="bottom-border'.$body_border_color.'"></div><div class="left-border'.$body_border_color.'"></div></div>';
+	}
 }
 
 if (isset($metabox_data['_uncode_specific_footer_block'][0]) && $metabox_data['_uncode_specific_footer_block'][0] !== '') {
@@ -53,6 +62,7 @@ if (isset($metabox_data['_uncode_specific_footer_block'][0]) && $metabox_data['_
 }
 
 if (isset($footer_block) && !empty($footer_block) && $footer_block !== 'none' && defined( 'WPB_VC_VERSION' )) {
+	$footer_block = apply_filters( 'wpml_object_id', $footer_block, 'post' );
 	$footer_block_content = get_post_field('post_content', $footer_block);
 	if ($footer_full_width) {
 		$footer_block_content = preg_replace('#\s(unlock_row)="([^"]+)"#', ' unlock_row="yes"', $footer_block_content);
@@ -65,7 +75,7 @@ if (isset($footer_block) && !empty($footer_block) && $footer_block !== 'none' &&
 		$footer_block_counter = substr_count($footer_block_content, 'unlock_row_content');
 		if ($footer_block_counter === 0) $footer_block_content = str_replace('[vc_row ', '[vc_row unlock_row="yes" unlock_row_content="no" ', $footer_block_content);
 	}
-	$footer_content .= $footer_block_content;
+	$footer_content .= uncode_the_content($footer_block_content);
 }
 
 $footer_position = ot_get_option('_uncode_footer_position');
@@ -78,7 +88,7 @@ if ($footer_copyright !== 'off') {
 
 $footer_text = ot_get_option('_uncode_footer_text');
 if ($footer_text !== '' && $footer_copyright === 'off') {
-	$footer_text_content = do_shortcode(apply_filters('the_content', $footer_text));
+	$footer_text_content = uncode_the_content($footer_text);
 }
 
 if ($footer_text_content !== '') {
@@ -119,7 +129,7 @@ if (($footer_text_content !== '' || $footer_icons !== '')) {
 						</div><!-- page wrapper -->
 					<?php if ($is_redirect !== true) : ?>
 					<footer id="colophon" class="site-footer">
-						<?php echo __(do_shortcode( shortcode_unautop( $footer_content ) )); ?>
+						<?php echo $footer_content; ?>
 					</footer>
 					<?php endif; ?>
 				</div><!-- main container -->
@@ -147,11 +157,14 @@ if (($footer_text_content !== '' || $footer_icons !== '')) {
 
 	?>
 	<div class="overlay overlay-<?php echo $search_animation; ?> style-dark style-dark-bg overlay-search" data-area="search" data-container="box-container">
-		<div class="mmb-container"><div class="mobile-menu-button menu-button-offcanvas mobile-menu-button-dark lines-button x2 overlay-close close" data-area="search" data-container="box-container"><span class="lines"></span></div></div>
+		<div class="mmb-container"><div class="menu-close-search mobile-menu-button menu-button-offcanvas mobile-menu-button-dark lines-button x2 overlay-close close" data-area="search" data-container="box-container"><span class="lines"></span></div></div>
 		<div class="search-container"><?php get_search_form( true ); ?></div>
 	</div>
 <?php
 	}
-wp_footer(); ?>
+
+	echo $body_border_frame;
+
+	wp_footer(); ?>
 </body>
 </html>

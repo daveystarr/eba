@@ -176,7 +176,7 @@
 .woocommerce .row-related {
   border-top-width: 1px;
   border-top-style: solid;
-  padding: 54px 0px 72px 0px;
+  padding: 36px 0px 36px 0px;
 }
 .woocommerce .related:before,
 .woocommerce .upsells.products:before,
@@ -1024,7 +1024,8 @@ p.demo_store {
   margin: 27px 0 0;
   margin: 0;
 }
-.woocommerce span.onsale {
+.woocommerce span.onsale,
+.woocommerce span.soldout {
   z-index: 100;
   top: 10px;
   left: 10px;
@@ -1035,6 +1036,9 @@ p.demo_store {
   text-align: center;
   border-radius: 2px;
   color: #fff !important;
+}
+.woocommerce span.soldout {
+  background-color: #F73B3B;
 }
 .woocommerce .products ul,
 .woocommerce ul.products {
@@ -1396,7 +1400,7 @@ p.demo_store {
 }
 .woocommerce .products.related .related-title {
   text-align: center;
-  margin: 0px 0px 54px 0px;
+  margin: 0px 0px 36px 0px;
 }
 .woocommerce .product_meta > *:first-child {
   margin-top: 0;
@@ -2296,6 +2300,35 @@ p.demo_store {
 .woocommerce .order-details .addresses {
   margin-top: 36px !important;
 }
+.woocommerce .woocommerce-MyAccount-navigation ul {
+  padding: 0;
+  margin: 0;
+}
+.woocommerce .woocommerce-MyAccount-navigation li {
+  list-style-type: none;
+  padding: 14px 0px 14px 0px;
+  border-top-width: 1px;
+  border-top-style: solid;
+  line-height: 27px;
+}
+.woocommerce .woocommerce-MyAccount-navigation li i {
+  margin-right: 0;
+  font-size: 20px;
+  line-height: 25px;
+}
+.woocommerce .woocommerce-MyAccount-navigation li i:not(.active) {
+  opacity: .2;
+}
+.woocommerce .woocommerce-MyAccount-navigation li:hover i {
+  opacity: 1 !important;
+}
+.woocommerce .woocommerce-MyAccount-navigation li:last-child {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.woocommerce .woocommerce-EditAccountForm .form-row {
+  margin-top: 0;
+}
 .woocommerce .addresses {
   margin: 18px 0px 0px 0px;
   border-top-width: 1px;
@@ -2732,6 +2765,7 @@ body[class*=vmenu-] .uncode-cart .badge {
 .uncode-cart .cart-desc {
   overflow: auto;
   margin-bottom: -7px;
+  white-space: normal;
 }
 .uncode-cart .cart-desc > span:first-child {
   font-weight: 600;
@@ -2755,6 +2789,26 @@ body[class*=vmenu-] .uncode-cart .badge {
 }
 .uncode-cart .buttons:after {
   clear: both;
+}
+.mobile-shopping-cart .cart-icon-container {
+  position: relative;
+  display: block;
+}
+.mobile-shopping-cart .badge {
+  display: block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  color: #fff;
+  line-height: 10px;
+  top: -8px;
+  right: -10px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  padding: 4px;
+  box-sizing: content-box;
 }
 .woocommerce ul.cart_list li.buttons,
 .woocommerce ul.product_list_widget li.buttons {

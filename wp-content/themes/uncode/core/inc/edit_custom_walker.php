@@ -139,7 +139,7 @@ class Walker_Nav_Menu_Edit_Custom extends Walker_Nav_Menu  {
 				</dt>
 			</dl>
 
-			<div class="menu-item-settings" id="menu-item-settings-<?php echo esc_attr($item_id); ?>">
+			<div class="menu-item-settings wp-clearfix" id="menu-item-settings-<?php echo esc_attr($item_id); ?>">
 				<?php if( 'custom' == $item->type ) : ?>
 					<p class="field-url description description-wide">
 						<label for="edit-menu-item-url-<?php echo esc_attr($item_id); ?>">
@@ -187,6 +187,7 @@ class Walker_Nav_Menu_Edit_Custom extends Walker_Nav_Menu  {
 				</p>
 				<?php
 				/* New fields insertion starts here */
+				do_action( 'wp_nav_menu_item_custom_fields', $item_id, $item, $depth, $args );
 				?>
 				<p class="field-custom description description-wide">
 				    <label for="edit-menu-item-icon-<?php echo esc_attr($item_id); ?>">

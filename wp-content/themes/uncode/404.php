@@ -43,7 +43,7 @@ get_header();
 		$header_html = $page_header->html;
 		if ($header_html !== '') {
 			echo '<div id="page-header">';
-			echo do_shortcode( shortcode_unautop( $page_header->html ) );
+			echo uncode_remove_wpautop( $page_header->html );
 			echo '</div>';
 		}
 	}
@@ -64,7 +64,7 @@ get_header();
 								<div class="uncont">
 									'.$page_title.'
 									<h2>' . esc_html__( 'Opps! Something went wrong…', 'uncode' ).'</h2>
-									<p>' . esc_html__( 'Page not found. Please continue to our', 'uncode' ).' <a href="'.esc_url(get_home_url('/')).'">' . esc_html__( 'home page', 'uncode' ).'</a></p>
+									<p>' . esc_html__( 'Page not found. Please continue to our', 'uncode' ).' <a href="'.esc_url(get_home_url(get_current_blog_id(),'/')).'">' . esc_html__( 'home page', 'uncode' ).'</a></p>
 									<hr class="separator-break separator-accent separator-double-padding">
 									'.get_search_form(false).'
 								</div>
@@ -79,6 +79,7 @@ get_header();
 
 	} else {
 		$uncodeblock_id = ot_get_option('_uncode_404_body_block');
+		$uncodeblock_id = apply_filters( 'wpml_object_id', $uncodeblock_id, 'post' );
 		$the_content = get_post_field('post_content', $uncodeblock_id);
 	}
 

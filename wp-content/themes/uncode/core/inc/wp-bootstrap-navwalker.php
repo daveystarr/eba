@@ -65,7 +65,7 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 	 * @param object $args
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
-		global $megamenu, $megachildren,$wpdb, $menutype;
+		global $megamenu, $megachildren, $wpdb, $menutype;
 
 		$description = '';
 		$icon_html = '';
@@ -77,7 +77,7 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 		}
 		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 
-		if ($item->description !== '' && $menutype === 'menu-overlay') $description = '<span class="menu-item-description">' . $item->description . '</span>';
+		if ($item->description !== '' && ($menutype === 'menu-overlay' || $menutype === 'menu-overlay-center')) $description = '<span class="menu-item-description">' . $item->description . '</span>';
 
 		/**
 		 * Get the icon
@@ -167,17 +167,21 @@ class wp_bootstrap_navwalker extends Walker_Nav_Menu {
 			 * if there is a value in the attr_title property. If the attr_title
 			 * property is NOT null we apply it as the class name for the glyphicon.
 			 */
-			if ( ! empty( $item->icon ) && ! $item->button )
-				$item_output .= '<a'. $attributes .'>' . $icon_html;
-			else {
-				$item_output .= ( $args->has_children) ? '<a'. $attributes .' data-type="title">' : '<a'. $attributes .'>';
-			}
+			if (!isset($item->logo) && !$item->logo) {
+				if ( ! empty( $item->icon ) && ! $item->button )
+					$item_output .= '<a'. $attributes .'>' . $icon_html;
+				else {
+					$item_output .= ( $args->has_children) ? '<a'. $attributes .' data-type="title">' : '<a'. $attributes .'>';
+				}
 
-			if ($item->button) {
-				$item_output .= '<div class="menu-btn-table"><div class="menu-btn-cell"><div'.$class_names.'><span>' . $args->link_before . ( ! empty( $item->icon ) ? '<i class="menu-icon ' . esc_attr( $item->icon ) . '"></i>' : '') . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after . '</span></div></div></div>'.$description.'</a>';
+				if ($item->button) {
+					$item_output .= '<div class="menu-btn-table"><div class="menu-btn-cell"><div'.$class_names.'><span>' . $args->link_before . ( ! empty( $item->icon ) ? '<i class="menu-icon ' . esc_attr( $item->icon ) . '"></i>' : '') . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after . '</span></div></div></div>'.$description.'</a>';
+				} else {
+					$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+					$item_output .= ( $args->has_children) ? '<i class="fa fa-angle-down fa-dropdown"></i>' . $description . '</a>' : '<i class="fa fa-angle-right fa-dropdown"></i>' . $description . '</a>';
+				}
 			} else {
-				$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-				$item_output .= ( $args->has_children) ? '<i class="fa fa-angle-down fa-dropdown"></i>' . $description . '</a>' : '<i class="fa fa-angle-right fa-dropdown"></i>' . $description . '</a>';
+				$item_output .= $item->title;
 			}
 
 			$item_output .= $args->after;

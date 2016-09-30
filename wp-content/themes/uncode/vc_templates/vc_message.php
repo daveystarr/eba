@@ -24,5 +24,5 @@ if ($css_animation !== '') {
 }
 ?>
 <div class="<?php echo esc_attr($css_class); ?>" <?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
-	<div class="messagebox_text<?php echo esc_attr($message_color); ?>"><?php echo wpb_js_remove_wpautop($content, true); ?></div>
+	<div class="messagebox_text<?php echo esc_attr($message_color); ?>"><?php echo uncode_remove_wpautop($content, true); ?></div>
 </div>
