@@ -1,25 +1,19 @@
-.logo-image {
-  @media screen and (max-width:959px) {
-    background-image: url('/wp-content/uploads/2016/06/eba-logo-horizontal.png');
-    background-size: 250px;
-    background-repeat: no-repeat;
-
-    img {
-      display: none;
-    }
+.logo-container {
+  
+  .logo-image img {
+    height: auto;
   }
+}
 
-  @media screen and (max-width: 400px) {
-    background-size: 225px;
-  }
-
+.menu-wrapper .row-menu .row-menu-inner {
+  padding: 0;
 }
 
 @media screen and (max-width: 400px) {
-  .menu-container .logo-container {
-    padding: 25px 20px 20px !important;
-  }
-  .mobile-menu-button {
-    padding: 25px 20px 20px !important;
-  }
+  // .menu-container .logo-container {
+  //   padding: 25px 20px 20px !important;
+  // }
+  // .mobile-menu-button {
+  //   padding: 25px 20px 20px !important;
+  // }
 }

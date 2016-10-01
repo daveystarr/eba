@@ -6,26 +6,20 @@ Author URI: http://www.trumfiodesigns.com
 Template: uncode
 Version: 1.0.0
 */
-body { font-family: "neuzeit-grotesk", sans-serif; letter-spacing: 0.5px; }
+body { font-family: "futura-pt", sans-serif; letter-spacing: 0.5px; }
 
 .style-light h1 { border: 3px solid white; color: white; font-weight: 400; margin: 0 auto; padding: 10px; width: 50%; }
 .style-light h2 { font-weight: 300; }
 
-@media screen and (max-width: 959px) { .logo-image { background-image: url("/wp-content/uploads/2016/06/eba-logo-horizontal.png"); background-size: 250px; background-repeat: no-repeat; }
-  .logo-image img { display: none; } }
-@media screen and (max-width: 400px) { .logo-image { background-size: 225px; } }
+.logo-container .logo-image img { height: auto; }
 
-@media screen and (max-width: 400px) { .menu-container .logo-container { padding: 25px 20px 20px !important; }
-  .mobile-menu-button { padding: 25px 20px 20px !important; } }
+.menu-wrapper .row-menu .row-menu-inner { padding: 0; }
+
 .vmenu-footer p { font-size: 10px; }
 
 .fa.fa-angle-right.fa-dropdown { display: none; }
 
 .vmenu-left .menu-smart a i.fa-dropdown { float: none; top: 0; }
-
-.logo-container { padding: 46px 46px 0 !important; }
-
-.logo-container .logo-image img { height: auto; }
 
 .vmenu-container .menu-accordion ul ul { padding: 8px 0 8px 6px; }
 
