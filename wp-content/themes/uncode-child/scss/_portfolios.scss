@@ -1,0 +1,164 @@
+.single-portfolio {
+
+  .style-light h1 {
+    background-color: rgba(255, 255, 255, .55);
+    border: 0;
+    color: $black;
+    font-weight: 300;
+    padding: 5px 15px 10px;
+
+    @media screen and (max-width:959px) {
+      padding: 10px 15px;
+    }
+  }
+
+  .style-light h2 {
+    margin-top: 10px;
+  }
+
+  .post-title {
+    font-size: 28px;
+    margin: 0;
+    padding: 10px 0 0;
+
+    @media screen and (max-width:767px) {
+      font-size: 24px;
+    }
+  }
+
+  .post-content .row {
+    padding-bottom: 30px;
+    padding-top: 10px;
+  }
+
+  .detail-label {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .portfolio-wrapper div[class*=sharer-].share-button .social ul li {
+    font-size: 20px;
+    height: 25px;
+    margin-right: 10px;
+    width: auto;
+
+    @media screen and (max-width:1024px) {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+    @media screen and (max-width:959px) {
+      font-size: 26px;
+      margin-right: 13px;
+    }
+    @media screen and (max-width:370px) {
+      margin-right: 20px;
+    }
+  }
+
+  .post-media.single-bottom-padding {
+    padding-bottom: 20px;
+  }
+
+  .share-button.share-inline .social.top li.social-xing,
+  .share-button.share-inline .social.top li.social-linkedin {
+    display: none !important;
+  }
+
+  .row-navigation.row-navigation-light {
+    background-color: $white;
+    outline: none;
+  }
+}
+
+.post-content {
+
+  h2 {
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    padding-top: 8px;
+
+    @media screen and (max-width:959px) {
+      margin-bottom: 0;
+      padding-top: 0;
+    }
+    @media screen and (max-width:767px) {
+      font-size: 24px;
+    }
+  }
+}
+
+.info-content {
+
+  p:first-of-type {
+    display: none; 
+  }
+}
+
+.listing-gallery {
+  margin-bottom: 36px;
+}
+
+.units {
+
+  .t-entry-type {
+    display: none;
+  }
+
+  .t-overlay-text {
+    padding: 0 0 10px 15px;
+  }
+
+  .t-entry-title {
+    font-size: 28px;
+  }
+}
+
+.archive .style-light {
+  
+  h1 {
+    width: 60%;
+
+    @media screen and (max-width:1170px) {
+      width: 68%;
+    }
+    @media screen and (max-width:1024px) {
+      width: 74%;
+    }
+    @media screen and (max-width:959px) {
+      padding: 10px 15px;
+      width: 65%;
+    }
+    @media screen and (max-width:767px) {
+      width: 75%;
+    }
+    @media screen and (max-width:480px) {
+      width: 95%;
+    }
+  }
+}
+
+
+@media screen and (max-width:959px) {
+  .portfolio-body .row-parent {
+    padding-top: 25px !important;
+
+    .double-bottom-padding {
+      padding-bottom: 10px !important;
+    } 
+  }
+}
+
+@media screen and (max-width:370px) {
+  .detail-container {
+    display: block;
+
+    .detail-value {
+      display: block; 
+    }
+  }
+
+  div[class*=sharer-].share-button .social ul {
+    padding: 10px 0 0;
+  }
+}
