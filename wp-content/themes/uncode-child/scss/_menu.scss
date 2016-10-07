@@ -14,6 +14,10 @@
 }
 
 //main-main items
+.hmenu-center-split #masthead > .menu-container {
+  opacity: 1;
+}
+
 .menu-accordion .menu-smart a {
   padding: 5px 46px;
 }
@@ -36,6 +40,20 @@
   .menu-container .logo-container {
     padding: 23px 24px 20px !important;
   }
+
+  .menu-light .menu-smart li {
+    padding-bottom: 10px;
+
+    ul li:last-of-type {
+      padding-bottom: 0;
+    }
+  }
+
+  .menu-smart a i.fa-dropdown {
+    font-size: 26px;
+    font-weight: 500;
+    top: -2px;
+  }
 }
 
 .logo-container {
@@ -51,26 +69,5 @@
 
 .menu-wrapper .row-menu .row-menu-inner {
   padding: 0;
-}
-
-@media screen and (max-width: 959px) {
-  .menu-light .menu-smart li {
-    padding-bottom: 10px;
-
-    &:last-of-type {
-      padding-bottom: 25px;
-      // margin-bottom: 25px;
-    }
-
-    ul li:last-of-type {
-      padding-bottom: 0;
-    }
-  }
-
-  .menu-smart a i.fa-dropdown {
-    font-size: 26px;
-    font-weight: 500;
-    top: -2px;
-  }
 }
 

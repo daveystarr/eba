@@ -28,22 +28,23 @@ footer .footer-last .uncell { border-top: 1px solid #fce2ec; }
 
 .vmenu-container .menu-accordion ul ul { padding: 8px 0 8px 6px; }
 
+.hmenu-center-split #masthead > .menu-container { opacity: 1; }
+
 .menu-accordion .menu-smart a { padding: 5px 46px; }
 
 .vmenu-container a { letter-spacing: .5px !important; }
 
 @media screen and (max-width: 959px) { .menu-container ul.menu-smart > li > a, .menu-container ul.menu-smart li.dropdown > a { font-weight: 400; }
   .menu-smart a { text-transform: none; padding: 7px 46px; }
-  .menu-container .logo-container { padding: 23px 24px 20px !important; } }
+  .menu-container .logo-container { padding: 23px 24px 20px !important; }
+  .menu-light .menu-smart li { padding-bottom: 10px; }
+  .menu-light .menu-smart li ul li:last-of-type { padding-bottom: 0; }
+  .menu-smart a i.fa-dropdown { font-size: 26px; font-weight: 500; top: -2px; } }
 .logo-container .logo-image img { height: auto; }
 @media screen and (max-width: 959px) { .logo-container .logo-image img { height: inherit; } }
 
 .menu-wrapper .row-menu .row-menu-inner { padding: 0; }
 
-@media screen and (max-width: 959px) { .menu-light .menu-smart li { padding-bottom: 10px; }
-  .menu-light .menu-smart li:last-of-type { padding-bottom: 25px; }
-  .menu-light .menu-smart li ul li:last-of-type { padding-bottom: 0; }
-  .menu-smart a i.fa-dropdown { font-size: 26px; font-weight: 500; top: -2px; } }
 .single-portfolio .style-light h1 { background-color: rgba(255, 255, 255, 0.55); border: 0; color: black; font-weight: 300; padding: 5px 15px 10px; }
 @media screen and (max-width: 959px) { .single-portfolio .style-light h1 { padding: 10px 15px; } }
 .single-portfolio .style-light h2 { margin-top: 10px; }
