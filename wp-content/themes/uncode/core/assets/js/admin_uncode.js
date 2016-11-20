@@ -696,7 +696,7 @@
 	/**
 	 * Extended Filters dropdown with taxonomy term selection values
 	 */
-	if ( media ) {
+	if ( media && mediaTaxonomies != null ) {
 
 		$.each(mediaTaxonomies,function(key,label){
 

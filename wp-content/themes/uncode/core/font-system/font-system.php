@@ -125,7 +125,7 @@ class UncodeFont {
 
 					if (isset($response->kit)) {
 						$uncodefont_typekit_text .= "<div>";
-						$uncodefont_typekit_text .= "<strong>".esc_html__('Your kits: ', 'uncodefont')."</strong>";
+						$uncodefont_typekit_text .= "<strong>".esc_html__('Your kits:', 'uncodefont')." </strong>";
 						$kit_string = "";
 						$family_string = "";
 						$kit_position = 0;

@@ -1533,11 +1533,7 @@ function uncode_page_options()
 
 	}
 
-	if ($post_type === 'post' || $post_type === 'portfolio' || $post_type === 'product') {
-
-		/////////////////////////////////////////
-		//  Post/Portfolio/Product specific   ///
-		/////////////////////////////////////////
+	if ($post_type !== 'page') {
 
 		$ppp_fields = array(
 			array(

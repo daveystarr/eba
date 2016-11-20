@@ -1654,6 +1654,7 @@ function custom_theme_options()
 				$cpt_single_options[] = str_replace('%section%', $value, run_array_to($show_title, 'std', 'on'));
 				$cpt_single_options[] = str_replace('%section%', $value, $show_media);
 				$cpt_single_options[] = str_replace('%section%', $value, $show_comments);
+				$cpt_single_options[] = str_replace('%section%', $value, $show_share);
 				$cpt_single_options[] = str_replace('%section%', $value, $body_uncode_block_after);
 				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_section_title);
 				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_activate);
@@ -1664,6 +1665,11 @@ function custom_theme_options()
 				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_style);
 				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_bgcolor);
 				$cpt_single_options[] = str_replace('%section%', $value, $sidebar_fill);
+				$cpt_single_options[] = str_replace('%section%', $value, $navigation_section_title);
+				$cpt_single_options[] = str_replace('%section%', $value, $navigation_activate);
+				$cpt_single_options[] = str_replace('%section%', $value, $navigation_page_index);
+				$cpt_single_options[] = str_replace('%section%', $value, $navigation_index_label);
+				$cpt_single_options[] = str_replace('%section%', $value, $navigation_nextprev_title);
 				$cpt_single_options[] = str_replace('%section%', $value, $footer_section_title);
 				$cpt_single_options[] = str_replace('%section%', $value, $footer_uncode_block);
 				$cpt_single_options[] = str_replace('%section%', $value, $footer_width);
@@ -2164,7 +2170,7 @@ function custom_theme_options()
 		array(
 			'id' => '_uncode_menu_hide_mobile',
 			'label' => esc_html__('Menu hide mobile', 'uncode') ,
-			'desc' => esc_html__('Activate the sticky menu on mobile devices. This is a menu that is locked into place so that it does not disappear when the user scrolls down the page.', 'uncode') ,
+			'desc' => esc_html__('Activate the autohide menu on mobile devices. This is a menu that is hiding after the user have scrolled down the page.', 'uncode') ,
 			'std' => 'off',
 			'type' => 'on-off',
 			'section' => 'uncode_header_section',
@@ -2207,7 +2213,7 @@ function custom_theme_options()
 			'type' => 'select',
 			'section' => 'uncode_header_section',
 			'condition' => '_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
-			'operator' => 'and',
+			'operator' => 'or',
 			'choices' => array(
 				array(
 					'value' => '3d',
@@ -2340,7 +2346,7 @@ function custom_theme_options()
 			'desc' => esc_html__('Insert additional text on top of the menu.','uncode') ,
 			'type' => 'textarea',
 			'section' => 'uncode_header_section',
-			'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center)',
+			'condition' => '_uncode_headers:is(hmenu-right),_uncode_headers:is(hmenu-left),_uncode_headers:is(hmenu-justify),_uncode_headers:is(hmenu-center),_uncode_headers:is(hmenu-center-split)',
 			'operator' => 'or'
 		) ,
 		//////////////////////
@@ -3514,14 +3520,6 @@ function custom_theme_options()
 			'choices' => $title_weight
 		) ,
 		array(
-			'id' => '_uncode_smooth_scroller',
-			'label' => esc_html__('Smooth scroller', 'uncode') ,
-			'desc' => esc_html__('Activate the enhanced smooth scroller.', 'uncode') ,
-			'std' => 'on',
-			'type' => 'on-off',
-			'section' => 'uncode_customize_section',
-		) ,
-		array(
 			'id' => '_uncode_input_underline',
 			'label' => esc_html__('Input text underlined', 'uncode') ,
 			'desc' => esc_html__('Activate to style all the input text with the underline.', 'uncode') ,
@@ -3544,6 +3542,7 @@ function custom_theme_options()
 			'type' => 'select',
 			'section' => 'uncode_customize_section',
 			'condition' => '_uncode_headers:is(menu-overlay),_uncode_headers:is(menu-overlay-center)',
+			'operator' => 'or',
 			'choices' => $stylesArrayMenu
 		) ,
 		array(
@@ -3741,6 +3740,59 @@ function custom_theme_options()
 			'section' => 'uncode_customize_section',
 		) ,
 		array(
+			'id' => '_uncode_customize_extra_block_title',
+			'label' => '<i class="fa fa-gear"></i> ' . esc_html__('Extra', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_smooth_scroller',
+			'label' => esc_html__('Smooth scroller', 'uncode') ,
+			'desc' => esc_html__('Activate the enhanced smooth scroller.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_scroll_constant',
+			'label' => esc_html__('ScrollTo constant speed', 'uncode') ,
+			'desc' => esc_html__('Activate this to always have a constant speed when scrolling to point.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_scroll_constant_factor',
+			'label' => esc_html__('ScrollTo constant speed factor', 'uncode') ,
+			'desc' => esc_html__('Adjust the constant scroll speed factor. Default 2', 'uncode') ,
+			'std' => '2',
+			'type' => 'numeric-slider',
+			'min_max_step'=> '1,15,0.25',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'condition' => '_uncode_scroll_constant:is(on)',
+		) ,
+		array(
+			'id' => '_uncode_scroll_speed_value',
+			'label' => esc_html__('ScrollTo speed fixed', 'uncode') ,
+			'desc' => esc_html__('Specify the scroll speed time in milliseconds.', 'uncode') ,
+			'std' => '1000',
+			'type' => 'text',
+			'section' => 'uncode_customize_section',
+			'operator' => 'or',
+			'condition' => '_uncode_scroll_constant:is(off)',
+		) ,
+		array(
+			'id' => '_uncode_parallax_factor',
+			'label' => esc_html__('Parallax speed factor', 'uncode') ,
+			'desc' => esc_html__('Adjust the parallax speed factor. Default 2.5', 'uncode') ,
+			'std' => '2.5',
+			'type' => 'numeric-slider',
+			'min_max_step'=> '0.5,3,0.5',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
 			'id' => '_uncode_custom_portfolio_block_title',
 			'label' => '<i class="fa fa-briefcase3"></i> ' . ucfirst($portfolio_cpt_name) . ' ' . esc_html__('CPT', 'uncode') ,
 			'type' => 'textblock-titled',
@@ -3761,6 +3813,21 @@ function custom_theme_options()
 			'desc' => esc_html__('Enter a custom portfolio post type slug.', 'uncode') ,
 			'std' => 'portfolio',
 			'type' => 'text',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_customize_admin_block_title',
+			'label' => '<i class="fa fa-dashboard"></i> ' . esc_html__('Admin', 'uncode') ,
+			'type' => 'textblock-titled',
+			'class' => 'section-title',
+			'section' => 'uncode_customize_section',
+		) ,
+		array(
+			'id' => '_uncode_admin_help',
+			'label' => esc_html__('Help button in admin bar', 'uncode') ,
+			'desc' => esc_html__('Activate to show the Uncode help button in the WP admin bar.', 'uncode') ,
+			'std' => 'on',
+			'type' => 'on-off',
 			'section' => 'uncode_customize_section',
 		) ,
 		array(
@@ -4141,6 +4208,7 @@ function custom_theme_options()
 			str_replace('%section%', 'product', $show_breadcrumb),
 			str_replace('%section%', 'product', $breadcrumb_align),
 			str_replace('%section%', 'product', $show_title),
+			str_replace('%section%', 'product', $show_share),
 			str_replace('%section%', 'product', $body_uncode_block_after),
 			str_replace('%section%', 'product', $navigation_section_title),
 			str_replace('%section%', 'product', $navigation_activate),
@@ -4262,7 +4330,7 @@ function custom_theme_options()
 				) ,
 				array(
 					'value' => 'hmenu-center-split',
-					'label' => esc_html__('Center Splitted', 'uncode') ,
+					'label' => esc_html__('Center Split', 'uncode') ,
 					'src' => get_template_directory_uri() . '/core/assets/images/layout/hmenu-splitted.jpg'
 				) ,
 				array(

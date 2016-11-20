@@ -308,7 +308,10 @@ switch ($type) {
     <?php endif; ?>
   <?php endif; ?>
   <div class="<?php echo esc_attr(trim(implode(' ', $parent_container_classes))); ?>">
-    <div<?php if ($type === 'carousel') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php echo esc_attr(trim(implode(' ', $container_classes))); ?>" <?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
+    <?php
+    $div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+    ?>
+    <div<?php if ($type === 'carousel') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php echo esc_attr(trim(implode(' ', $container_classes))); ?>" <?php echo implode(' ', $div_data_attributes); ?>>
 <?php
 /**
  * init loop
@@ -325,7 +328,7 @@ if (count($medias) > 0) {
       foreach ($categories as $key => $cat) {
         if (in_array($item_thumb_id, $cat[key($cat)])) {
           $categories_css.= ' grid-cat-' . $key;
-          $categories_name[] = $cat;
+          $categories_name[] = key($cat);
           $categories_id[] = $key;
         }
       }
@@ -545,6 +548,7 @@ if (count($medias) > 0) {
     $block_data['single_back_color'] = $single_back_color;
     $block_data['single_icon'] = $single_icon;
     $block_data['title_classes'] = $title_classes;
+    $block_data['single_categories'] = $categories_name;
     $block_data['single_categories_id'] = $categories_id;
 
     $single_padding = (isset($item_prop['single_padding'])) ? $item_prop['single_padding'] : $general_padding;

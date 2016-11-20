@@ -5669,7 +5669,7 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 			docClick: function(e) {
 				// hide on any click outside the menu or on a menu link
 				if (this.visibleSubMenus.length && !$.contains(this.$root[0], e.target) || $(e.target).is('a')) {
-					this.menuHideAll();
+					this.menuHideAll($(e.target));
 				}
 			},
 			docTouchEnd: function(e) {
@@ -5683,7 +5683,7 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 					}
 					// hide with a delay to prevent triggering accidental unwanted click on some page element
 					var self = this;
-					this.hideTimeout = setTimeout(function() { self.menuHideAll(); }, 350);
+					this.hideTimeout = setTimeout(function() { self.menuHideAll($(e.target)); }, 350);
 				}
 				this.lastTouch = null;
 			},
@@ -5923,13 +5923,6 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 							$sub.css('z-index', '');
 						}
 					};
-					// if ($('html.firefox').length) {
-					// 	$('#menu-main-menu > li > a').removeAttr('style');
-					// 	// var menuel = $('.main-menu-container');
-					// 	// setTimeout(function(){
-					// 	// 	menuel.data('tempheight',undefined).removeAttr('style');
-					// 	// }, 300);
-					// }
 					// if sub is collapsible (mobile view)
 					if (this.isCollapsible()) {
 						if (this.opts.collapsibleHideFunction) {
@@ -5960,7 +5953,8 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 					this.$root.triggerHandler('hide.smapi', $sub[0]);
 				}
 			},
-			menuHideAll: function() {
+			menuHideAll: function($item) {
+				if ($item != undefined && $item.parent().hasClass('menu-item') && !$item.parent().hasClass('menu-item-has-children')) return;
 				if (this.showTimeout) {
 					clearTimeout(this.showTimeout);
 					this.showTimeout = 0;
@@ -6228,17 +6222,6 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 				this.menuFixLayout($sub);
 				$sub.stop(true, true);
 				if (!$sub.is(':visible')) {
-					// if ($('html.firefox').length) {
-					// 	if ($sub.dataSM('level') == 2) {
-					// 		$('#menu-main-menu > li > a').css('height','0');
-					// 		$('#menu-main-menu > li > a').removeAttr('style');
-					// 		// var menuel = $('.main-menu-container'),
-					// 		//  menuelHeight = menuel.outerHeight(true);
-					// 		// menuel.removeAttr('style');
-					// 		// if (menuel.data('tempheight') == undefined) menuel.data('tempheight',menuelHeight).css('height',menuelHeight+'px');
-					// 		// else menuel.css('height',menuel.data('tempheight')+'px');
-					// 	}
-					// }
 					// set z-index - for IE < 9 set it to the parent LI
 					var zIndex = this.getStartZIndex() + (++this.zIndexInc);
 					if (IElt9) {
@@ -6954,7 +6937,8 @@ jQuery.extend( jQuery.easing,
 				isSwipe: false,
 				mouseID: 0,
 				cycleID: 0,
-				isPaused: 0
+				isPaused: 0,
+				captionHeight: 39,
 			};
 
 			// Hideable elements with mousemove event
@@ -7066,14 +7050,16 @@ jQuery.extend( jQuery.easing,
 					options = t.data("options") && eval("({" + t.data("options") + "})") || {},
 					caption = t.data('caption'),
 					title = t.data('title'),
-					type = t.data('type') || getTypeByExtension(URL);
+					type = t.data('type') || getTypeByExtension(URL),
+					clone = t.data('lbox-clone') || false;
 
 				items.push({
 					URL: URL,
 					caption: caption,
 					title: title,
 					type: type,
-					options: options
+					options: options,
+					clone: clone
 				});
 
 				if (!iL.instant) itemsObject.push(t);
@@ -7767,6 +7753,7 @@ jQuery.extend( jQuery.easing,
 					}
 
 					if (thumb) iL.loadImage(thumb, function(img) {
+						if (val.clone) return;
 						i++;
 						if (img) thumbnail.data({
 							naturalWidth: img.width,
@@ -8392,6 +8379,17 @@ jQuery.extend( jQuery.easing,
 					top = parseInt((winH / 2) - (height / 2) - diff.H - (thumbsOffset.H / 2)),
 					left = parseInt((winW / 2) - (width / 2) - diff.W - (thumbsOffset.W / 2));
 
+				var secondOffset = secondHolder.data('offset'),
+					object = secondOffset.object;
+
+				if (object.item.caption && !isNaN(width) && !isNaN(height) && UNCODE.wwidth > UNCODE.mediaQuery) {
+					var objRatio = width / height;
+					height = height - vars.captionHeight;
+					width = height * objRatio;
+					top = parseInt((winH / 2) - (height / 2) - diff.H - (thumbsOffset.H / 2)),
+					left = parseInt((winW / 2) - (width / 2) - diff.W - (thumbsOffset.W / 2));
+				}
+
 				firstHolder.css(transform, gpuAcceleration).animate({
 					top: top,
 					left: left,
@@ -8405,8 +8403,6 @@ jQuery.extend( jQuery.easing,
 					height: height
 				}, switchSpeed, (vars.isSwipe) ? 'easeOutCirc' : 'easeInOutCirc');
 
-				var secondOffset = secondHolder.data('offset'),
-					object = secondOffset.object;
 
 				diff = secondOffset.diff;
 
@@ -8422,6 +8418,13 @@ jQuery.extend( jQuery.easing,
 				else {
 					top = (path == 'horizontal') ? top : parseInt(object.offsetX - diff.H - height - (thumbsOffset.H / 2)),
 						left = (path == 'horizontal') ? parseInt(object.offsetX - diff.W - width - (thumbsOffset.W / 2)) : parseInt((winW / 2) - object.offsetY - (width / 2) - diff.W - (thumbsOffset.W / 2));
+				}
+
+				if (object.item.caption && !isNaN(width) && !isNaN(height) && UNCODE.wwidth > UNCODE.mediaQuery) {
+					var objRatio = width / height;
+					height = height - vars.captionHeight;
+					width = height * objRatio;
+					top = parseInt((winH / 2) - (height / 2) - diff.H - (thumbsOffset.H / 2));
 				}
 
 				$('div.ilightbox-container', secondHolder).animate({
@@ -8887,6 +8890,12 @@ jQuery.extend( jQuery.easing,
 			var widthDiff = parseInt((getPixel(holder, 'padding-left') + getPixel(holder, 'padding-right') + getPixel(holder, 'border-left-width') + getPixel(holder, 'border-right-width')) / 2),
 				heightDiff = parseInt((getPixel(holder, 'padding-top') + getPixel(holder, 'padding-bottom') + getPixel(holder, 'border-top-width') + getPixel(holder, 'border-bottom-width') + $('.ilightbox-inner-toolbar', holder).outerHeight()) / 2);
 
+			if (obj.item.caption && !isNaN(width) && !isNaN(height) && UNCODE.wwidth > UNCODE.mediaQuery) {
+				var objRatio = width / height;
+				height = height - vars.captionHeight;
+				width = height * objRatio;
+			}
+
 			switch (obj.type) {
 				case 'current':
 					var top = parseInt((obj.height / 2) - (height / 2) - heightDiff - (thumbsOffsetH / 2)),
@@ -9031,7 +9040,7 @@ jQuery.extend( jQuery.easing,
 				testEl = document.createElement("video");
 
 			iL.plugins = {
-				flash: (parseInt(PluginDetect.getVersion("Shockwave")) >= 0 || parseInt(PluginDetect.getVersion("Flash")) >= 0) ? true : false,
+				flash: false,
 				quicktime: (parseInt(PluginDetect.getVersion("QuickTime")) >= 0) ? true : false,
 				html5H264: !!(testEl.canPlayType && testEl.canPlayType('video/mp4').replace(/no/, '')),
 				html5WebM: !!(testEl.canPlayType && testEl.canPlayType('video/webm').replace(/no/, '')),
@@ -13803,16 +13812,14 @@ uncode_progress_bar();
 				setTimeout($this.data('counterup-func'), $settings.delay);
 			};
 			// Perform counts when the element gets into view
-			if (!UNCODE.isMobile) {
-				new Waypoint({
-					element: this,
-					handler: function() {
-						counterUpper();
-						this.destroy();
-					},
-					offset: '80%'
-				});
-			}
+			new Waypoint({
+				element: this,
+				handler: function() {
+					counterUpper();
+					this.destroy();
+				},
+				offset: '80%'
+			});
 		});
 	};
 })(jQuery);

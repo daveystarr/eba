@@ -14,8 +14,43 @@
 }
 
 //main-main items
-.hmenu-center-split #masthead > .menu-container {
-  opacity: 1;
+.hmenu-center-split {
+
+  .logo-container {
+    padding: 10px 20px 15px;
+
+    @media screen and (max-width:959px) {
+      padding: 22px 22px !important;
+
+      .logo-image {
+        height: 50px !important;
+
+        img {
+          content: url('/wp-content/themes/uncode-child/img/eba-final-logo-small.png')
+        }
+      }
+    }
+
+    @media screen and (max-width:425px) {
+      padding: 14px 14px 12px !important;
+
+      .logo-image {
+        height: 40px !important;
+      }
+    }
+
+    &.shrinked {
+      padding: 5px 15px 10px;
+
+      .logo-image img {
+        content: url('/wp-content/themes/uncode-child/img/eba-top.png')
+      }
+    }
+  }
+
+  #masthead > .menu-container {
+    opacity: 1;
+  }
 }
 
 .menu-accordion .menu-smart a {
@@ -37,10 +72,6 @@
     padding: 7px 46px;
   }
 
-  .menu-container .logo-container {
-    padding: 23px 24px 20px !important;
-  }
-
   .menu-light .menu-smart li {
     padding-bottom: 10px;
 
@@ -56,18 +87,31 @@
   }
 }
 
-.logo-container {
-  
-  .logo-image img {
-    height: auto;
+.menu-wrapper .row-menu .row-menu-inner {
+  padding: 0;
+}
 
-    @media screen and (max-width:959px) {
-      height: inherit;
+body.hmenu .menu-primary .menu-horizontal .menu-smart > li > a {
+  padding-top: 30px;
+}
+
+body.hmenu .menu-primary .shrinked .menu-horizontal .menu-smart > li > a {
+  padding-top: 20px;
+}
+
+.menu-horizontal .menu-smart ul {
+  margin-left: -8px !important;
+  padding: 10px 0 14px 14px;
+
+  li {
+    padding-right: 0;
+
+    a {
+      padding-right: 0;
+      margin-right: 14px;
     }
   }
 }
 
-.menu-wrapper .row-menu .row-menu-inner {
-  padding: 0;
-}
+
 

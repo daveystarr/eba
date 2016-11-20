@@ -214,15 +214,26 @@ function uncode_equeue()
 	}
 
 	/** Add JS parameters to frontend */
+	$parallax_factor = ot_get_option('_uncode_parallax_factor');
+	if ($parallax_factor === '') $parallax_factor = 2.5;
+	$constant_scroll = ot_get_option('_uncode_scroll_constant');
+	if ($constant_scroll === '') $constant_scroll = 'on';
+	$constant_factor = ot_get_option('_uncode_scroll_constant_factor');
+	if ($constant_factor === '') $constant_factor = 2;
+	$scroll_speed_value = ot_get_option('_uncode_scroll_speed_value');
+	if ($scroll_speed_value === '') $scroll_speed_value = 1000;
+	$scroll_speed = ($constant_scroll === 'on') ? $constant_factor : $scroll_speed_value;
+	if ($scroll_speed == 0 && $constant_scroll === 'on') $scroll_speed = 0.1;
 	$site_parameters = array(
 		'site_url' => get_home_url(get_current_blog_id(),'/'),
 		'theme_directory' => get_template_directory_uri(),
-		'admin_ajax' => admin_url( 'admin-ajax.php' ),
-		'uncode_ajax' => get_template_directory_uri() . '/core/inc/uncode-ajax.php',
 		'days' => esc_html__( 'days', 'uncode' ),
 		'hours' => esc_html__( 'hours', 'uncode' ),
 		'minutes' => esc_html__( 'minutes', 'uncode' ),
 		'seconds' => esc_html__( 'seconds', 'uncode' ),
+		'constant_scroll' => $constant_scroll ,
+		'scroll_speed' => $scroll_speed ,
+		'parallax_factor' => ($parallax_factor / 10) ,
 	);
 
 	/** JS */
@@ -233,7 +244,6 @@ function uncode_equeue()
 	if ($ai_active === 'on' || $ai_active === '') {
 		$is_ai_active = true;
 		wp_enqueue_script('ai-uncode', get_template_directory_uri() . '/library/js/min/ai-uncode.min.js', array() , $resources_version, false);
-		wp_localize_script( 'ai-uncode', 'SiteParameters', $site_parameters );
 	}
 
 	if ($production_mode === 'on') {
@@ -246,7 +256,7 @@ function uncode_equeue()
 		wp_enqueue_script('uncode-app', get_template_directory_uri() . '/library/js/app.js', array('jquery') , $resources_version, true);
 	}
 
-	if (!$is_ai_active) wp_localize_script( 'uncode-init', 'SiteParameters', $site_parameters );
+	wp_localize_script( 'uncode-init', 'SiteParameters', $site_parameters );
 
 	if (is_singular() && comments_open() && get_option('thread_comments'))
 	{
@@ -256,6 +266,9 @@ function uncode_equeue()
 	/** Deregister CSS */
 	global $wp_styles, $wp_scripts;
 	if (isset($wp_styles->registered['dot-irecommendthis'])) wp_dequeue_style('dot-irecommendthis');
+	if (isset($wp_styles->registered['media-views'])) {
+		$wp_styles->registered['media-views']->deps = array_diff($wp_styles->registered['media-views']->deps, array('wp-mediaelement'));
+	}
 	if (isset($wp_styles->registered['mediaelement'])) wp_deregister_style('mediaelement');
 	if (isset($wp_styles->registered['wp-mediaelement'])) wp_deregister_style('wp-mediaelement');
 
@@ -516,6 +529,7 @@ if (!class_exists('WPBakeryShortCode')) {
 		{
 			$categories_css = '';
 			$categories_name = array();
+			$tag_name = array();
 			$categories_id = array();
 			$post_categories = wp_get_object_terms($post_id, $this->getTaxonomies());
 			foreach ($post_categories as $cat)
@@ -532,15 +546,15 @@ if (!class_exists('WPBakeryShortCode')) {
 					$categories_id[] = $cat->term_id;
 				} else if ($cat->taxonomy === 'post_tag') {
 					$categories_id[] = $cat->term_id;
+					$categories_name[] = $cat->name;
+					$tag_name[] = $cat->name;
 				}
 			}
-			return array('cat_css' => $categories_css, 'cat_name' => $categories_name, 'cat_id' => $categories_id);
+			return array('cat_css' => $categories_css, 'cat_name' => $categories_name, 'cat_id' => $categories_id, 'tag' => $tag_name);
 		}
 		protected function getTaxonomies()
 		{
-			if ($this
-				->taxonomies === false)
-			{
+			if ($this->taxonomies === false) {
 				$this
 					->taxonomies = get_object_taxonomies(!empty($this
 					->loop_args['post_type']) ? $this->loop_args['post_type'] : get_post_types(array(
@@ -554,10 +568,13 @@ if (!class_exists('WPBakeryShortCode')) {
 		public function getCategoriesLink( $post_id ) {
 			$categories_link = array();
 			$args = array('orderby' => 'term_group', 'order' => 'DESC', 'fields' => 'all');
+
 			$post_categories = wp_get_object_terms( $post_id, $this->getTaxonomies(), $args);
 			foreach ( $post_categories as $cat ) {
 				if (is_taxonomy_hierarchical($cat->taxonomy) && substr( $cat->taxonomy, 0, 3 ) !== 'pa_') {
-					$categories_link[] = array('link' => '<a href="'.get_term_link($cat->term_id, $cat->taxonomy).'">'.$cat->name.'</a>', 'tax' => $cat->taxonomy);
+					$categories_link[] = array('link' => '<a href="'.get_term_link($cat->term_id, $cat->taxonomy).'">'.$cat->name.'</a>', 'tax' => $cat->taxonomy, 'cat_id' => $cat->term_id);
+				} else if ($cat->taxonomy === 'post_tag') {
+					$categories_link[] = array('link' => '<a href="'.get_term_link($cat->term_id, $cat->taxonomy).'">'.$cat->name.'</a>', 'tax' => $cat->taxonomy, 'cat_id' => $cat->term_id);
 				}
 			}
 			return $categories_link;

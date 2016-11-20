@@ -37,28 +37,23 @@ if (isset($metabox_data['_uncode_specific_bg_color'][0]) && $metabox_data['_unco
 } else $bg_color = ot_get_option('_uncode_general_bg_color');
 $bg_color = ($bg_color == '') ? ' style-'.$style.'-bg' : ' style-'.$bg_color.'-bg';
 
-/** Get page width info **/
-$boxed = ot_get_option('_uncode_boxed');
-
-if ($boxed !== 'on') {
-	/** Use generic page width **/
-	$generic_content_full = ot_get_option('_uncode_'.$post_type.'_layout_width');
-	if ($generic_content_full === '') {
-		$main_content_full = ot_get_option('_uncode_body_full');
-		if ($main_content_full !== 'on') $limit_content_width = ' limit-width';
-	} else {
-		if ($generic_content_full === 'limit') {
-			$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
-			if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
-				if ($generic_custom_width[1] === 'px') {
-					$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
-				}
-				if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
-					$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
-				}
-			} else {
-				$limit_content_width = ' limit-width';
+/** Use generic page width **/
+$generic_content_full = ot_get_option('_uncode_'.$post_type.'_layout_width');
+if ($generic_content_full === '') {
+	$main_content_full = ot_get_option('_uncode_body_full');
+	if ($main_content_full !== 'on') $limit_content_width = ' limit-width';
+} else {
+	if ($generic_content_full === 'limit') {
+		$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
+		if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
+			if ($generic_custom_width[1] === 'px') {
+				$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
 			}
+			if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
+				$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
+			}
+		} else {
+			$limit_content_width = ' limit-width';
 		}
 	}
 }
@@ -310,7 +305,8 @@ if (have_posts()):
 	} else {
 
 		/** Create html without sidebar **/
-		$the_content = '<div class="post-content"' . $page_custom_width . '>' . uncode_get_row_template($the_content, $limit_width, $limit_content_width, $style, '', ($with_builder ? '' : 'double'), true, ($with_builder ? '' : 'double')) . '</div>';
+		if ($with_builder !== $with_builder) $the_content = '<div class="post-content"' . $page_custom_width . '>' . uncode_get_row_template($the_content, $limit_width, $limit_content_width, $style, '', 'double', true, 'double') . '</div>';
+		else $the_content = '<div class="post-content"' . $page_custom_width . '>' . $the_content . '</div>';
 
 	}
 

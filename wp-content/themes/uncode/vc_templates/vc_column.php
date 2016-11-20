@@ -383,7 +383,8 @@ if ($is_carousel && $width_media === 12) {
 	$output.= $content;
 } else {
 	$output.= '<div class="' . esc_attr(trim(implode(' ', $col_classes))) . '"' . $col_style . '>';
-	$output.= '<div class="' . esc_attr(trim(implode(' ', $uncol_classes))) . '"' . $uncol_style . '  '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'>';
+	$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+	$output.= '<div class="' . esc_attr(trim(implode(' ', $uncol_classes))) . '"' . $uncol_style . '  '.implode(' ', $div_data_attributes).'>';
 	$output.= '<div class="' . esc_attr(trim(implode(' ', $uncoltable_classes))) . '"' . $uncoltable_style . '>';
 	$output.= '<div class="' . esc_attr(trim(implode(' ', $uncell_classes))) . '"'.$uncell_style.'>';
 	$output.= $background_div;

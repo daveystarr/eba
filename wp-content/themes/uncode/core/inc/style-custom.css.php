@@ -67,11 +67,14 @@ foreach ($front_background_colors as $key => $value)
 		echo "\n" . '.btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):hover, .btn-' . $key . '.btn-outline:not(.btn-hover-nobg):not(.btn-text-skin):focus, btn-' . $key . '.btn-outline:active { color: #ffffff !important; }';
 		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline, .style-light .btn-' . $key . '.btn-text-skin:not(.btn-outline):hover { color: ' . $cs_heading_color_light . ' !important; }';
 		echo "\n" . '.style-light .btn-' . $key . '.btn-text-skin.btn-outline:hover { color: #ffffff !important; }';
-		echo "\n" . '.text-' . $key . '-color { background-color: white; position: relative; }';
-		echo "\n" . '.text-' . $key . '-color::before, .text-' . $key . '-color::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none; }';
-		echo "\n" . '.text-' . $key . '-color::before { ' . $value . 'content: "";display: block;mix-blend-mode: screen;}';
-		echo "\n" . '.text-' . $key . '-color::after { color: white; mix-blend-mode: multiply; }';
 		echo "\n" . '.border-' . $key . '-color {'.str_replace('background','border-image',$value).'}';
+		preg_match_all("/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i", $value, $matches);
+		if (isset($matches[0][0])) {
+			echo "\n" . '.text-' . $key . '-color > * { color: '.$matches[0][0].' !important; }';
+		}
+		echo "\n" . '.text-' . $key . '-color > * { -webkit-text-fill-color: transparent !important; -webkit-background-clip: text !important; '.$value.' }';
+		echo "\n" . '.text-' . $key . '-color > * { background: none !important \0/IE9; }';
+		echo "\n" . '@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { .text-' . $key . '-color > * { background: none !important; } }';
 	} else {
 		echo "\n" . '.style-' . $key . '-bg { background-color: ' . $value . '; }';
 		if ($key !== 'white') {
@@ -92,7 +95,15 @@ foreach ($front_background_colors as $key => $value)
 	}
 
 	if ($key === $cs_logo_color_light) $cs_logo_color_light = $value;
-	if ($key === $cs_menu_color_light) $cs_menu_color_light = $value;
+	if ($key === $cs_menu_color_light) {
+		if (strpos($value, 'background') !== false) {
+			preg_match_all("/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i", $value, $matches);
+			if (isset($matches[0][0])) {
+				$cs_menu_color_light = $matches[0][0];
+			}
+			echo "\n" . '.menu-light .menu-smart a, .menu-light .menu-smart a i:before { -webkit-text-fill-color: transparent !important; -webkit-background-clip: text !important; ' . $value . '}';
+		} else $cs_menu_color_light = $value;
+	}
 	if ($key === $cs_menu_bg_color_light) $cs_menu_bg_color_light = $value;
 	if ($key === $cs_submenu_bg_color_light) $cs_submenu_bg_color_light = $value;
 	if ($key === $cs_menu_border_color_light) $cs_menu_border_color_light = $value;

@@ -28,6 +28,14 @@ footer .footer-last .uncell { border-top: 1px solid #fce2ec; }
 
 .vmenu-container .menu-accordion ul ul { padding: 8px 0 8px 6px; }
 
+.hmenu-center-split .logo-container { padding: 10px 20px 15px; }
+@media screen and (max-width: 959px) { .hmenu-center-split .logo-container { padding: 22px 22px !important; }
+  .hmenu-center-split .logo-container .logo-image { height: 50px !important; }
+  .hmenu-center-split .logo-container .logo-image img { content: url("/wp-content/themes/uncode-child/img/eba-final-logo-small.png"); } }
+@media screen and (max-width: 425px) { .hmenu-center-split .logo-container { padding: 14px 14px 12px !important; }
+  .hmenu-center-split .logo-container .logo-image { height: 40px !important; } }
+.hmenu-center-split .logo-container.shrinked { padding: 5px 15px 10px; }
+.hmenu-center-split .logo-container.shrinked .logo-image img { content: url("/wp-content/themes/uncode-child/img/eba-top.png"); }
 .hmenu-center-split #masthead > .menu-container { opacity: 1; }
 
 .menu-accordion .menu-smart a { padding: 5px 46px; }
@@ -36,14 +44,18 @@ footer .footer-last .uncell { border-top: 1px solid #fce2ec; }
 
 @media screen and (max-width: 959px) { .menu-container ul.menu-smart > li > a, .menu-container ul.menu-smart li.dropdown > a { font-weight: 400; }
   .menu-smart a { text-transform: none; padding: 7px 46px; }
-  .menu-container .logo-container { padding: 23px 24px 20px !important; }
   .menu-light .menu-smart li { padding-bottom: 10px; }
   .menu-light .menu-smart li ul li:last-of-type { padding-bottom: 0; }
   .menu-smart a i.fa-dropdown { font-size: 26px; font-weight: 500; top: -2px; } }
-.logo-container .logo-image img { height: auto; }
-@media screen and (max-width: 959px) { .logo-container .logo-image img { height: inherit; } }
-
 .menu-wrapper .row-menu .row-menu-inner { padding: 0; }
+
+body.hmenu .menu-primary .menu-horizontal .menu-smart > li > a { padding-top: 30px; }
+
+body.hmenu .menu-primary .shrinked .menu-horizontal .menu-smart > li > a { padding-top: 20px; }
+
+.menu-horizontal .menu-smart ul { margin-left: -8px !important; padding: 10px 0 14px 14px; }
+.menu-horizontal .menu-smart ul li { padding-right: 0; }
+.menu-horizontal .menu-smart ul li a { padding-right: 0; margin-right: 14px; }
 
 .single-portfolio .style-light h1 { background-color: rgba(255, 255, 255, 0.55); border: 0; color: black; font-weight: 300; padding: 5px 15px 10px; }
 @media screen and (max-width: 959px) { .single-portfolio .style-light h1 { padding: 10px 15px; } }

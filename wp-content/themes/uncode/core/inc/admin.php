@@ -7,7 +7,7 @@ function uncode_welcome_page(){
 function uncode_admin_menu(){
 	if ( current_user_can( 'edit_theme_options' ) ) {
 		add_menu_page( 'UNCODE', UNCODE_NAME, 'administrator', 'uncode-menu', 'uncode_welcome_page', 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAwIDIwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGcgaWQ9Imljb21vb24taWdub3JlIiBkaXNwbGF5PSJub25lIj48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxNS4xIiB5MT0iLTQxMiIgeDI9IjQxNS4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDE4LjIiIHkxPSItNDEyIiB4Mj0iNDE4LjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MjEuNCIgeTE9Ii00MTIiIHgyPSI0MjEuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQyNC41IiB5MT0iLTQxMiIgeDI9IjQyNC41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDI3LjYiIHkxPSItNDEyIiB4Mj0iNDI3LjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MzAuOCIgeTE9Ii00MTIiIHgyPSI0MzAuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQzMy45IiB5MT0iLTQxMiIgeDI9IjQzMy45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDM3IiB5MT0iLTQxMiIgeDI9IjQzNyIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQ0MC4xIiB5MT0iLTQxMiIgeDI9IjQ0MC4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDQzLjIiIHkxPSItNDEyIiB4Mj0iNDQzLjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0NDYuNCIgeTE9Ii00MTIiIHgyPSI0NDYuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQ0OS41IiB5MT0iLTQxMiIgeDI9IjQ0OS41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDUyLjYiIHkxPSItNDEyIiB4Mj0iNDUyLjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0NTUuOCIgeTE9Ii00MTIiIHgyPSI0NTUuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQ1OC45IiB5MT0iLTQxMiIgeDI9IjQ1OC45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDYyIiB5MT0iLTQxMiIgeDI9IjQ2MiIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQ2NS4xIiB5MT0iLTQxMiIgeDI9IjQ2NS4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDY4LjIiIHkxPSItNDEyIiB4Mj0iNDY4LjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0NzEuNCIgeTE9Ii00MTIiIHgyPSI0NzEuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQ3NC41IiB5MT0iLTQxMiIgeDI9IjQ3NC41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDc3LjYiIHkxPSItNDEyIiB4Mj0iNDc3LjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0ODAuOCIgeTE9Ii00MTIiIHgyPSI0ODAuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQ4My45IiB5MT0iLTQxMiIgeDI9IjQ4My45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDg3IiB5MT0iLTQxMiIgeDI9IjQ4NyIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQ5MC4xIiB5MT0iLTQxMiIgeDI9IjQ5MC4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDkzLjIiIHkxPSItNDEyIiB4Mj0iNDkzLjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0OTYuNCIgeTE9Ii00MTIiIHgyPSI0OTYuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQ5OS41IiB5MT0iLTQxMiIgeDI9IjQ5OS41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNTAyLjYiIHkxPSItNDEyIiB4Mj0iNTAyLjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI1MDUuOCIgeTE9Ii00MTIiIHgyPSI1MDUuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjUwOC45IiB5MT0iLTQxMiIgeDI9IjUwOC45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTEyIiB5MT0iLTQxMiIgeDI9IjUxMiIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjUxNS4xIiB5MT0iLTQxMiIgeDI9IjUxNS4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTE4LjIiIHkxPSItNDEyIiB4Mj0iNTE4LjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI1MjEuNCIgeTE9Ii00MTIiIHgyPSI1MjEuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjUyNC41IiB5MT0iLTQxMiIgeDI9IjUyNC41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNTI3LjYiIHkxPSItNDEyIiB4Mj0iNTI3LjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI1MzAuOCIgeTE9Ii00MTIiIHgyPSI1MzAuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjUzMy45IiB5MT0iLTQxMiIgeDI9IjUzMy45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTM3IiB5MT0iLTQxMiIgeDI9IjUzNyIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjU0MC4xIiB5MT0iLTQxMiIgeDI9IjU0MC4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTQzLjIiIHkxPSItNDEyIiB4Mj0iNTQzLjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI1NDYuNCIgeTE9Ii00MTIiIHgyPSI1NDYuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjU0OS41IiB5MT0iLTQxMiIgeDI9IjU0OS41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNTUyLjYiIHkxPSItNDEyIiB4Mj0iNTUyLjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI1NTUuOCIgeTE9Ii00MTIiIHgyPSI1NTUuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjU1OC45IiB5MT0iLTQxMiIgeDI9IjU1OC45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTYyIiB5MT0iLTQxMiIgeDI9IjU2MiIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjU2NS4xIiB5MT0iLTQxMiIgeDI9IjU2NS4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTY4LjIiIHkxPSItNDEyIiB4Mj0iNTY4LjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI1NzEuNCIgeTE9Ii00MTIiIHgyPSI1NzEuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjU3NC41IiB5MT0iLTQxMiIgeDI9IjU3NC41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNTc3LjYiIHkxPSItNDEyIiB4Mj0iNTc3LjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI1ODAuOCIgeTE9Ii00MTIiIHgyPSI1ODAuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjU4My45IiB5MT0iLTQxMiIgeDI9IjU4My45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTg3IiB5MT0iLTQxMiIgeDI9IjU4NyIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjU5MC4xIiB5MT0iLTQxMiIgeDI9IjU5MC4xIiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNTkzLjIiIHkxPSItNDEyIiB4Mj0iNTkzLjIiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI1OTYuNCIgeTE9Ii00MTIiIHgyPSI1OTYuNCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjU5OS41IiB5MT0iLTQxMiIgeDI9IjU5OS41IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNjAyLjYiIHkxPSItNDEyIiB4Mj0iNjAyLjYiIHkyPSItMjEyIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI2MDUuOCIgeTE9Ii00MTIiIHgyPSI2MDUuOCIgeTI9Ii0yMTIiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjYwOC45IiB5MT0iLTQxMiIgeDI9IjYwOC45IiB5Mj0iLTIxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTQwOC45IiB4Mj0iNjEyIiB5Mj0iLTQwOC45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItNDA1LjgiIHgyPSI2MTIiIHkyPSItNDA1LjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii00MDIuNiIgeDI9IjYxMiIgeTI9Ii00MDIuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTM5OS41IiB4Mj0iNjEyIiB5Mj0iLTM5OS41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMzk2LjQiIHgyPSI2MTIiIHkyPSItMzk2LjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0zOTMuMiIgeDI9IjYxMiIgeTI9Ii0zOTMuMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTM5MC4xIiB4Mj0iNjEyIiB5Mj0iLTM5MC4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzg3IiB4Mj0iNjEyIiB5Mj0iLTM4NyIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTM4My45IiB4Mj0iNjEyIiB5Mj0iLTM4My45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzgwLjgiIHgyPSI2MTIiIHkyPSItMzgwLjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0zNzcuNiIgeDI9IjYxMiIgeTI9Ii0zNzcuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTM3NC41IiB4Mj0iNjEyIiB5Mj0iLTM3NC41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMzcxLjQiIHgyPSI2MTIiIHkyPSItMzcxLjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0zNjguMiIgeDI9IjYxMiIgeTI9Ii0zNjguMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTM2NS4xIiB4Mj0iNjEyIiB5Mj0iLTM2NS4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzYyIiB4Mj0iNjEyIiB5Mj0iLTM2MiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTM1OC45IiB4Mj0iNjEyIiB5Mj0iLTM1OC45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzU1LjgiIHgyPSI2MTIiIHkyPSItMzU1LjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0zNTIuNiIgeDI9IjYxMiIgeTI9Ii0zNTIuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTM0OS41IiB4Mj0iNjEyIiB5Mj0iLTM0OS41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMzQ2LjQiIHgyPSI2MTIiIHkyPSItMzQ2LjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0zNDMuMiIgeDI9IjYxMiIgeTI9Ii0zNDMuMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTM0MC4xIiB4Mj0iNjEyIiB5Mj0iLTM0MC4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzM3IiB4Mj0iNjEyIiB5Mj0iLTMzNyIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTMzMy45IiB4Mj0iNjEyIiB5Mj0iLTMzMy45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzMwLjgiIHgyPSI2MTIiIHkyPSItMzMwLjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0zMjcuNiIgeDI9IjYxMiIgeTI9Ii0zMjcuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTMyNC41IiB4Mj0iNjEyIiB5Mj0iLTMyNC41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMzIxLjQiIHgyPSI2MTIiIHkyPSItMzIxLjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0zMTguMiIgeDI9IjYxMiIgeTI9Ii0zMTguMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTMxNS4xIiB4Mj0iNjEyIiB5Mj0iLTMxNS4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzEyIiB4Mj0iNjEyIiB5Mj0iLTMxMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTMwOC45IiB4Mj0iNjEyIiB5Mj0iLTMwOC45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMzA1LjgiIHgyPSI2MTIiIHkyPSItMzA1LjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0zMDIuNiIgeDI9IjYxMiIgeTI9Ii0zMDIuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTI5OS41IiB4Mj0iNjEyIiB5Mj0iLTI5OS41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMjk2LjQiIHgyPSI2MTIiIHkyPSItMjk2LjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0yOTMuMiIgeDI9IjYxMiIgeTI9Ii0yOTMuMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTI5MC4xIiB4Mj0iNjEyIiB5Mj0iLTI5MC4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjg3IiB4Mj0iNjEyIiB5Mj0iLTI4NyIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTI4My45IiB4Mj0iNjEyIiB5Mj0iLTI4My45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjgwLjgiIHgyPSI2MTIiIHkyPSItMjgwLjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0yNzcuNiIgeDI9IjYxMiIgeTI9Ii0yNzcuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTI3NC41IiB4Mj0iNjEyIiB5Mj0iLTI3NC41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMjcxLjQiIHgyPSI2MTIiIHkyPSItMjcxLjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0yNjguMiIgeDI9IjYxMiIgeTI9Ii0yNjguMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTI2NS4xIiB4Mj0iNjEyIiB5Mj0iLTI2NS4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjYyIiB4Mj0iNjEyIiB5Mj0iLTI2MiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTI1OC45IiB4Mj0iNjEyIiB5Mj0iLTI1OC45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjU1LjgiIHgyPSI2MTIiIHkyPSItMjU1LjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0yNTIuNiIgeDI9IjYxMiIgeTI9Ii0yNTIuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTI0OS41IiB4Mj0iNjEyIiB5Mj0iLTI0OS41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMjQ2LjQiIHgyPSI2MTIiIHkyPSItMjQ2LjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0yNDMuMiIgeDI9IjYxMiIgeTI9Ii0yNDMuMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTI0MC4xIiB4Mj0iNjEyIiB5Mj0iLTI0MC4xIi8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjM3IiB4Mj0iNjEyIiB5Mj0iLTIzNyIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTIzMy45IiB4Mj0iNjEyIiB5Mj0iLTIzMy45Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIHgxPSI0MTIiIHkxPSItMjMwLjgiIHgyPSI2MTIiIHkyPSItMjMwLjgiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIG9wYWNpdHk9IjAuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3ICAgICIgeDE9IjQxMiIgeTE9Ii0yMjcuNiIgeDI9IjYxMiIgeTI9Ii0yMjcuNiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDQ5RkRCIiB4MT0iNDEyIiB5MT0iLTIyNC41IiB4Mj0iNjEyIiB5Mj0iLTIyNC41Ii8+PGxpbmUgZGlzcGxheT0iaW5saW5lIiBvcGFjaXR5PSIwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAgICAiIHgxPSI0MTIiIHkxPSItMjIxLjQiIHgyPSI2MTIiIHkyPSItMjIxLjQiLz48bGluZSBkaXNwbGF5PSJpbmxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzQ0OUZEQiIgeDE9IjQxMiIgeTE9Ii0yMTguMiIgeDI9IjYxMiIgeTI9Ii0yMTguMiIvPjxsaW5lIGRpc3BsYXk9ImlubGluZSIgb3BhY2l0eT0iMC4zIiBmaWxsPSJub25lIiBzdHJva2U9IiM0NDlGREIiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgICAgIiB4MT0iNDEyIiB5MT0iLTIxNS4xIiB4Mj0iNjEyIiB5Mj0iLTIxNS4xIi8+PC9nPjxwYXRoIGZpbGw9IiM5RUEzQTgiIHN0cm9rZT0iIzlFQTNBOCIgc3Ryb2tlLXdpZHRoPSIxMSIgZD0iTTE4MS40LDUwLjdsLTY1LTM2LjdjLTguOS01LTI0LjEtNS0zMi45LDBsLTY1LDM2LjdjLTUsMi44LTcuNyw2LjctNy43LDExLjFzMi43LDguMyw3LjcsMTEuMWw2NSwzNi43YzQuNCwyLjUsMTAuMywzLjksMTYuNSwzLjlzMTItMS40LDE2LjUtMy45bDY1LTM2LjdjNS0yLjgsNy43LTYuNyw3LjctMTEuMVMxODYuMyw1My41LDE4MS40LDUwLjdMMTgxLjQsNTAuN3ogTTE3OC40LDY3LjZsLTY1LDM2LjdjLTcsMy45LTIwLDQtMjcsMGwtNjUtMzYuN2MtMy0xLjctNC42LTMuOC00LjYtNS44YzAtMiwxLjctNC4yLDQuNi01LjhsNjUtMzYuN2MzLjUtMiw4LjQtMy4xLDEzLjUtMy4xYzUuMSwwLDEwLDEuMSwxMy41LDMuMWw2NSwzNi43YzMsMS43LDQuNiwzLjgsNC42LDUuOEMxODMuMSw2My44LDE4MS40LDY1LjksMTc4LjQsNjcuNnogTTE4MS40LDg5LjJjLTEuNC0wLjgtMy4zLTAuMy00LjEsMS4xYy0wLjgsMS40LTAuMywzLjMsMS4xLDQuMWMzLDEuNyw0LjYsMy44LDQuNiw1LjhzLTEuNyw0LjItNC42LDUuOGwtNjUsMzYuN2MtNy4zLDQuMS0xOS43LDQuMS0yNywwbC02NS0zNi43Yy0zLTEuNy00LjYtMy44LTQuNi01LjhzMS43LTQuMiw0LjYtNS44YzEuNC0wLjgsMi0yLjcsMS4xLTQuMWMtMC44LTEuNS0yLjctMi00LjEtMS4xYy01LDIuOC03LjcsNi43LTcuNywxMS4xczIuNyw4LjMsNy43LDExLjFsNjUsMzYuN0M4OCwxNTAuNyw5NCwxNTIsOTkuOSwxNTJzMTEuOS0xLjMsMTYuNS0zLjlsNjUtMzYuN2M1LTIuOCw3LjctNi43LDcuNy0xMS4xQzE4OS4xLDk2LDE4Ni4zLDkyLDE4MS40LDg5LjJMMTgxLjQsODkuMnogTTE4MS40LDEyN2MtMS40LTAuOC0zLjMtMC4zLTQuMSwxLjFjLTAuOCwxLjQtMC4zLDMuMywxLjEsNC4xYzMsMS43LDQuNiwzLjgsNC42LDUuOGMwLDItMS43LDQuMi00LjYsNS44bC02NSwzNi43Yy03LjMsNC4xLTE5LjcsNC4xLTI3LDBsLTY1LTM2LjdjLTMtMS43LTQuNi0zLjgtNC42LTUuOGMwLTIsMS43LTQuMiw0LjYtNS44YzEuNC0wLjgsMi0yLjcsMS4xLTQuMWMtMC44LTEuNC0yLjctMi00LjEtMS4xYy01LDIuOC03LjcsNi43LTcuNywxMS4xYzAsNC4zLDIuNyw4LjMsNy43LDExLjFsNjUsMzYuN2M0LjYsMi42LDEwLjUsMy45LDE2LjUsMy45czExLjktMS4zLDE2LjUtMy45bDY1LTM2LjdjNS0yLjgsNy43LTYuNyw3LjctMTEuMUMxODkuMSwxMzMuNywxODYuMywxMjkuOCwxODEuNCwxMjdMMTgxLjQsMTI3eiIvPjwvc3ZnPg==', 4 );
-		add_submenu_page( 'uncode-menu', 'UNCODE', esc_html__('Welcome','uncode'), 'administrator', 'uncode-menu', 'uncode_welcome_page' );
+		add_submenu_page( 'uncode-menu', 'UNCODE', esc_html__('System Status','uncode'), 'administrator', 'uncode-menu', 'uncode_welcome_page' );
 	}
 }
 
@@ -36,7 +36,7 @@ if (is_admin() && isset($_GET['activated'] ) && $pagenow == "themes.php" ) {
 
 function uncode_ot_admin_script()
 {
-	wp_enqueue_script('uncode-ot-admin', get_template_directory_uri() . '/core/assets/js/ot-admin-extended.js', array('ot-admin-js'), UNCODE_VERSION , false);
+	wp_enqueue_script('uncode-ot-admin', get_template_directory_uri() . '/core/assets/js/ot-admin-extended.js', array('ot-admin-js'), UNCODE_VERSION, false);
 	wp_enqueue_script( 'ot-admin-fontpicker', get_template_directory_uri() . '/core/assets/js/jquery.fonticonpicker.min.js', array('ot-admin-js'), UNCODE_VERSION , false);
 }
 add_action('ot_admin_scripts_after', 'uncode_ot_admin_script');
@@ -98,6 +98,8 @@ function uncode_modify_post_mime_types( $post_mime_types ) {
     $post_mime_types['oembed/youtube'] = array( esc_html__( 'Youtube','uncode' ), esc_html__( 'Manage Youtubes' ,'uncode'), _n_noop( 'Youtube <span class="count">(%s)</span>', 'Youtubes <span class="count">(%s)</span>', 'uncode' ) );
     $post_mime_types['oembed/soundcloud'] = array( esc_html__( 'Soundcloud','uncode' ), esc_html__( 'Manage Soundclouds','uncode' ), _n_noop( 'Soundcloud <span class="count">(%s)</span>', 'Soundclouds <span class="count">(%s)</span>', 'uncode' ) );
     $post_mime_types['oembed/spotify'] = array( esc_html__( 'Spotify','uncode' ), esc_html__( 'Manage Spotifys','uncode' ), _n_noop( 'Spotify <span class="count">(%s)</span>', 'Spotifys <span class="count">(%s)</span>', 'uncode' ) );
+    $post_mime_types['oembed/facebook'] = array( esc_html__( 'Facebook','uncode' ), esc_html__( 'Manage Facebooks','uncode' ), _n_noop( 'Facebook <span class="count">(%s)</span>', 'Facebooks <span class="count">(%s)</span>', 'uncode' ) );
+    $post_mime_types['oembed/twitter'] = array( esc_html__( 'Twitter','uncode' ), esc_html__( 'Manage Tweets','uncode' ), _n_noop( 'Twitter <span class="count">(%s)</span>', 'Tweets <span class="count">(%s)</span>', 'uncode' ) );
     $post_mime_types['oembed/flickr'] = array( esc_html__( 'Flickr','uncode' ), esc_html__( 'Manage Flickrs','uncode' ), _n_noop( 'Flickr <span class="count">(%s)</span>', 'Flickrs <span class="count">(%s)</span>', 'uncode' ) );
     $post_mime_types['oembed/instagram'] = array( esc_html__( 'Instagram','uncode' ), esc_html__( 'Manage Instagrams','uncode' ), _n_noop( 'Instagram <span class="count">(%s)</span>', 'Instagrams <span class="count">(%s)</span>', 'uncode' ) );
     $post_mime_types['oembed/svg'] = array( esc_html__( 'SVG','uncode' ), esc_html__( 'Manage SVGs','uncode' ), _n_noop( 'SVG <span class="count">(%s)</span>', 'SVGs <span class="count">(%s)</span>', 'uncode' ) );
@@ -121,6 +123,7 @@ add_filter('upload_mimes', 'uncode_mime_types');
 function uncode_add_additional_fields($form_fields, $post)
 {
 	$team = (bool) get_post_meta($post->ID, "_uncode_team_member", true);
+	$social_original = (bool) get_post_meta($post->ID, "_uncode_social_original", true);
 	$animated_svg = (bool) get_post_meta($post->ID, "_uncode_animated_svg", true);
 	$animated_svg_time = get_post_meta($post->ID, "_uncode_animated_svg_time", true);
 	$team_social = get_post_meta($post->ID, "_uncode_team_member_social", true);
@@ -132,9 +135,20 @@ function uncode_add_additional_fields($form_fields, $post)
 	$video2 = isset($videos[1]) ? $videos[1] : '';
 
 	$checked_team = ($team) ? 'checked="checked"' : '';
+	$checked_social = ($social_original) ? 'checked="checked"' : '';
 	$checked_animated = ($animated_svg) ? 'checked="checked"' : '';
 	$checked_loop = ($video_loop) ? 'checked="checked"' : '';
 	$checked_auto = ($video_auto) ? 'checked="checked"' : '';
+
+	if ($post->post_mime_type === 'oembed/svg') {
+		$alt = get_post_meta($post->ID, '_wp_attachment_image_alt', true);
+		if ( empty($alt) )
+			$alt = '';
+		$form_fields['svg_alt'] = array(
+			'value' => $alt,
+			'label' => esc_html__('Alt Text', 'uncode') ,
+		);
+	}
 
 	if (strpos($post->post_mime_type, 'image') === false || $post->post_mime_type === 'image/svg+xml')
 	{
@@ -161,8 +175,7 @@ function uncode_add_additional_fields($form_fields, $post)
 		);
 	}
 
-	if (strpos($post->post_mime_type, 'video/') !== false)
-	{
+	if (strpos($post->post_mime_type, 'video/') !== false) {
 		$form_fields["video_loop"] = array(
 			"label" => esc_html__("Loop?", 'uncode') ,
 			"input" => 'html',
@@ -185,8 +198,7 @@ function uncode_add_additional_fields($form_fields, $post)
 		);
 	}
 
-	if (strpos($post->post_mime_type, 'oembed/svg') !== false || $post->post_mime_type === 'image/svg+xml')
-	{
+	if (strpos($post->post_mime_type, 'oembed/svg') !== false || $post->post_mime_type === 'image/svg+xml') {
 		$form_fields["animated_svg"] = array(
 			"label" => esc_html__("Animated?", 'uncode') ,
 			"input" => 'html',
@@ -203,12 +215,20 @@ function uncode_add_additional_fields($form_fields, $post)
 		);
 	}
 
-	if (strpos($post->post_mime_type, 'image') !== false)
-	{
+	if (strpos($post->post_mime_type, 'image') !== false) {
 		$form_fields["media_id"] = array(
 			"label" => esc_html__("ID", 'uncode') ,
 			"input" => 'html',
 			"html" => '<input type="text" value="' . $post->ID . '" readonly=""><br />'
+		);
+	}
+
+	if ($post->post_mime_type === 'oembed/twitter') {
+		$form_fields["social_original"] = array(
+			"label" => esc_html__("Twitter original", 'uncode') ,
+			"input" => 'html',
+			"html" => "<input type='checkbox' {$checked_social} name='attachments[{$post->ID}][social_original]' id='attachments[{$post->ID}][social_original]' /> <span>Yes</span>",
+			"value" => $social_original
 		);
 	}
 
@@ -243,6 +263,90 @@ function uncode_add_additional_fields($form_fields, $post)
 
 	return $form_fields;
 }
+
+function uncode_save_additional_fields($attachment_id)
+{
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['svg_alt']))
+	{
+		$alt_text = $_REQUEST['attachments'][$attachment_id]['svg_alt'];
+		update_post_meta($attachment_id, '_wp_attachment_image_alt', $alt_text);
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['team_member'])) {
+		$team = ($_REQUEST['attachments'][$attachment_id]['team_member'] == 'on') ? '1' : '0';
+		update_post_meta($attachment_id, '_uncode_team_member', $team);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_team_member', '1');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['social_original'])) {
+		$social_original = ($_REQUEST['attachments'][$attachment_id]['social_original'] == 'on') ? '1' : '0';
+		update_post_meta($attachment_id, '_uncode_social_original', $social_original);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_social_original', '1');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['animated_svg'])) {
+		$animated = ($_REQUEST['attachments'][$attachment_id]['animated_svg'] == 'on') ? '1' : '0';
+		update_post_meta($attachment_id, '_uncode_animated_svg', $animated);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_animated_svg', '1');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['animated_svg_time']))
+	{
+		$animated_svg_time = $_REQUEST['attachments'][$attachment_id]['animated_svg_time'];
+		update_post_meta($attachment_id, '_uncode_animated_svg_time', $animated_svg_time);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_animated_svg_time');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['video_loop'])) {
+		$video_loop = ($_REQUEST['attachments'][$attachment_id]['video_loop'] == 'on') ? '1' : '0';
+		update_post_meta($attachment_id, '_uncode_video_loop', $video_loop);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_video_loop', '1');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['video_autoplay'])) {
+		$video_auto = ($_REQUEST['attachments'][$attachment_id]['video_autoplay'] == 'on') ? '1' : '0';
+		update_post_meta($attachment_id, '_uncode_video_autoplay', $video_auto);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_video_autoplay', '1');
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['team_member_social']) && isset($_REQUEST['attachments'][$attachment_id]['team_member_social']) !== '')
+	{
+		$team_social = $_REQUEST['attachments'][$attachment_id]['team_member_social'];
+		update_post_meta($attachment_id, '_uncode_team_member_social', $team_social);
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['media_width']) && isset($_REQUEST['attachments'][$attachment_id]['media_width']) !== '' && isset($_REQUEST['attachments'][$attachment_id]['media_height']) && isset($_REQUEST['attachments'][$attachment_id]['media_height']) !== '')
+	{
+		$dimensions = array( 'width' => $_REQUEST['attachments'][$attachment_id]['media_width'], 'height' => $_REQUEST['attachments'][$attachment_id]['media_height'] );
+		update_post_meta($attachment_id, '_wp_attachment_metadata', $dimensions);
+	}
+
+	if (isset($_REQUEST['attachments'][$attachment_id]['poster_image']) && $_REQUEST['attachments'][$attachment_id]['poster_image'] !== '')
+	{
+		$poster = $_REQUEST['attachments'][$attachment_id]['poster_image'];
+		update_post_meta($attachment_id, '_uncode_poster_image', $poster);
+	} else {
+		delete_post_meta($attachment_id, '_uncode_poster_image');
+	}
+
+	$changes = $_REQUEST['changes'];
+
+	if ( isset( $changes['url'] ) && isset($_REQUEST['id']) && $_REQUEST['id'] !== '' ) {
+		global $wpdb;
+		$id = esc_sql($_REQUEST['id']);
+		$code = esc_sql($changes['url']);
+		$update = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->posts SET guid = %s WHERE ID = %d", $code, $id ) );
+	}
+
+}
+add_action('edit_attachment', 'uncode_save_additional_fields');
 
 function uncode_terms_checkboxes( $taxonomy, $post_id ) {
 	if ( !is_object( $taxonomy ) ) :
@@ -420,7 +524,7 @@ function uncode_taxonomy_add_meta_field() {
 		jQuery( document ).ready(function( $ ) {
 			$('select.term_color').each(function(index) {
 				var $select = $(this);
-				if ($(this).is('[class*="_color"]')) {
+				if ($(this).is('[class*="_color"]') && window.navigator.userAgent.indexOf("Windows NT 10.0") == -1) {
 					$(this).easyDropDown({
 						cutOff: 10,
 					});
@@ -504,7 +608,7 @@ function uncode_taxonomy_edit_meta_field($term) {
 				jQuery( document ).ready(function( $ ) {
 					$('select.term_color').each(function(index) {
 						var $select = $(this);
-						if ($(this).is('[class*="_color"]')) {
+						if ($(this).is('[class*="_color"]') && window.navigator.userAgent.indexOf("Windows NT 10.0") == -1) {
 							$(this).easyDropDown({
 								cutOff: 10,
 							});
@@ -734,10 +838,12 @@ function uncode_admin_get_oembed()
 		$strip = array(
 			"www.",
 			"api.",
-			"embed."
+			"embed.",
+			"publish.",
 		);
 		$bare_host = str_replace($strip, "", $host);
 		$bare_host = explode('.', $bare_host);
+
 		$mime = 'oembed/' . $bare_host[0];
 
 		$code = wp_oembed_get($urlEnterd);
@@ -1185,6 +1291,26 @@ if (function_exists('is_plugin_active')) {
 	}
 }
 
+$max_input_vars = ini_get('max_input_vars');
+if ( $max_input_vars < 3000 ) {
+	global $pagenow;
+	if (is_admin() && $pagenow === 'admin.php' && $_GET['page'] === 'uncode-options') {
+		function uncode_php_max_vars_nag() {
+	    ?>
+	    <div class="notice error is-dismissible">
+	      <p>
+	      	<strong><?php esc_html_e('Warning: PHP max_input_vars','uncode'); ?></strong>
+	      </p>
+	      <p>
+	      	<?php echo sprintf( wp_kses(__( 'Before saving the theme options you need to address an issue marked on the <a href="%s">Welcome Screen</a>.', 'uncode' ), array( 'a' => array( 'href' => array(),'target' => array() ) ) ), admin_url('admin.php?page=uncode-menu') ); ?>
+	      </p>
+	    </div>
+	    <?php
+		}
+		add_action( 'admin_notices', 'uncode_php_max_vars_nag' );
+	}
+}
+
 function uncode_transparent_header_nag() {
 	if (!is_admin()) return false;
 	if (!isset($_GET['post'])) return false;
@@ -1198,12 +1324,20 @@ function uncode_transparent_header_nag() {
 		if ($transpmainheader !== '100') {
 			$post_id = $_GET['post'];
 			$metabox_data = get_post_custom($post_id);
-			if (!isset($metabox_data['_uncode_header_type']) || (isset($metabox_data['_uncode_header_type'][0]) && ($metabox_data['_uncode_header_type'][0] === '' || $metabox_data['_uncode_header_type'][0] === 'none'))) {
-				if (isset($metabox_data['_uncode_specific_menu_opaque'][0]) && $metabox_data['_uncode_specific_menu_opaque'][0] !== 'on') {
+			$show_nag = false;
+			if (isset($metabox_data['_uncode_specific_menu_opaque'][0]) && $metabox_data['_uncode_specific_menu_opaque'][0] !== 'on') {
+				if (!isset($metabox_data['_uncode_header_type']) || (isset($metabox_data['_uncode_header_type'][0]) && $metabox_data['_uncode_header_type'][0] === 'none')) {
+					$show_nag = true;
+				} else {
+					$get_post_type = get_post_type($post_id);
+					$get_generic_header = ot_get_option('_uncode_'.$get_post_type.'_header');
+					if ($get_generic_header === 'none' || $get_generic_header === '') $show_nag = true;
+				}
+				if ($show_nag) {
 				?>
-				<div class="notice notice-success notice-warning is-dismissible">
-					<p><?php echo sprintf( wp_kses(__( 'The menu transparency will not be visible without a declared header <a class="page-options-header-section" href="%s">here</a>.', 'uncode' ), array( 'a' => array( 'href' => array(),'class' => array(),'target' => array() ) ) ), '#_uncode_page_options' ); ?></p>
-				</div>
+					<div class="notice notice-success notice-warning is-dismissible">
+						<p><?php echo sprintf( wp_kses(__( 'The menu transparency will not be visible without a declared header <a class="page-options-header-section" href="%s">here</a>.', 'uncode' ), array( 'a' => array( 'href' => array(),'class' => array(),'target' => array() ) ) ), '#_uncode_page_options' ); ?></p>
+					</div>
 				<?php
 				}
 			}
@@ -1212,6 +1346,55 @@ function uncode_transparent_header_nag() {
 }
 
 add_action( 'admin_notices', 'uncode_transparent_header_nag' );
+
+function uncode_core_update_nag() {
+	if (!is_admin()) return false;
+	$uncode_core = get_plugin_data( WP_PLUGIN_DIR . '/uncode-core/uncode-core.php' );
+	if (isset($GLOBALS['tgmpa']->plugins['uncode-core']['version']) && isset($uncode_core['Version'])) {
+		if ( version_compare( $GLOBALS['tgmpa']->plugins['uncode-core']['version'], $uncode_core['Version'], '>' ) ) {
+			?>
+			<div class="notice error is-dismissible">
+				<p><?php echo __( 'You need to update the Uncode Core plugin.', 'uncode' ); ?></p>
+			</div>
+			<?php
+		}
+	}
+}
+
+add_action( 'admin_notices', 'uncode_core_update_nag' );
+
+/**
+ * Add admin bar Uncode support button
+ */
+
+function uncode_support_admin_bar_menu( $wp_admin_bar ) {
+
+  if ( ! is_admin_bar_showing() || ot_get_option('_uncode_admin_help') === 'off')
+    return;
+
+  $wp_admin_bar->add_node( array(
+    'id'      => 'uncode-help',
+    'title'   => esc_html__( 'Uncode Help', 'uncode' ),
+  ) );
+
+  $wp_admin_bar->add_node( array(
+    'id'      => 'uncode-support',
+    'parent'	=> 'uncode-help',
+    'title'   => esc_html__( 'Support', 'uncode' ),
+    'href'    => 'https://undsgn.com/support/',
+    'meta'    => array( 'class' => 'uncode-support', 'target' => '_blank' )
+  ) );
+
+  $wp_admin_bar->add_node( array(
+    'id'      => 'uncode-docs',
+    'parent'	=> 'uncode-help',
+    'title'   => esc_html__( 'Documentation', 'uncode' ),
+    'href'    => 'https://undsgn.com/uncode/documentation/',
+    'meta'    => array( 'class' => 'uncode-docs', 'target' => '_blank' )
+  ) );
+}
+
+add_action( 'admin_bar_menu', 'uncode_support_admin_bar_menu', 999 );
 
 /**
  * Deactivate js_composer.
@@ -1226,26 +1409,29 @@ function deactivate_js_composer() {
 add_action('wp_ajax_deactivate_js_composer','deactivate_js_composer');
 add_action('wp_ajax_nopriv_deactivate_js_composer','deactivate_js_composer');
 
-function uncode_get_post_types($built_in = false) {
-	$args = array(
-    'public'                => true,
-    '_builtin'              => false
-	);
-	$output = 'names'; // names or objects, note names is the default
-	$operator = 'and'; // 'and' or 'or'
-	$get_post_types = get_post_types($args,$output,$operator);
-	$uncode_post_types = array();
-	if (($key = array_search('uncodeblock', $get_post_types)) !== false) {
-    unset($get_post_types[$key]);
-	}
-	if ($built_in) $uncode_post_types[] = 'post';
-	if ($built_in) $uncode_post_types[] = 'page';
-	foreach ($get_post_types as $key => $value) {
-		$uncode_post_types[] = $key;
-	}
+if (!function_exists('uncode_get_post_types')) {
+	function uncode_get_post_types($built_in = false) {
+		$args = array(
+	    'public'                => true,
+	    '_builtin'              => false
+		);
+		$output = 'names'; // names or objects, note names is the default
+		$operator = 'and'; // 'and' or 'or'
+		$get_post_types = get_post_types($args,$output,$operator);
+		$uncode_post_types = array();
+		if (($key = array_search('uncodeblock', $get_post_types)) !== false) {
+	    unset($get_post_types[$key]);
+		}
+		if ($built_in) $uncode_post_types[] = 'post';
+		if ($built_in) $uncode_post_types[] = 'page';
+		foreach ($get_post_types as $key => $value) {
+			$uncode_post_types[] = $key;
+		}
 
-	return $uncode_post_types;
+		return $uncode_post_types;
+	}
 }
+
 
 /**
  * Convert HEX color to RGB

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Uncode\n"
-"POT-Creation-Date: 2016-09-29 16:10+0200\n"
-"PO-Revision-Date: 2016-09-29 16:11+0200\n"
+"POT-Creation-Date: 2016-11-01 11:54+0100\n"
+"PO-Revision-Date: 2016-11-01 11:55+0100\n"
 "Last-Translator: Undsgn Team <info@undsgn.com>\n"
 "Language-Team: Undsgn <info@undsgn.com>\n"
 "Language: ro\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: style.css\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -102,7 +102,8 @@ msgid "Please active Uncode Core plugin to version > 1.0.5"
 msgstr "Vă rugăm să activați Unicode Core plug-in pentru versiunea> 1.0.5"
 
 #: core/font-system/font-system.php:128
-msgid "Your kits: "
+#, fuzzy
+msgid "Your kits:"
 msgstr "Kiturile tale:"
 
 #: core/font-system/font-system.php:180
@@ -147,7 +148,7 @@ msgstr ""
 "sunt îndeplinite și etichetate în verde.<br>Bucurați-vă și dați frâu liber "
 "imaginației cu %s!"
 
-#: core/inc/admin-pages/welcome.php:39
+#: core/inc/admin-pages/welcome.php:39 core/inc/admin.php:10
 msgid "System Status"
 msgstr "Starea sistemului"
 
@@ -178,7 +179,7 @@ msgstr "Instalaţi Fonturile"
 msgid "Font Sources"
 msgstr "Surse de fonturi"
 
-#: core/inc/admin-pages/welcome.php:45
+#: core/inc/admin-pages/welcome.php:45 core/inc/admin.php:1391
 #: core/theme-options/includes/ot-functions-admin.php:214
 #: core/theme-options/includes/ot-functions-admin.php:215
 msgid "Documentation"
@@ -192,7 +193,7 @@ msgstr "Mediu WordPress "
 msgid "Frontend stylesheet"
 msgstr "Frontend stylesheet"
 
-#: core/inc/admin-pages/welcome.php:57 core/inc/admin-pages/welcome.php:89
+#: core/inc/admin-pages/welcome.php:57 core/inc/admin-pages/welcome.php:90
 msgid ""
 "Uncode is generating a stylesheet when the options are saved. The file must "
 "be writtable."
@@ -200,7 +201,7 @@ msgstr ""
 "Unicode generează stylesheet atunci când sunt salvate opțiunile. Fișierul "
 "trebuie să fie inscriptibil."
 
-#: core/inc/admin-pages/welcome.php:83 core/inc/admin-pages/welcome.php:111
+#: core/inc/admin-pages/welcome.php:84 core/inc/admin-pages/welcome.php:113
 #, fuzzy, php-format
 msgid ""
 "WordPress doesn't have direct access to this folder <code>%s</code> due to a "
@@ -211,50 +212,50 @@ msgstr ""
 "confict în permisiunea dosarul Uncode sau configurația de acces de fișiere "
 "WordPress nu este metoda directă. Css personalizat va fi în linie de ieșire."
 
-#: core/inc/admin-pages/welcome.php:88
+#: core/inc/admin-pages/welcome.php:89
 msgid "Backend stylesheet"
 msgstr "Backend stylesheet"
 
-#: core/inc/admin-pages/welcome.php:116
+#: core/inc/admin-pages/welcome.php:118
 msgid "WP Version"
 msgstr "Versiune WP"
 
-#: core/inc/admin-pages/welcome.php:117
+#: core/inc/admin-pages/welcome.php:119
 msgid "The version of WordPress installed on your site."
 msgstr "Versiunea de WordPress instalat pe site."
 
-#: core/inc/admin-pages/welcome.php:121
+#: core/inc/admin-pages/welcome.php:123
 msgid "WP Multisite"
 msgstr "WP Multisite"
 
-#: core/inc/admin-pages/welcome.php:122
+#: core/inc/admin-pages/welcome.php:124
 msgid "Whether or not you have WordPress Multisite enabled."
 msgstr "Indiferent dacă sunt sau nu aveți WordPress Multisite activat."
 
-#: core/inc/admin-pages/welcome.php:126
+#: core/inc/admin-pages/welcome.php:128
 msgid "WP Memory Limit"
 msgstr "WP Memorie Limită"
 
-#: core/inc/admin-pages/welcome.php:127
+#: core/inc/admin-pages/welcome.php:129
 msgid "The maximum amount of memory (RAM) that your site can use at one time."
 msgstr ""
 "Cantitatea maximă de memorie (RAM) pe care site-ul dvs. o poate utiliza la "
 "un moment dat."
 
-#: core/inc/admin-pages/welcome.php:132
-#, php-format
+#: core/inc/admin-pages/welcome.php:134
+#, fuzzy, php-format
 msgid ""
-"%s - We recommend setting memory to at least 64MB. See: <a href=\"%s\" "
+"%s - We recommend setting memory to at least 96MB. See: <a href=\"%s\" "
 "target=\"_blank\">Increasing memory allocated to PHP</a>"
 msgstr ""
 "%s - Vă recomandăm setarea de memorie la cel puțin 64MB. Vezi: <a href=\"%s"
 "\" target=\"_blank\">Mărirea memoriei alocate PHP</a>"
 
-#: core/inc/admin-pages/welcome.php:139
+#: core/inc/admin-pages/welcome.php:141
 msgid "Server Memory Limit"
 msgstr "Limită de memorie server"
 
-#: core/inc/admin-pages/welcome.php:140
+#: core/inc/admin-pages/welcome.php:142
 msgid ""
 "This is actually the real memory available for your installation despite the "
 "WP memory limit."
@@ -262,40 +263,56 @@ msgstr ""
 "Aceasta este de fapt adevărata memorie disponibilă pentru instalarea "
 "dumneavoastră în ciuda limitei de memorie WP."
 
-#: core/inc/admin-pages/welcome.php:142
+#: core/inc/admin-pages/welcome.php:144
 msgid "Calculating…"
 msgstr "De calculat…"
 
-#: core/inc/admin-pages/welcome.php:144
+#: core/inc/admin-pages/welcome.php:146
+#, fuzzy
 msgid ""
 "You only have %d% MB available and it's not enough to run the system. If you "
 "have already increased the memory limit please check with your hosting "
-"provider for increase it (at least 64MB is required)."
+"provider for increase it (at least 96MB is required)."
 msgstr ""
 "Ai doar %d% MB disponibili și nu este suficient pentru a rula sistemul. Dacă "
 "ați crescut deja limita de memorie, vă rugăm să verificați impreună cu "
 "furnizorul dvs. de găzduire pentru a crește capacitatea (este necesară cel "
 "puțin 64MB)"
 
-#: core/inc/admin-pages/welcome.php:148
+#: core/inc/admin-pages/welcome.php:150
+msgid "PHP Max Input Vars"
+msgstr ""
+
+#: core/inc/admin-pages/welcome.php:151
+msgid ""
+"The maximum number of variables your server can use for a single function to "
+"avoid overloads."
+msgstr ""
+
+#: core/inc/admin-pages/welcome.php:155
+#, fuzzy, php-format
+msgid ""
+"%s - We recommend setting PHP max_input_vars to at least 3000. See: <a href="
+"\"%s\" target=\"_blank\">Increasing the PHP max vars limit</a>"
+msgstr ""
+"%s - Vă recomandăm setarea de memorie la cel puțin 64MB. Vezi: <a href=\"%s"
+"\" target=\"_blank\">Mărirea memoriei alocate PHP</a>"
+
+#: core/inc/admin-pages/welcome.php:162
 msgid "WP Debug Mode"
 msgstr "Modul de depanare WP"
 
-#: core/inc/admin-pages/welcome.php:149
+#: core/inc/admin-pages/welcome.php:163
 msgid "Displays whether or not WordPress is in Debug Mode."
 msgstr "Arată dacă este sau nu WordPress este în modul Debug."
 
-#: core/inc/admin-pages/welcome.php:153
+#: core/inc/admin-pages/welcome.php:167
 msgid "Language"
 msgstr "Limbă"
 
-#: core/inc/admin-pages/welcome.php:154
+#: core/inc/admin-pages/welcome.php:168
 msgid "The current language used by WordPress. Default = English"
 msgstr "Limba curentă folosită de către WordPress. Implicit = Engleză"
-
-#: core/inc/admin.php:10
-msgid "Welcome"
-msgstr "Bine ati venit"
 
 #: core/inc/admin.php:81 core/theme-options/assets/theme-mode/functions.php:316
 #: core/theme-options/assets/theme-mode/functions.php:395
@@ -387,15 +404,51 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: core/inc/admin.php:101
+#: core/theme-options/includes/ot-functions-option-types.php:2363
+msgid "Facebook"
+msgstr "Facebook"
+
+#: core/inc/admin.php:101
+#, fuzzy
+msgid "Manage Facebooks"
+msgstr "Gestionaţi Flickr"
+
+#: core/inc/admin.php:101
+#, php-format
+msgid "Facebook <span class=\"count\">(%s)</span>"
+msgid_plural "Facebooks <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: core/inc/admin.php:102
+#: core/theme-options/includes/ot-functions-option-types.php:2368
+msgid "Twitter"
+msgstr "Twitter"
+
+#: core/inc/admin.php:102
+#, fuzzy
+msgid "Manage Tweets"
+msgstr "Gestionaţi HTML"
+
+#: core/inc/admin.php:102
+#, php-format
+msgid "Twitter <span class=\"count\">(%s)</span>"
+msgid_plural "Tweets <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: core/inc/admin.php:103
 #: core/theme-options/includes/ot-functions-option-types.php:2438
 msgid "Flickr"
 msgstr "Flickr"
 
-#: core/inc/admin.php:101
+#: core/inc/admin.php:103
 msgid "Manage Flickrs"
 msgstr "Gestionaţi Flickr"
 
-#: core/inc/admin.php:101
+#: core/inc/admin.php:103
 #, php-format
 msgid "Flickr <span class=\"count\">(%s)</span>"
 msgid_plural "Flickrs <span class=\"count\">(%s)</span>"
@@ -403,15 +456,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/inc/admin.php:102
+#: core/inc/admin.php:104
 msgid "Instagram"
 msgstr "Instagram"
 
-#: core/inc/admin.php:102
+#: core/inc/admin.php:104
 msgid "Manage Instagrams"
 msgstr "Gestionaţi Instagram"
 
-#: core/inc/admin.php:102
+#: core/inc/admin.php:104
 #, php-format
 msgid "Instagram <span class=\"count\">(%s)</span>"
 msgid_plural "Instagrams <span class=\"count\">(%s)</span>"
@@ -419,15 +472,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/inc/admin.php:103
+#: core/inc/admin.php:105
 msgid "SVG"
 msgstr "SVG"
 
-#: core/inc/admin.php:103
+#: core/inc/admin.php:105
 msgid "Manage SVGs"
 msgstr "Gestionaţi SVG"
 
-#: core/inc/admin.php:103
+#: core/inc/admin.php:105
 #, php-format
 msgid "SVG <span class=\"count\">(%s)</span>"
 msgid_plural "SVGs <span class=\"count\">(%s)</span>"
@@ -435,15 +488,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/inc/admin.php:104
+#: core/inc/admin.php:106
 msgid "HTML"
 msgstr "HTML"
 
-#: core/inc/admin.php:104
+#: core/inc/admin.php:106
 msgid "Manage HTMLs"
 msgstr "Gestionaţi HTML"
 
-#: core/inc/admin.php:104
+#: core/inc/admin.php:106
 #, php-format
 msgid "HTML <span class=\"count\">(%s)</span>"
 msgid_plural "HTMLs <span class=\"count\">(%s)</span>"
@@ -451,15 +504,15 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/inc/admin.php:105
+#: core/inc/admin.php:107
 msgid "iFrame"
 msgstr "iFrame"
 
-#: core/inc/admin.php:105
+#: core/inc/admin.php:107
 msgid "Manage iFrames"
 msgstr "Gestionaţi iFrame"
 
-#: core/inc/admin.php:105
+#: core/inc/admin.php:107
 #, php-format
 msgid "iFrame <span class=\"count\">(%s)</span>"
 msgid_plural "iFrames <span class=\"count\">(%s)</span>"
@@ -467,70 +520,80 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/inc/admin.php:151
+#: core/inc/admin.php:149
+#, fuzzy
+msgid "Alt Text"
+msgstr "Text"
+
+#: core/inc/admin.php:165
 msgid "Width"
 msgstr "Lăţime"
 
-#: core/inc/admin.php:155
+#: core/inc/admin.php:169
 #: core/theme-options/assets/theme-mode/meta-boxes.php:374
 #: core/theme-options/assets/theme-mode/theme-options.php:668
 msgid "Height"
 msgstr "Înălţime"
 
-#: core/inc/admin.php:159
+#: core/inc/admin.php:173
 msgid "Media Poster (Image ID)"
 msgstr "Media Poster ( ID Imagine)"
 
-#: core/inc/admin.php:167
+#: core/inc/admin.php:180
 msgid "Loop?"
 msgstr "Buclă?"
 
-#: core/inc/admin.php:173
+#: core/inc/admin.php:186
 msgid "Autoplay?"
 msgstr "Redare automata?"
 
-#: core/inc/admin.php:179
+#: core/inc/admin.php:192
 msgid "Alternative video source 1"
 msgstr "Sursa video alternativă 1"
 
-#: core/inc/admin.php:183
+#: core/inc/admin.php:196
 msgid "Alternative video source 2"
 msgstr "Sursa video alternativă 2"
 
-#: core/inc/admin.php:191
+#: core/inc/admin.php:203
 msgid "Animated?"
 msgstr "Animat?"
 
-#: core/inc/admin.php:200
+#: core/inc/admin.php:212
 msgid "Animation time (default 100)"
 msgstr "Durata animației (implicit 100)"
 
-#: core/inc/admin.php:209
+#: core/inc/admin.php:220
 msgid "ID"
 msgstr "ID"
 
-#: core/inc/admin.php:216
+#: core/inc/admin.php:228
+#, fuzzy
+msgid "Twitter original"
+msgstr "Twitter"
+
+#: core/inc/admin.php:236
 msgid "Team member?"
 msgstr "Membru al echipei?"
 
-#: core/inc/admin.php:224
+#: core/inc/admin.php:244
 msgid "Socials"
 msgstr "Socials"
 
-#: core/inc/admin.php:322 core/inc/export/uncode_export.php:98
+#: core/inc/admin.php:426 core/inc/export/uncode_export.php:98
 #: core/inc/export/uncode_export.php:104 core/inc/export/uncode_export.php:121
 #: core/inc/export/uncode_export.php:136 core/inc/export/uncode_export.php:153
 msgid "All"
 msgstr "Tot"
 
-#: core/inc/admin.php:389 core/inc/admin.php:444
+#: core/inc/admin.php:493 core/inc/admin.php:548
 #: core/theme-options/includes/ot-functions-admin.php:840
 #: core/theme-options/includes/ot-functions-settings-page.php:170
 #: core/theme-options/ot-loader.php:785
 msgid "Send to OptionTree"
 msgstr "Send to OptionTree"
 
-#: core/inc/admin.php:390 core/inc/admin.php:445 core/inc/admin.php:484
+#: core/inc/admin.php:494 core/inc/admin.php:549 core/inc/admin.php:588
 #: core/theme-options/assets/theme-mode/functions.php:331
 #: core/theme-options/assets/theme-mode/functions.php:414
 #: core/theme-options/includes/ot-functions-admin.php:841
@@ -539,36 +602,36 @@ msgstr "Send to OptionTree"
 msgid "Remove Media"
 msgstr "Elimină Media"
 
-#: core/inc/admin.php:396 core/inc/admin.php:451
+#: core/inc/admin.php:500 core/inc/admin.php:555
 #: core/theme-options/assets/theme-mode/meta-boxes.php:784
 #: core/theme-options/assets/theme-mode/theme-options.php:505
 #: core/theme-options/assets/theme-mode/theme-options.php:845
-#: core/theme-options/assets/theme-mode/theme-options.php:2564
-#: core/theme-options/assets/theme-mode/theme-options.php:4069
+#: core/theme-options/assets/theme-mode/theme-options.php:2570
+#: core/theme-options/assets/theme-mode/theme-options.php:4136
 msgid "Select…"
 msgstr "Selectați…"
 
-#: core/inc/admin.php:399 core/inc/admin.php:459
+#: core/inc/admin.php:503 core/inc/admin.php:563
 msgid "Featured media"
 msgstr "Media recomandate"
 
-#: core/inc/admin.php:403 core/inc/admin.php:464
+#: core/inc/admin.php:507 core/inc/admin.php:568
 msgid "Add media"
 msgstr "Adaugă media"
 
-#: core/inc/admin.php:406 core/inc/admin.php:488
+#: core/inc/admin.php:510 core/inc/admin.php:592
 msgid "Select a media assigned to the category."
 msgstr "Selectați media atribuit categoriei."
 
-#: core/inc/admin.php:409 core/inc/admin.php:492
+#: core/inc/admin.php:513 core/inc/admin.php:596
 msgid "Color"
 msgstr "Culoare"
 
-#: core/inc/admin.php:417 core/inc/admin.php:502
+#: core/inc/admin.php:521 core/inc/admin.php:606
 msgid "Select a color assigned to the category."
 msgstr "Selectați o culoare atribuită categoriei."
 
-#: core/inc/admin.php:614
+#: core/inc/admin.php:718
 msgid ""
 "Visual Composer is not active for this post type. Please activate it inside "
 "\"Visual Composer > Role Manager\""
@@ -576,7 +639,7 @@ msgstr ""
 "Visual Composer nu este activ pentru acest tip de post. Vă rugăm să-l "
 "activați în interiorul \"Visual Compozitor> Rolul managerului\""
 
-#: core/inc/admin.php:617
+#: core/inc/admin.php:721
 msgid ""
 "Visual Composer is not active. Please activate it inside \"Uncode > Install "
 "Plugins > Uncode Visual Composer\""
@@ -584,41 +647,41 @@ msgstr ""
 "Visual Composer nu este activ. Vă rugăm să-l activați în interiorul "
 "\"Unicode> Instalare plug> Unicode Visual Composer\""
 
-#: core/inc/admin.php:630
+#: core/inc/admin.php:734
 msgid "Select medias"
 msgstr "Selectează fișiere"
 
-#: core/inc/admin.php:631
+#: core/inc/admin.php:735
 msgid "Remove All"
 msgstr "Inlătură tot"
 
-#: core/inc/admin.php:645 core/inc/admin.php:646
+#: core/inc/admin.php:749 core/inc/admin.php:750
 msgid "Post media display"
 msgstr "Afișază fisiere media postate"
 
-#: core/inc/admin.php:650
+#: core/inc/admin.php:754
 msgid "Carousel"
 msgstr "Carusel"
 
-#: core/inc/admin.php:651
+#: core/inc/admin.php:755
 msgid "Stack"
 msgstr "Stivă"
 
-#: core/inc/admin.php:652
+#: core/inc/admin.php:756
 msgid "Isotope"
 msgstr "Isotope"
 
-#: core/inc/admin.php:663
+#: core/inc/admin.php:767
 msgid "Medias"
 msgstr "Fișiere"
 
-#: core/inc/admin.php:936
+#: core/inc/admin.php:1042
 #, php-format
 msgid "The Adaptive Images system is using %1$s of the %2$s space left."
 msgstr ""
 "Sistemul Adaptiv de Imagini utilizează %1$s of the %2$s spațiu la stânga."
 
-#: core/inc/admin.php:1178
+#: core/inc/admin.php:1284
 msgid ""
 "In order to run Uncode you need first to deactivate WPBakery Visual Composer "
 "and install the Uncode Visual Composer."
@@ -626,16 +689,41 @@ msgstr ""
 "In order to run Uncode you need first to deactivate WPBakery Visual Composer "
 "and install the Uncode Visual Composer."
 
-#: core/inc/admin.php:1179
+#: core/inc/admin.php:1285
 msgid "Deactivate WPBakery Visual Composer"
 msgstr "Dezactivarea WPBakery Visual Composer"
 
-#: core/inc/admin.php:1205
+#: core/inc/admin.php:1302
+msgid "Warning: PHP max_input_vars"
+msgstr ""
+
+#: core/inc/admin.php:1305
+#, php-format
+msgid ""
+"Before saving the theme options you need to address an issue marked on the "
+"<a href=\"%s\">Welcome Screen</a>."
+msgstr ""
+
+#: core/inc/admin.php:1339
 #, php-format
 msgid ""
 "The menu transparency will not be visible without a declared header <a class="
 "\"page-options-header-section\" href=\"%s\">here</a>."
 msgstr ""
+
+#: core/inc/admin.php:1357
+msgid "You need to update the Uncode Core plugin."
+msgstr ""
+
+#: core/inc/admin.php:1377
+#, fuzzy
+msgid "Uncode Help"
+msgstr "Uncode"
+
+#: core/inc/admin.php:1383
+#, fuzzy
+msgid "Support"
+msgstr "Site-ul nu suportă widget"
 
 #: core/inc/colors.php:9
 msgid "Accent"
@@ -911,7 +999,7 @@ msgstr ""
 "personalizate, termeni, meniuri de navigare și posturi personalizate."
 
 #: core/inc/export/uncode_export.php:94
-#: core/theme-options/assets/theme-mode/theme-options.php:1767
+#: core/theme-options/assets/theme-mode/theme-options.php:1773
 msgid "Posts"
 msgstr "Postări"
 
@@ -940,7 +1028,7 @@ msgid "Status:"
 msgstr "Stare:"
 
 #: core/inc/export/uncode_export.php:130
-#: core/theme-options/assets/theme-mode/theme-options.php:1771
+#: core/theme-options/assets/theme-mode/theme-options.php:1777
 msgid "Pages"
 msgstr "Pagini"
 
@@ -948,11 +1036,11 @@ msgstr "Pagini"
 msgid "Download Export File"
 msgstr "Descarcă documentul export"
 
-#: core/inc/helpers.php:200
+#: core/inc/helpers.php:139
 msgid "Minutes"
 msgstr "Minute"
 
-#: core/inc/helpers.php:202
+#: core/inc/helpers.php:141
 msgid "Minute"
 msgstr "Minut"
 
@@ -976,23 +1064,23 @@ msgstr "Adăugați widget-uri aici, să apară în bara laterală."
 msgid "Sidebar"
 msgstr "Bara laterală"
 
-#: core/inc/main.php:222 vc_templates/uncode_countdown.php:38
+#: core/inc/main.php:230 vc_templates/uncode_countdown.php:40
 msgid "days"
 msgstr "zile"
 
-#: core/inc/main.php:223 vc_templates/uncode_countdown.php:38
+#: core/inc/main.php:231 vc_templates/uncode_countdown.php:40
 msgid "hours"
 msgstr "ore"
 
-#: core/inc/main.php:224 vc_templates/uncode_countdown.php:38
+#: core/inc/main.php:232 vc_templates/uncode_countdown.php:40
 msgid "minutes"
 msgstr "minute"
 
-#: core/inc/main.php:225 vc_templates/uncode_countdown.php:38
+#: core/inc/main.php:233 vc_templates/uncode_countdown.php:40
 msgid "seconds"
 msgstr "secunde"
 
-#: core/inc/main.php:504
+#: core/inc/main.php:517
 msgid "Read more"
 msgstr "Citeste mai mult"
 
@@ -1052,14 +1140,14 @@ msgid "Save"
 msgstr "Salvați"
 
 #: core/inc/media-enhanced.php:375
-#: core/plugins_activation/class-tgm-plugin-activation.php:2611
+#: core/plugins_activation/class-tgm-plugin-activation.php:2810
 msgid "Update"
 msgstr "Actualizați"
 
 #: core/inc/related-posts.php:40
 #: core/theme-options/assets/theme-mode/meta-boxes.php:54
-#: core/theme-options/assets/theme-mode/theme-options.php:1838
-#: core/theme-options/assets/theme-mode/theme-options.php:3438
+#: core/theme-options/assets/theme-mode/theme-options.php:1844
+#: core/theme-options/assets/theme-mode/theme-options.php:3444
 #: core/theme-options/includes/ot-functions-admin.php:1061
 msgid "General"
 msgstr "General"
@@ -1128,7 +1216,7 @@ msgid "Checking this will enable displaying featured images of related posts."
 msgstr ""
 
 #: core/inc/related-posts.php:86
-#: core/theme-options/assets/theme-mode/theme-options.php:3931
+#: core/theme-options/assets/theme-mode/theme-options.php:3998
 #: core/theme-options/includes/ot-functions-admin.php:2420
 msgid "CSS"
 msgstr "CSS"
@@ -1474,7 +1562,7 @@ msgstr "WordPress Reset"
 #: core/one-click-demo/importer/radium-importer.php:148
 #, fuzzy
 msgid "IMPORT LAYOUTS"
-msgstr "IMPORTĂ TOT"
+msgstr "Import sabloane"
 
 #: core/one-click-demo/importer/radium-importer.php:228
 msgid "SINGLE LAYOUTS"
@@ -1483,7 +1571,7 @@ msgstr ""
 #: core/one-click-demo/importer/radium-importer.php:230
 #, fuzzy
 msgid "THEME OPTIONS"
-msgstr "IMPORTĂ OPȚIUNI TEMĂ"
+msgstr "Opțiuni temă"
 
 #: core/one-click-demo/importer/radium-importer.php:233
 #, fuzzy
@@ -1493,7 +1581,9 @@ msgstr "IMPORTĂ TOT"
 #: core/one-click-demo/importer/radium-importer.php:236
 #, fuzzy
 msgid "WIDGETS"
-msgstr "IMPORTĂ WIDGETS"
+msgstr ""
+"Mesaje , pagini, unele imagini , unele widget-uri și meniuri vor fi "
+"importate ."
 
 #: core/one-click-demo/importer/radium-importer.php:240
 #: core/one-click-demo/importer/radium-importer.php:373
@@ -1825,24 +1915,29 @@ msgstr ""
 msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:333
+#: core/plugins_activation/class-tgm-plugin-activation.php:334
 msgid "Install Required Plugins"
 msgstr "Instalează plugin-urile cerute"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:334
+#: core/plugins_activation/class-tgm-plugin-activation.php:335
 msgid "Install Plugins"
 msgstr "Instalați Plugin-uri:"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:335
+#: core/plugins_activation/class-tgm-plugin-activation.php:337
 #, php-format
 msgid "Installing Plugin: %s"
 msgstr "Se instaleaza Plugin: %s"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:336
+#: core/plugins_activation/class-tgm-plugin-activation.php:339
+#, fuzzy, php-format
+msgid "Updating Plugin: %s"
+msgstr "Se instaleaza Plugin: %s"
+
+#: core/plugins_activation/class-tgm-plugin-activation.php:340
 msgid "Something went wrong with the plugin API."
 msgstr "Ceva nu a mers cum trebuie cu plugin API."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:338
+#: core/plugins_activation/class-tgm-plugin-activation.php:343
 #, php-format
 msgid "This theme requires the following plugin: %1$s."
 msgid_plural "This theme requires the following plugins: %1$s."
@@ -1850,7 +1945,7 @@ msgstr[0] "Această temă necesită următoarele plugin:%1$s."
 msgstr[1] "Această temă necesită următoarele pluginuri:%1$s."
 msgstr[2] "Această temă necesită următoarele pluginuri:%1$s."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:343
+#: core/plugins_activation/class-tgm-plugin-activation.php:349
 #, php-format
 msgid "This theme recommends the following plugin: %1$s."
 msgid_plural "This theme recommends the following plugins: %1$s."
@@ -1858,22 +1953,7 @@ msgstr[0] "Această temă recomandă următoarele plugin:%1$s."
 msgstr[1] "Această temă recomandă următoarele pluginuri:%1$s."
 msgstr[2] "Această temă recomandă următoarele pluginuri:%1$s."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:348
-#, php-format
-msgid ""
-"Sorry, but you do not have the correct permissions to install the %1$s "
-"plugin."
-msgid_plural ""
-"Sorry, but you do not have the correct permissions to install the %1$s "
-"plugins."
-msgstr[0] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin%1$s."
-msgstr[1] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin%1$s."
-msgstr[2] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin%1$s."
-
-#: core/plugins_activation/class-tgm-plugin-activation.php:353
+#: core/plugins_activation/class-tgm-plugin-activation.php:355
 #, php-format
 msgid ""
 "The following plugin needs to be updated to its latest version to ensure "
@@ -1891,7 +1971,7 @@ msgstr[2] ""
 "Următoarea plugin trebuie actualizat la ultima versiune pentru a asigura "
 "compatibilitatea maximă cu această temă:%1$s."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:358
+#: core/plugins_activation/class-tgm-plugin-activation.php:361
 #, php-format
 msgid "There is an update available for: %1$s."
 msgid_plural "There are updates available for the following plugins: %1$s."
@@ -1899,23 +1979,7 @@ msgstr[0] "Există o actualizare disponibilă pentru:%1$s."
 msgstr[1] "Există  actualizare disponibilă pentru:%1$s."
 msgstr[2] "Există actualizare disponibilă pentru:%1$s."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:363
-#, php-format
-msgid ""
-"Sorry, but you do not have the correct permissions to update the %1$s plugin."
-msgid_plural ""
-"Sorry, but you do not have the correct permissions to update the %1$s "
-"plugins."
-msgstr[0] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza plugin%1$s."
-msgstr[1] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza pluginurile"
-"%1$s."
-msgstr[2] ""
-"Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza pluginurile"
-"%1$s."
-
-#: core/plugins_activation/class-tgm-plugin-activation.php:368
+#: core/plugins_activation/class-tgm-plugin-activation.php:367
 #, php-format
 msgid "The following required plugin is currently inactive: %1$s."
 msgid_plural "The following required plugins are currently inactive: %1$s."
@@ -1932,70 +1996,56 @@ msgstr[1] "Următoarele pluginuri recomandate sunt momentan inactive:%1$s."
 msgstr[2] "Următoarele pluginuri recomandate sunt momentan inactive:%1$s."
 
 #: core/plugins_activation/class-tgm-plugin-activation.php:378
-#, php-format
-msgid ""
-"Sorry, but you do not have the correct permissions to activate the %1$s "
-"plugin."
-msgid_plural ""
-"Sorry, but you do not have the correct permissions to activate the %1$s "
-"plugins."
-msgstr[0] ""
-"Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s plugin."
-msgstr[1] ""
-"Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s plugin-"
-"uri."
-msgstr[2] ""
-"Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s plugin-"
-"uri."
-
-#: core/plugins_activation/class-tgm-plugin-activation.php:383
 msgid "Begin installing plugin"
 msgid_plural "Begin installing plugins"
 msgstr[0] "Începe instalarea plugin"
 msgstr[1] "Începe instalarea pluginurilor"
 msgstr[2] "Începe instalarea pluginurilor"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:388
+#: core/plugins_activation/class-tgm-plugin-activation.php:383
 msgid "Begin updating plugin"
 msgid_plural "Begin updating plugins"
 msgstr[0] "A începe Actulizarea Plugin"
 msgstr[1] "A începe Actulizarea Plugin"
 msgstr[2] "A începe Actulizarea Plugin"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:393
+#: core/plugins_activation/class-tgm-plugin-activation.php:388
 msgid "Begin activating plugin"
 msgid_plural "Begin activating plugins"
 msgstr[0] "A începe Activarea Plugin"
 msgstr[1] "A începe Activarea Plugin"
 msgstr[2] "A începe Activarea Plugin"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:397
+#: core/plugins_activation/class-tgm-plugin-activation.php:392
 msgid "Return to Required Plugins Installer"
 msgstr "Înapoi la Instalare Plugin-uri Necesare"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:398
-msgid "Return to the dashboard"
-msgstr "Înapoi la Panoul de Control"
+#: core/plugins_activation/class-tgm-plugin-activation.php:393
+#: core/plugins_activation/class-tgm-plugin-activation.php:912
+#: core/plugins_activation/class-tgm-plugin-activation.php:2620
+#: core/plugins_activation/class-tgm-plugin-activation.php:3667
+msgid "Return to the Dashboard"
+msgstr "Întoarce-te la Panoul de Control"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:399
-#: core/plugins_activation/class-tgm-plugin-activation.php:3031
+#: core/plugins_activation/class-tgm-plugin-activation.php:394
+#: core/plugins_activation/class-tgm-plugin-activation.php:3246
 msgid "Plugin activated successfully."
 msgstr "Plugin activat cu succes"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:400
-#: core/plugins_activation/class-tgm-plugin-activation.php:2834
+#: core/plugins_activation/class-tgm-plugin-activation.php:395
+#: core/plugins_activation/class-tgm-plugin-activation.php:3039
 msgid "The following plugin was activated successfully:"
 msgid_plural "The following plugins were activated successfully:"
 msgstr[0] "Următorul plugin a fost activat cu succes."
 msgstr[1] "Următorul plugin a fost activat cu succes."
 msgstr[2] "Următorul plugin a fost activat cu succes."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:401
+#: core/plugins_activation/class-tgm-plugin-activation.php:397
 #, php-format
 msgid "No action taken. Plugin %1$s was already active."
 msgstr "Nici o acțiune luată . Plugin-ul %1$s a fost deja activat."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:402
+#: core/plugins_activation/class-tgm-plugin-activation.php:399
 #, php-format
 msgid ""
 "Plugin not activated. A higher version of %s is needed for this theme. "
@@ -2004,119 +2054,115 @@ msgstr ""
 "Plugin inactiv. O versiune mai mare a % s este necesar pentru această temă . "
 "Vă rugăm să actualizați plugin."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:403
+#: core/plugins_activation/class-tgm-plugin-activation.php:401
 #, php-format
 msgid "All plugins installed and activated successfully. %1$s"
 msgstr "Toate Plugin-urile au fost instalate si activate cu succes. %1$s"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:404
+#: core/plugins_activation/class-tgm-plugin-activation.php:402
 msgid "Dismiss this notice"
 msgstr "Ignoră această notiță"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:405
+#: core/plugins_activation/class-tgm-plugin-activation.php:403
+msgid ""
+"There are one or more required or recommended plugins to install, update or "
+"activate."
+msgstr ""
+
+#: core/plugins_activation/class-tgm-plugin-activation.php:404
 msgid "Please contact the administrator of this site for help."
 msgstr "Vă rugăm să contactați administratorul acestui site pentru ajutor."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:520
+#: core/plugins_activation/class-tgm-plugin-activation.php:607
 msgid "This plugin needs to be updated to be compatible with your theme."
 msgstr ""
 "Acest plug-in trebuie să fie actualizat pentru a fi compatibil cu tema."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:521
+#: core/plugins_activation/class-tgm-plugin-activation.php:608
 msgid "Update Required"
 msgstr "Actualizare Necesară"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:635
-msgid "Set the parent_slug config variable instead."
-msgstr ""
-
-#: core/plugins_activation/class-tgm-plugin-activation.php:828
-#: core/plugins_activation/class-tgm-plugin-activation.php:3440
-msgid "Return to the Dashboard"
-msgstr "Întoarce-te la Panoul de Control"
-
-#: core/plugins_activation/class-tgm-plugin-activation.php:935
+#: core/plugins_activation/class-tgm-plugin-activation.php:1019
 msgid ""
 "The remote plugin package does not contain a folder with the desired slug "
 "and renaming did not work."
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:935
-#: core/plugins_activation/class-tgm-plugin-activation.php:938
+#: core/plugins_activation/class-tgm-plugin-activation.php:1019
+#: core/plugins_activation/class-tgm-plugin-activation.php:1022
 msgid ""
 "Please contact the plugin provider and ask them to package their plugin "
 "according to the WordPress guidelines."
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:938
+#: core/plugins_activation/class-tgm-plugin-activation.php:1022
 msgid ""
 "The remote plugin package consists of more than one file, but the files are "
 "not packaged in a folder."
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:1118
-#: core/plugins_activation/class-tgm-plugin-activation.php:2830
+#: core/plugins_activation/class-tgm-plugin-activation.php:1206
+#: core/plugins_activation/class-tgm-plugin-activation.php:3035
 msgctxt "plugin A *and* plugin B"
 msgid "and"
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:1883
+#: core/plugins_activation/class-tgm-plugin-activation.php:2069
 #, php-format
-msgctxt "%s = version number"
 msgid "TGMPA v%s"
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2169
+#: core/plugins_activation/class-tgm-plugin-activation.php:2360
 msgid "Required"
 msgstr "Necesar"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2172
+#: core/plugins_activation/class-tgm-plugin-activation.php:2363
 msgid "Recommended"
 msgstr "Recomandat"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2188
+#: core/plugins_activation/class-tgm-plugin-activation.php:2379
 msgid "WordPress Repository"
 msgstr "Repertoriu Wordpress"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2191
+#: core/plugins_activation/class-tgm-plugin-activation.php:2382
 msgid "External Source"
 msgstr "Sursă Externă"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2194
+#: core/plugins_activation/class-tgm-plugin-activation.php:2385
 msgid "Pre-Packaged"
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2211
+#: core/plugins_activation/class-tgm-plugin-activation.php:2402
 msgid "Not Installed"
 msgstr "Nu este instalat"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2215
+#: core/plugins_activation/class-tgm-plugin-activation.php:2406
 msgid "Installed But Not Activated"
 msgstr "Instalat, Dar Nu Este Activat"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2217
+#: core/plugins_activation/class-tgm-plugin-activation.php:2408
 msgid "Active"
 msgstr "Activ"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2223
+#: core/plugins_activation/class-tgm-plugin-activation.php:2414
 msgid "Required Update not Available"
 msgstr "Solicitare Update nu este valabilă"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2226
+#: core/plugins_activation/class-tgm-plugin-activation.php:2417
 msgid "Requires Update"
 msgstr "Necesită Actualizare"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2229
+#: core/plugins_activation/class-tgm-plugin-activation.php:2420
 msgid "Update recommended"
 msgstr "Se recomandă actualizarea"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2237
+#: core/plugins_activation/class-tgm-plugin-activation.php:2429
 #, php-format
-msgctxt "%1$s = install status, %2$s = update status"
+msgctxt "Install/Update Status"
 msgid "%1$s, %2$s"
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2282
+#: core/plugins_activation/class-tgm-plugin-activation.php:2475
 #, php-format
 msgctxt "plugins"
 msgid "All <span class=\"count\">(%s)</span>"
@@ -2125,7 +2171,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2285
+#: core/plugins_activation/class-tgm-plugin-activation.php:2479
 #, php-format
 msgid "To Install <span class=\"count\">(%s)</span>"
 msgid_plural "To Install <span class=\"count\">(%s)</span>"
@@ -2133,7 +2179,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2288
+#: core/plugins_activation/class-tgm-plugin-activation.php:2483
 #, php-format
 msgid "Update Available <span class=\"count\">(%s)</span>"
 msgid_plural "Update Available <span class=\"count\">(%s)</span>"
@@ -2141,7 +2187,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2291
+#: core/plugins_activation/class-tgm-plugin-activation.php:2487
 #, php-format
 msgid "To Activate <span class=\"count\">(%s)</span>"
 msgid_plural "To Activate <span class=\"count\">(%s)</span>"
@@ -2149,137 +2195,132 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2373
+#: core/plugins_activation/class-tgm-plugin-activation.php:2569
 msgctxt "as in: \"version nr unknown\""
 msgid "unknown"
 msgstr ""
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2381
+#: core/plugins_activation/class-tgm-plugin-activation.php:2577
 msgid "Installed version:"
 msgstr "Versiune Instașată:"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2389
+#: core/plugins_activation/class-tgm-plugin-activation.php:2585
 msgid "Minimum required version:"
 msgstr "Versiune minimă necesară:"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2401
+#: core/plugins_activation/class-tgm-plugin-activation.php:2597
 msgid "Available version:"
 msgstr "Versiune disponibilă:"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2424
-#, php-format
-msgid ""
-"No plugins to install, update or activate. <a href=\"%1$s\">Return to the "
-"Dashboard</a>"
+#: core/plugins_activation/class-tgm-plugin-activation.php:2620
+#, fuzzy
+msgid "No plugins to install, update or activate."
 msgstr ""
 "Nu există plugin-uri pentru a fi instalate, actualizate sau activate. <a "
 "href=\"%1$s\">Înapoi la Panoul de Control</a>"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2438
+#: core/plugins_activation/class-tgm-plugin-activation.php:2634
 msgid "Plugin"
 msgstr "Plugin"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2439
+#: core/plugins_activation/class-tgm-plugin-activation.php:2635
 msgid "Source"
 msgstr "Sursă"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2440
+#: core/plugins_activation/class-tgm-plugin-activation.php:2636
 #: core/theme-options/assets/theme-mode/meta-boxes.php:261
 #: core/theme-options/assets/theme-mode/theme-options.php:498
 msgid "Type"
 msgstr "Tip"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2444
+#: core/plugins_activation/class-tgm-plugin-activation.php:2640
 #: core/theme-options/assets/theme-mode/functions.php:91
 msgid "Version"
 msgstr "Versiune"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2445
+#: core/plugins_activation/class-tgm-plugin-activation.php:2641
 msgid "Status"
 msgstr "Starea"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2493
-#, php-format
-msgctxt "%2$s = plugin name in screen reader markup"
+#: core/plugins_activation/class-tgm-plugin-activation.php:2690
+#, fuzzy, php-format
 msgid "Install %2$s"
 msgstr "Instalați %2$s"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2497
-#, php-format
-msgctxt "%2$s = plugin name in screen reader markup"
+#: core/plugins_activation/class-tgm-plugin-activation.php:2695
+#, fuzzy, php-format
 msgid "Update %2$s"
 msgstr "Actualizați %2$s"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2502
-#, php-format
-msgctxt "%2$s = plugin name in screen reader markup"
+#: core/plugins_activation/class-tgm-plugin-activation.php:2701
+#, fuzzy, php-format
 msgid "Activate %2$s"
 msgstr "Activați %2$s"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2572
+#: core/plugins_activation/class-tgm-plugin-activation.php:2771
 msgid "Upgrade message from the plugin author:"
 msgstr "Upgrade mesaj de la autorul plugin-ului"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2605
+#: core/plugins_activation/class-tgm-plugin-activation.php:2804
 msgid "Install"
 msgstr "Instalare"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2614
+#: core/plugins_activation/class-tgm-plugin-activation.php:2813
 #: core/theme-options/includes/ot-functions-admin.php:4383
 #: core/theme-options/includes/ot-functions-admin.php:4384
 msgid "Activate"
 msgstr "Activați"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2645
+#: core/plugins_activation/class-tgm-plugin-activation.php:2844
 msgid "No plugins were selected to be installed. No action taken."
 msgstr ""
 "Nu există plugin-uri selectate pentru a fi instalate . Nici a fost luată "
 "nici o acțiune."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2647
+#: core/plugins_activation/class-tgm-plugin-activation.php:2846
 msgid "No plugins were selected to be updated. No action taken."
 msgstr ""
 "Nu există plugin-uri selectate pentru a fi actualizate . Nici a fost luată "
 "nici o acțiune."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2683
+#: core/plugins_activation/class-tgm-plugin-activation.php:2887
 msgid "No plugins are available to be installed at this time."
 msgstr "Nu sunt plugin-uri disponibile pentru a fi instalate in acest moment"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2685
+#: core/plugins_activation/class-tgm-plugin-activation.php:2889
 msgid "No plugins are available to be updated at this time."
 msgstr "Nu sunt plugin-uri disponibile pentru a fi actualizate in acest moment"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2790
+#: core/plugins_activation/class-tgm-plugin-activation.php:2995
 msgid "No plugins were selected to be activated. No action taken."
 msgstr ""
 "Nu există plugin-uri selectate pentru a fi activate . Nici a fost luată nici "
 "o acțiune."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:2816
+#: core/plugins_activation/class-tgm-plugin-activation.php:3021
 msgid "No plugins are available to be activated at this time."
 msgstr "Nu sunt plugin-uri disponibile pentru a fi activate in acest moment"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3030
+#: core/plugins_activation/class-tgm-plugin-activation.php:3245
 msgid "Plugin activation failed."
 msgstr "Activare plugin nu a reușit"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3364
+#: core/plugins_activation/class-tgm-plugin-activation.php:3585
 #, php-format
 msgid "Updating Plugin %1$s (%2$d/%3$d)"
 msgstr "Actualizare Plugin %1$s (%2$d/%3$d)"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3366
+#: core/plugins_activation/class-tgm-plugin-activation.php:3588
 #, php-format
 msgid "An error occurred while installing %1$s: <strong>%2$s</strong>."
 msgstr "A apărut o eroare în timpul instalării %1$s: <strong>%2$s</strong>."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3367
+#: core/plugins_activation/class-tgm-plugin-activation.php:3590
 #, php-format
 msgid "The installation of %1$s failed."
 msgstr "Instalarea %1$s nu a reușit."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3371
+#: core/plugins_activation/class-tgm-plugin-activation.php:3594
 msgid ""
 "The installation and activation process is starting. This process may take a "
 "while on some hosts, so please be patient."
@@ -2287,31 +2328,31 @@ msgstr ""
 "Procesul de instalare și de activare a început. Acest proces poate dura "
 "câteva minute pe unele hosturi , vă rugăm sa aveți răbdare."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3372
+#: core/plugins_activation/class-tgm-plugin-activation.php:3596
 #, php-format
 msgid "%1$s installed and activated successfully."
 msgstr "%1$s instalat și activat cu succes."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3372
-#: core/plugins_activation/class-tgm-plugin-activation.php:3378
+#: core/plugins_activation/class-tgm-plugin-activation.php:3596
+#: core/plugins_activation/class-tgm-plugin-activation.php:3604
 msgid "Show Details"
 msgstr "Arată Detalii"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3372
-#: core/plugins_activation/class-tgm-plugin-activation.php:3378
+#: core/plugins_activation/class-tgm-plugin-activation.php:3596
+#: core/plugins_activation/class-tgm-plugin-activation.php:3604
 msgid "Hide Details"
 msgstr "Ascunde Detalii"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3373
+#: core/plugins_activation/class-tgm-plugin-activation.php:3597
 msgid "All installations and activations have been completed."
 msgstr "Toate instalările și activările au fost finalizate ."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3374
+#: core/plugins_activation/class-tgm-plugin-activation.php:3599
 #, php-format
 msgid "Installing and Activating Plugin %1$s (%2$d/%3$d)"
 msgstr "Instalarea și activarea Plugin %1$s (%2$d/%3$d)"
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3377
+#: core/plugins_activation/class-tgm-plugin-activation.php:3602
 msgid ""
 "The installation process is starting. This process may take a while on some "
 "hosts, so please be patient."
@@ -2319,16 +2360,16 @@ msgstr ""
 "Procesul de instalare a început. Acest proces poate dura câteva minute pe "
 "unele hosturi , vă rugăm sa aveți răbdare."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3378
+#: core/plugins_activation/class-tgm-plugin-activation.php:3604
 #, php-format
 msgid "%1$s installed successfully."
 msgstr "%1$s instalat cu succes."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3379
+#: core/plugins_activation/class-tgm-plugin-activation.php:3605
 msgid "All installations have been completed."
 msgstr "Toate instalările au fost finalizate."
 
-#: core/plugins_activation/class-tgm-plugin-activation.php:3380
+#: core/plugins_activation/class-tgm-plugin-activation.php:3607
 #, php-format
 msgid "Installing Plugin %1$s (%2$d/%3$d)"
 msgstr "Instalare Plugin %1$s (%2$d/%3$d)"
@@ -2401,7 +2442,7 @@ msgid "HTML Body background"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:39
-#: core/theme-options/assets/theme-mode/theme-options.php:3446
+#: core/theme-options/assets/theme-mode/theme-options.php:3452
 msgid "Specify the body background color and media."
 msgstr ""
 
@@ -2430,7 +2471,7 @@ msgstr ""
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1348
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1432
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1497
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1588
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1584
 #: core/theme-options/assets/theme-mode/theme-options.php:63
 #: core/theme-options/assets/theme-mode/theme-options.php:82
 #: core/theme-options/assets/theme-mode/theme-options.php:464
@@ -2438,7 +2479,7 @@ msgstr ""
 #: core/theme-options/assets/theme-mode/theme-options.php:1264
 #: core/theme-options/assets/theme-mode/theme-options.php:1434
 #: core/theme-options/assets/theme-mode/theme-options.php:1550
-#: core/theme-options/assets/theme-mode/theme-options.php:2604
+#: core/theme-options/assets/theme-mode/theme-options.php:2610
 msgid "Inherit"
 msgstr "Moștenit"
 
@@ -2446,8 +2487,8 @@ msgstr "Moștenit"
 #: core/theme-options/assets/theme-mode/meta-boxes.php:137
 #: core/theme-options/assets/theme-mode/theme-options.php:440
 #: core/theme-options/assets/theme-mode/theme-options.php:449
-#: core/theme-options/assets/theme-mode/theme-options.php:1742
-#: core/theme-options/assets/theme-mode/theme-options.php:3534
+#: core/theme-options/assets/theme-mode/theme-options.php:1748
+#: core/theme-options/assets/theme-mode/theme-options.php:3532
 msgid "Menu"
 msgstr "Meniu"
 
@@ -2467,7 +2508,7 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:102
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1048
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1592
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1588
 #: core/theme-options/assets/theme-mode/theme-options.php:468
 #: core/theme-options/assets/theme-mode/theme-options.php:602
 #: core/theme-options/assets/theme-mode/theme-options.php:1268
@@ -2477,7 +2518,7 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:106
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1052
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1596
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1592
 #: core/theme-options/assets/theme-mode/theme-options.php:472
 #: core/theme-options/assets/theme-mode/theme-options.php:606
 #: core/theme-options/assets/theme-mode/theme-options.php:1272
@@ -2516,13 +2557,13 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:157
 #: core/theme-options/assets/theme-mode/meta-boxes.php:288
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1568
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1564
 #: core/theme-options/assets/theme-mode/theme-options.php:77
 #: core/theme-options/assets/theme-mode/theme-options.php:119
 #: core/theme-options/assets/theme-mode/theme-options.php:522
 #: core/theme-options/assets/theme-mode/theme-options.php:1231
 #: core/theme-options/assets/theme-mode/theme-options.php:1531
-#: core/theme-options/assets/theme-mode/theme-options.php:3792
+#: core/theme-options/assets/theme-mode/theme-options.php:3859
 msgid "Content Block"
 msgstr "Conținut Blocat"
 
@@ -2536,7 +2577,7 @@ msgstr "Nu a Fost Gasit Conținut Blocat"
 #: core/theme-options/assets/theme-mode/meta-boxes.php:827
 #: core/theme-options/assets/theme-mode/theme-options.php:85
 #: core/theme-options/assets/theme-mode/theme-options.php:889
-#: core/theme-options/assets/theme-mode/theme-options.php:2194
+#: core/theme-options/assets/theme-mode/theme-options.php:2200
 msgid "None"
 msgstr ""
 
@@ -2569,7 +2610,7 @@ msgstr ""
 #: core/theme-options/assets/theme-mode/meta-boxes.php:289
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1221
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1229
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1569
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1565
 #: core/theme-options/assets/theme-mode/theme-options.php:523
 msgid "Specify the Content Block."
 msgstr "Specifică Conținut Blocat."
@@ -2589,12 +2630,12 @@ msgid "Specify the LayerSlider."
 msgstr "Specifică LayerSlider."
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:319
-#: core/theme-options/assets/theme-mode/theme-options.php:1911
+#: core/theme-options/assets/theme-mode/theme-options.php:1917
 msgid "Container full width"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:322
-#: core/theme-options/assets/theme-mode/theme-options.php:1912
+#: core/theme-options/assets/theme-mode/theme-options.php:1918
 msgid "Activate to expand the header container to full width."
 msgstr ""
 
@@ -2620,7 +2661,7 @@ msgstr "Ajustați lățimea conținutului interior în%."
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:350
 #: core/theme-options/assets/theme-mode/theme-options.php:640
-#: core/theme-options/assets/theme-mode/theme-options.php:3827
+#: core/theme-options/assets/theme-mode/theme-options.php:3894
 msgid "Content alignment"
 msgstr "Alinierea Conținutului"
 
@@ -2635,9 +2676,9 @@ msgstr "Specifică aliniere text/conținut ."
 #: core/theme-options/assets/theme-mode/theme-options.php:650
 #: core/theme-options/assets/theme-mode/theme-options.php:1140
 #: core/theme-options/assets/theme-mode/theme-options.php:1398
-#: core/theme-options/assets/theme-mode/theme-options.php:2007
-#: core/theme-options/assets/theme-mode/theme-options.php:3835
-#: core/theme-options/assets/theme-mode/theme-options.php:4255
+#: core/theme-options/assets/theme-mode/theme-options.php:2013
+#: core/theme-options/assets/theme-mode/theme-options.php:3902
+#: core/theme-options/assets/theme-mode/theme-options.php:4323
 msgid "Left"
 msgstr "Stânga"
 
@@ -2645,8 +2686,8 @@ msgstr "Stânga"
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1098
 #: core/theme-options/assets/theme-mode/theme-options.php:655
 #: core/theme-options/assets/theme-mode/theme-options.php:1136
-#: core/theme-options/assets/theme-mode/theme-options.php:3839
-#: core/theme-options/assets/theme-mode/theme-options.php:4260
+#: core/theme-options/assets/theme-mode/theme-options.php:3906
+#: core/theme-options/assets/theme-mode/theme-options.php:4328
 msgid "Center"
 msgstr "Centru"
 
@@ -2656,9 +2697,9 @@ msgstr "Centru"
 #: core/theme-options/assets/theme-mode/theme-options.php:660
 #: core/theme-options/assets/theme-mode/theme-options.php:1132
 #: core/theme-options/assets/theme-mode/theme-options.php:1394
-#: core/theme-options/assets/theme-mode/theme-options.php:2012
-#: core/theme-options/assets/theme-mode/theme-options.php:3843
-#: core/theme-options/assets/theme-mode/theme-options.php:4245
+#: core/theme-options/assets/theme-mode/theme-options.php:2018
+#: core/theme-options/assets/theme-mode/theme-options.php:3910
+#: core/theme-options/assets/theme-mode/theme-options.php:4313
 msgid "Right"
 msgstr "Dreapta"
 
@@ -2687,8 +2728,8 @@ msgstr "Introduceți o înălțime cel puțin minimă pentru antet în pixeli ."
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1491
 #: core/theme-options/assets/theme-mode/theme-options.php:581
 #: core/theme-options/assets/theme-mode/theme-options.php:1428
-#: core/theme-options/assets/theme-mode/theme-options.php:2598
-#: core/theme-options/assets/theme-mode/theme-options.php:3639
+#: core/theme-options/assets/theme-mode/theme-options.php:2604
+#: core/theme-options/assets/theme-mode/theme-options.php:3638
 msgid "Skin"
 msgstr ""
 
@@ -2703,8 +2744,8 @@ msgstr ""
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1501
 #: core/theme-options/assets/theme-mode/theme-options.php:49
 #: core/theme-options/assets/theme-mode/theme-options.php:1438
-#: core/theme-options/assets/theme-mode/theme-options.php:2608
-#: core/theme-options/assets/theme-mode/theme-options.php:3649
+#: core/theme-options/assets/theme-mode/theme-options.php:2614
+#: core/theme-options/assets/theme-mode/theme-options.php:3648
 msgid "Light"
 msgstr "Deschis"
 
@@ -2714,8 +2755,8 @@ msgstr "Deschis"
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1505
 #: core/theme-options/assets/theme-mode/theme-options.php:54
 #: core/theme-options/assets/theme-mode/theme-options.php:1442
-#: core/theme-options/assets/theme-mode/theme-options.php:2612
-#: core/theme-options/assets/theme-mode/theme-options.php:3654
+#: core/theme-options/assets/theme-mode/theme-options.php:2618
+#: core/theme-options/assets/theme-mode/theme-options.php:3653
 msgid "Dark"
 msgstr "Înghis"
 
@@ -2984,19 +3025,19 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:745
 #: core/theme-options/assets/theme-mode/theme-options.php:822
-#: core/theme-options/assets/theme-mode/theme-options.php:3705
+#: core/theme-options/assets/theme-mode/theme-options.php:3704
 msgid "Uppercase"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:749
 #: core/theme-options/assets/theme-mode/theme-options.php:826
-#: core/theme-options/assets/theme-mode/theme-options.php:3709
+#: core/theme-options/assets/theme-mode/theme-options.php:3708
 msgid "Lowercase"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:753
 #: core/theme-options/assets/theme-mode/theme-options.php:830
-#: core/theme-options/assets/theme-mode/theme-options.php:3713
+#: core/theme-options/assets/theme-mode/theme-options.php:3712
 msgid "Capitalize"
 msgstr ""
 
@@ -3310,19 +3351,19 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1179
 #: core/theme-options/assets/theme-mode/theme-options.php:1183
-#: core/theme-options/assets/theme-mode/theme-options.php:1865
+#: core/theme-options/assets/theme-mode/theme-options.php:1871
 msgid "Left align"
 msgstr "Aliniere la stânga"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1184
 #: core/theme-options/assets/theme-mode/theme-options.php:1188
-#: core/theme-options/assets/theme-mode/theme-options.php:1870
+#: core/theme-options/assets/theme-mode/theme-options.php:1876
 msgid "Center align"
 msgstr "Aliniere la centru"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1189
 #: core/theme-options/assets/theme-mode/theme-options.php:1193
-#: core/theme-options/assets/theme-mode/theme-options.php:1875
+#: core/theme-options/assets/theme-mode/theme-options.php:1881
 msgid "Right align"
 msgstr "Aliniere la dreapta"
 
@@ -3351,18 +3392,18 @@ msgstr "Nu a Fost Gasit Conținut Blocat"
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1364
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1513
 #: core/theme-options/assets/theme-mode/theme-options.php:1451
-#: core/theme-options/assets/theme-mode/theme-options.php:3661
+#: core/theme-options/assets/theme-mode/theme-options.php:3660
 msgid "Background color"
 msgstr "Culoare fundal"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1237
-#: core/theme-options/assets/theme-mode/theme-options.php:3662
+#: core/theme-options/assets/theme-mode/theme-options.php:3661
 msgid "Specify a custom content background color."
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1243
 #: core/theme-options/assets/theme-mode/theme-options.php:1222
-#: core/theme-options/assets/theme-mode/theme-options.php:3632
+#: core/theme-options/assets/theme-mode/theme-options.php:3631
 msgid "Content"
 msgstr "Conținut"
 
@@ -3415,31 +3456,31 @@ msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1365
 #: core/theme-options/assets/theme-mode/theme-options.php:1452
-#: core/theme-options/assets/theme-mode/theme-options.php:2621
+#: core/theme-options/assets/theme-mode/theme-options.php:2627
 msgid "Specify the sidebar background color."
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1372
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1521
 #: core/theme-options/assets/theme-mode/theme-options.php:1460
-#: core/theme-options/assets/theme-mode/theme-options.php:2628
+#: core/theme-options/assets/theme-mode/theme-options.php:2634
 msgid "Sidebar filling space"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1373
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1522
 #: core/theme-options/assets/theme-mode/theme-options.php:1461
-#: core/theme-options/assets/theme-mode/theme-options.php:2629
+#: core/theme-options/assets/theme-mode/theme-options.php:2635
 msgid "Activate to remove padding around the sidebar and fill the height."
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1420
-#: core/theme-options/assets/theme-mode/theme-options.php:2533
+#: core/theme-options/assets/theme-mode/theme-options.php:2539
 msgid "Details"
 msgstr "Detalii"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1426
-#: core/theme-options/assets/theme-mode/theme-options.php:2540
+#: core/theme-options/assets/theme-mode/theme-options.php:2546
 msgid "details"
 msgstr "detalii"
 
@@ -3449,43 +3490,43 @@ msgid "Override the %s visibility."
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1446
-#: core/theme-options/assets/theme-mode/theme-options.php:2557
+#: core/theme-options/assets/theme-mode/theme-options.php:2563
 msgid "details layout"
 msgstr "detalii aspect"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1447
-#: core/theme-options/assets/theme-mode/theme-options.php:2558
+#: core/theme-options/assets/theme-mode/theme-options.php:2564
 #, php-format
 msgid "Specify the layout template for all the %s posts."
 msgstr "Specifică șablon aspect pentru toate %s postarile."
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1452
-#: core/theme-options/assets/theme-mode/theme-options.php:2568
+#: core/theme-options/assets/theme-mode/theme-options.php:2574
 msgid "Details on the top"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1456
-#: core/theme-options/assets/theme-mode/theme-options.php:2572
+#: core/theme-options/assets/theme-mode/theme-options.php:2578
 msgid "Details on the right"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1460
-#: core/theme-options/assets/theme-mode/theme-options.php:2576
+#: core/theme-options/assets/theme-mode/theme-options.php:2582
 msgid "Details on the bottom"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1464
-#: core/theme-options/assets/theme-mode/theme-options.php:2580
+#: core/theme-options/assets/theme-mode/theme-options.php:2586
 msgid "Details on the left"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1472
-#: core/theme-options/assets/theme-mode/theme-options.php:2586
+#: core/theme-options/assets/theme-mode/theme-options.php:2592
 msgid "Sidebar size"
 msgstr "Mărime Bară Laterală"
 
 #: core/theme-options/assets/theme-mode/meta-boxes.php:1473
-#: core/theme-options/assets/theme-mode/theme-options.php:2587
+#: core/theme-options/assets/theme-mode/theme-options.php:2593
 msgid "Set the sidebar size."
 msgstr "Setează mărime bara laterală."
 
@@ -3493,44 +3534,47 @@ msgstr "Setează mărime bara laterală."
 msgid "Specify the background color."
 msgstr "Specifică culoarea de fundal."
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1544
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1540
 #: core/theme-options/assets/theme-mode/theme-options.php:1471
 msgid "Navigation"
 msgstr "Navigare"
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1550
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1546
 msgid "Navigation parent"
 msgstr "Navigare părinte"
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1552
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1548
 msgid "Specify the parent page to create the navigation logic."
 msgstr "Specifică pagina părinte pentru a crea navigare logica."
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1582
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1578
 #: core/theme-options/assets/theme-mode/theme-options.php:1544
 msgid "Footer width"
 msgstr "Lățime Subsol"
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1583
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1579
 #: core/theme-options/assets/theme-mode/theme-options.php:1545
 msgid "Override the footer width."
 msgstr "Suprascrie lățime Subsol"
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1603
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1599
 #: core/theme-options/assets/theme-mode/theme-options.php:1520
-#: core/theme-options/assets/theme-mode/theme-options.php:1793
-#: core/theme-options/assets/theme-mode/theme-options.php:3719
+#: core/theme-options/assets/theme-mode/theme-options.php:1799
+#: core/theme-options/assets/theme-mode/theme-options.php:3718
 msgid "Footer"
 msgstr "Subsol"
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1626
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1622
 #: core/theme-options/assets/theme-mode/theme-options.php:1566
 #: core/theme-options/assets/theme-mode/theme-options.php:1575
 #, fuzzy
 msgid "Custom fields"
-msgstr "Personalizare"
+msgstr ""
+"Acest format, pe care noi îl numim WordPress eXtended RSS sau WXR, va "
+"conține toate posturi, pagini, comentarii, câmpuri personalizate, categorii "
+"și etichete dumneavoastră."
 
-#: core/theme-options/assets/theme-mode/meta-boxes.php:1638
+#: core/theme-options/assets/theme-mode/meta-boxes.php:1634
 msgid "Page Options"
 msgstr "Optiuni Pagina"
 
@@ -3711,482 +3755,487 @@ msgid "Unique custom field ID"
 msgstr "ID social unic"
 
 #: core/theme-options/assets/theme-mode/theme-options.php:1586
-#: core/theme-options/assets/theme-mode/theme-options.php:2551
-#: core/theme-options/assets/theme-mode/theme-options.php:2953
-#: core/theme-options/assets/theme-mode/theme-options.php:2982
-#: core/theme-options/assets/theme-mode/theme-options.php:3071
-#: core/theme-options/assets/theme-mode/theme-options.php:3096
-#: core/theme-options/assets/theme-mode/theme-options.php:3121
-#: core/theme-options/assets/theme-mode/theme-options.php:3218
-#: core/theme-options/assets/theme-mode/theme-options.php:3893
+#: core/theme-options/assets/theme-mode/theme-options.php:2557
+#: core/theme-options/assets/theme-mode/theme-options.php:2959
+#: core/theme-options/assets/theme-mode/theme-options.php:2988
+#: core/theme-options/assets/theme-mode/theme-options.php:3077
+#: core/theme-options/assets/theme-mode/theme-options.php:3102
+#: core/theme-options/assets/theme-mode/theme-options.php:3127
+#: core/theme-options/assets/theme-mode/theme-options.php:3224
+#: core/theme-options/assets/theme-mode/theme-options.php:3960
 msgid ""
 "This value is created automatically and it shouldn't be edited unless you "
 "know what you are doing."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1738
-#: core/theme-options/assets/theme-mode/theme-options.php:1940
+#: core/theme-options/assets/theme-mode/theme-options.php:1744
+#: core/theme-options/assets/theme-mode/theme-options.php:1946
 msgid "Logo"
 msgstr "Logo"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1746
-#: core/theme-options/assets/theme-mode/theme-options.php:1982
-#: core/theme-options/assets/theme-mode/theme-options.php:3768
+#: core/theme-options/assets/theme-mode/theme-options.php:1752
+#: core/theme-options/assets/theme-mode/theme-options.php:1988
+#: core/theme-options/assets/theme-mode/theme-options.php:3835
 #: core/theme-options/includes/ot-functions-admin.php:4381
 msgid "Layout"
 msgstr "Aspect"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1750
+#: core/theme-options/assets/theme-mode/theme-options.php:1756
 msgid "Post"
 msgstr "Postare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1754
-#: partials/elements.php:1521
+#: core/theme-options/assets/theme-mode/theme-options.php:1760
+#: partials/elements.php:1580
 msgid "Page"
 msgstr "Pagina"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1785
-#: partials/menus.php:319
+#: core/theme-options/assets/theme-mode/theme-options.php:1791
+#: partials/menus.php:332
 msgid "Search"
 msgstr "Caută"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1789
+#: core/theme-options/assets/theme-mode/theme-options.php:1795
 msgid "404"
 msgstr "404"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1797
+#: core/theme-options/assets/theme-mode/theme-options.php:1803
 msgid "Palette"
 msgstr "Paletă"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1801
-#: core/theme-options/assets/theme-mode/theme-options.php:2233
+#: core/theme-options/assets/theme-mode/theme-options.php:1807
+#: core/theme-options/assets/theme-mode/theme-options.php:2239
 #: core/theme-options/includes/ot-functions-admin.php:2455
 msgid "Typography"
 msgstr "Tipografie"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1805
+#: core/theme-options/assets/theme-mode/theme-options.php:1811
 msgid "Customize"
 msgstr "Personalizare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1809
+#: core/theme-options/assets/theme-mode/theme-options.php:1815
 msgid "Sidebars"
 msgstr "Bară laterală"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1813
+#: core/theme-options/assets/theme-mode/theme-options.php:1819
 msgid "Connections"
 msgstr "Conexiuni"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1817
+#: core/theme-options/assets/theme-mode/theme-options.php:1823
 #, fuzzy
 msgid "Google Maps"
 msgstr "Fonturi Google"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1821
+#: core/theme-options/assets/theme-mode/theme-options.php:1827
 msgid "Redirect"
 msgstr "Redirecţionare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1825
+#: core/theme-options/assets/theme-mode/theme-options.php:1831
 msgid "CSS & JS"
 msgstr "CSS & JS"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1829
+#: core/theme-options/assets/theme-mode/theme-options.php:1835
 msgid "Performance"
 msgstr "Performanţă"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1846
+#: core/theme-options/assets/theme-mode/theme-options.php:1852
 msgid "Site width"
 msgstr "Lăţimea site-ului"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1847
+#: core/theme-options/assets/theme-mode/theme-options.php:1853
 msgid "Enter the width of your site."
 msgstr "Introduceți lățimea site-ului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1857
+#: core/theme-options/assets/theme-mode/theme-options.php:1863
 msgid "Site layout align"
 msgstr "Aliniere aspect site"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1858
+#: core/theme-options/assets/theme-mode/theme-options.php:1864
 msgid "Specify the alignment of the content area when is less then 100% width."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1882
+#: core/theme-options/assets/theme-mode/theme-options.php:1888
 msgid "Boxed"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1883
+#: core/theme-options/assets/theme-mode/theme-options.php:1889
 msgid "Activate for the boxed layout."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1890
+#: core/theme-options/assets/theme-mode/theme-options.php:1896
 msgid "Body frame"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1891
+#: core/theme-options/assets/theme-mode/theme-options.php:1897
 #, fuzzy
 msgid "Specify the thickness of the frame around the body"
 msgstr "Specifică poziția conținutului antet în interiorul containerului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1901
+#: core/theme-options/assets/theme-mode/theme-options.php:1907
 msgid "Body frame color"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1902
+#: core/theme-options/assets/theme-mode/theme-options.php:1908
 #, fuzzy
 msgid "Specify the body frame color."
 msgstr "Specifică culoare accent."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1922
+#: core/theme-options/assets/theme-mode/theme-options.php:1928
 msgid "Content area full width"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1923
+#: core/theme-options/assets/theme-mode/theme-options.php:1929
 msgid "Activate to expand the content area to full width."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1932
+#: core/theme-options/assets/theme-mode/theme-options.php:1938
 msgid "Switchable logo"
 msgstr "Switchable logo"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1933
+#: core/theme-options/assets/theme-mode/theme-options.php:1939
 msgid "Activate to upload different logo for each skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1941
+#: core/theme-options/assets/theme-mode/theme-options.php:1947
 msgid "Upload a logo. You can use Images, SVG code or HTML code."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1949
+#: core/theme-options/assets/theme-mode/theme-options.php:1955
 msgid "Logo - Light"
 msgstr "Logo - Deschis"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1950
+#: core/theme-options/assets/theme-mode/theme-options.php:1956
 msgid "Upload a logo for the light skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1958
+#: core/theme-options/assets/theme-mode/theme-options.php:1964
 msgid "Logo - Dark"
 msgstr "Logo - Închis"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1959
+#: core/theme-options/assets/theme-mode/theme-options.php:1965
 msgid "Upload a logo for the dark skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1967
+#: core/theme-options/assets/theme-mode/theme-options.php:1973
 msgid "Logo height"
 msgstr "Înălțime LOGO"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1968
+#: core/theme-options/assets/theme-mode/theme-options.php:1974
 msgid "Enter the height of the logo in px."
 msgstr "Introduceți înălțimea logo-ului în px."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1975
+#: core/theme-options/assets/theme-mode/theme-options.php:1981
 msgid "Logo height mobile"
 msgstr "Înălțimea logo-ului pentru mobil"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1976
+#: core/theme-options/assets/theme-mode/theme-options.php:1982
 msgid "Enter the height of the logo in px for mobile version."
 msgstr "Introduceți înălțimea logo-ului în px pentru versiunea mobilă."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1989
+#: core/theme-options/assets/theme-mode/theme-options.php:1995
 msgid "Specify the menu layout."
 msgstr "Specifică aspectul meniului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1997
+#: core/theme-options/assets/theme-mode/theme-options.php:2003
 msgid "Menu horizontal position"
 msgstr "Meniu poziție orizontală"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:1998
+#: core/theme-options/assets/theme-mode/theme-options.php:2004
 msgid "Specify the horizontal position of the menu."
 msgstr "Specifică poziția orizontală a meniului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2019
+#: core/theme-options/assets/theme-mode/theme-options.php:2025
 msgid "Menu vertical alignment"
 msgstr "Meniu aliniere verticală"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2020
+#: core/theme-options/assets/theme-mode/theme-options.php:2026
 msgid "Specify the vertical alignment of the menu."
 msgstr "Specifică alinierea verticală a meniului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2029
+#: core/theme-options/assets/theme-mode/theme-options.php:2035
 msgid "Top"
 msgstr "Sus"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2034
+#: core/theme-options/assets/theme-mode/theme-options.php:2040
 msgid "Middle"
 msgstr "Mijloc"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2039
+#: core/theme-options/assets/theme-mode/theme-options.php:2045
 msgid "Bottom"
 msgstr "Jos"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2046
+#: core/theme-options/assets/theme-mode/theme-options.php:2052
 msgid "Menu horizontal alignment"
 msgstr "Meniu aliniere orizontală"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2047
+#: core/theme-options/assets/theme-mode/theme-options.php:2053
 msgid "Specify the horizontal alignment of the menu."
 msgstr "Specifică alinierea orizontală a meniului."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2056
+#: core/theme-options/assets/theme-mode/theme-options.php:2062
 msgid "Left Align"
 msgstr "Aliniere la stânga"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2061
+#: core/theme-options/assets/theme-mode/theme-options.php:2067
 msgid "Center Align"
 msgstr "Aliniere la centru"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2066
+#: core/theme-options/assets/theme-mode/theme-options.php:2072
 msgid "Right Align"
 msgstr "Aliniere la dreapta"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2073
+#: core/theme-options/assets/theme-mode/theme-options.php:2079
 msgid "Vertical menu width"
 msgstr "Lățime meniu vertical"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2074
+#: core/theme-options/assets/theme-mode/theme-options.php:2080
 msgid "Vertical menu width in px"
 msgstr "Lățime meniu vertical în px"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2088
+#: core/theme-options/assets/theme-mode/theme-options.php:2094
 msgid "Menu full width"
 msgstr "Meniu lățime completă"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2089
+#: core/theme-options/assets/theme-mode/theme-options.php:2095
 msgid ""
 "Activate to expand the menu to full width. (Only for the horizontal menus)."
 msgstr ""
 "Activează pentru a extinde meniul la lățimea întreagă/maximă. ( Numai pentru "
 "meniuri orizontale )."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2098
+#: core/theme-options/assets/theme-mode/theme-options.php:2104
 msgid "Visuals"
 msgstr "Vizual"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2105
+#: core/theme-options/assets/theme-mode/theme-options.php:2111
 msgid "Menu shadows"
 msgstr "Umbre meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2106
+#: core/theme-options/assets/theme-mode/theme-options.php:2112
 msgid "Activate to show the menu shadows."
 msgstr "Activează pentru a vedea umbre meniu."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2113
+#: core/theme-options/assets/theme-mode/theme-options.php:2119
 msgid "Menu borders"
 msgstr "Margini Meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2114
+#: core/theme-options/assets/theme-mode/theme-options.php:2120
 msgid "Activate to show the menu borders."
 msgstr "Activează pentru a vedea margini meniu."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2121
+#: core/theme-options/assets/theme-mode/theme-options.php:2127
 msgid "Hide dropdown arrows"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2122
+#: core/theme-options/assets/theme-mode/theme-options.php:2128
 msgid "Activate to hide the dropdow arrows."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2129
+#: core/theme-options/assets/theme-mode/theme-options.php:2135
 msgid "Animation"
 msgstr "Animație"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2138
+#: core/theme-options/assets/theme-mode/theme-options.php:2144
 msgid "Menu sticky"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2139
+#: core/theme-options/assets/theme-mode/theme-options.php:2145
 msgid ""
 "Activate the sticky menu. This is a menu that is locked into place so that "
 "it does not disappear when the user scrolls down the page."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2148
+#: core/theme-options/assets/theme-mode/theme-options.php:2154
 msgid "Menu sticky mobile"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2149
-#: core/theme-options/assets/theme-mode/theme-options.php:2167
+#: core/theme-options/assets/theme-mode/theme-options.php:2155
 msgid ""
 "Activate the sticky menu on mobile devices. This is a menu that is locked "
 "into place so that it does not disappear when the user scrolls down the page."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2156
+#: core/theme-options/assets/theme-mode/theme-options.php:2162
 msgid "Menu hide"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2157
+#: core/theme-options/assets/theme-mode/theme-options.php:2163
 msgid ""
 "Activate the autohide menu. This is a menu that is hiding after the user "
 "have scrolled down the page."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2166
+#: core/theme-options/assets/theme-mode/theme-options.php:2172
 msgid "Menu hide mobile"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2174
+#: core/theme-options/assets/theme-mode/theme-options.php:2173
+msgid ""
+"Activate the autohide menu on mobile devices. This is a menu that is hiding "
+"after the user have scrolled down the page."
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:2180
 msgid "Menu shrink"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2175
+#: core/theme-options/assets/theme-mode/theme-options.php:2181
 msgid ""
 "Activate the shrink menu. This is a menu where the logo shrinks after the "
 "user have scrolled down the page."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2184
+#: core/theme-options/assets/theme-mode/theme-options.php:2190
 msgid "Menu open items animation"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2185
+#: core/theme-options/assets/theme-mode/theme-options.php:2191
 #, fuzzy
 msgid "Specify the menu items animation when opening."
 msgstr "Specificați culoarea textului meniului ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2198
+#: core/theme-options/assets/theme-mode/theme-options.php:2204
 msgid "Scale"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2204
+#: core/theme-options/assets/theme-mode/theme-options.php:2210
 msgid "Menu overlay animation"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2205
+#: core/theme-options/assets/theme-mode/theme-options.php:2211
 msgid "Specify the overlay menu animation when opening and closing."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2214
-#: core/theme-options/assets/theme-mode/theme-options.php:2299
+#: core/theme-options/assets/theme-mode/theme-options.php:2220
+#: core/theme-options/assets/theme-mode/theme-options.php:2305
 msgid "3D"
 msgstr "3D"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2218
-#: core/theme-options/assets/theme-mode/theme-options.php:2303
+#: core/theme-options/assets/theme-mode/theme-options.php:2224
+#: core/theme-options/assets/theme-mode/theme-options.php:2309
 msgid "Flat"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2224
+#: core/theme-options/assets/theme-mode/theme-options.php:2230
 msgid "Minimum logo height"
 msgstr "Înălțimea minimă LOGO"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2225
+#: core/theme-options/assets/theme-mode/theme-options.php:2231
 msgid "Enter the minimal height of the shrinked logo in <b>px</b>."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2240
+#: core/theme-options/assets/theme-mode/theme-options.php:2246
 msgid "Menu first level uppercase"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2241
+#: core/theme-options/assets/theme-mode/theme-options.php:2247
 msgid "Activate to transform the first menu level to uppercase."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2248
+#: core/theme-options/assets/theme-mode/theme-options.php:2254
 msgid "Menu other levels uppercase"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2249
+#: core/theme-options/assets/theme-mode/theme-options.php:2255
 msgid "Activate to transform all the others menu level to uppercase."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2256
-#: core/theme-options/assets/theme-mode/theme-options.php:3856
+#: core/theme-options/assets/theme-mode/theme-options.php:2262
+#: core/theme-options/assets/theme-mode/theme-options.php:3923
 msgid "Additionals"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2263
+#: core/theme-options/assets/theme-mode/theme-options.php:2269
 msgid "Hide secondary menu"
 msgstr "Ascunde meniul secundar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2264
+#: core/theme-options/assets/theme-mode/theme-options.php:2270
 msgid "Activate to hide the secondary menu."
 msgstr "Activează pentru a ascunde meniul secundar."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2271
+#: core/theme-options/assets/theme-mode/theme-options.php:2277
 msgid "Social icons"
 msgstr "Icoane Sociale"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2272
+#: core/theme-options/assets/theme-mode/theme-options.php:2278
 msgid "Activate to show the social connection icons in the menu bar."
 msgstr ""
 "Activează pentru a afișa icoanele de conectare la rețelele sociale în bara "
 "de meniu "
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2281
+#: core/theme-options/assets/theme-mode/theme-options.php:2287
 msgid "Search icon"
 msgstr "Icoană de căutare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2282
+#: core/theme-options/assets/theme-mode/theme-options.php:2288
 msgid "Activate to show the search icon in the menu bar."
 msgstr "Activează pentru a afișa icoana de căutare în bara de meniu."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2291
+#: core/theme-options/assets/theme-mode/theme-options.php:2297
 msgid "Search overlay animation"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2292
+#: core/theme-options/assets/theme-mode/theme-options.php:2298
 msgid "Specify the search overlay animation when opening and closing."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2311
+#: core/theme-options/assets/theme-mode/theme-options.php:2317
 msgid "Woocommerce cart"
 msgstr "Coș WooCommerce"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2312
+#: core/theme-options/assets/theme-mode/theme-options.php:2318
 msgid "Activate to show the Woocommerce icon in the menu bar."
 msgstr "Activază pentru a afișa icoana Woocommerce în bara de meniu."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2319
+#: core/theme-options/assets/theme-mode/theme-options.php:2325
 #, fuzzy
 msgid "Woocommerce cart on menu bar"
 msgstr "Coș WooCommerce"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2320
+#: core/theme-options/assets/theme-mode/theme-options.php:2326
 msgid ""
 "Show the cart icon in the menu bar when layout is on desktop mode (Only for "
 "overlay and offcanvas menu)."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2329
+#: core/theme-options/assets/theme-mode/theme-options.php:2335
 msgid "Woocommerce cart on menu bar for mobile"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2330
+#: core/theme-options/assets/theme-mode/theme-options.php:2336
 msgid "Show the cart icon in the menu bar when layout is on mobile mode."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2339
+#: core/theme-options/assets/theme-mode/theme-options.php:2345
 msgid "Top line text"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2340
+#: core/theme-options/assets/theme-mode/theme-options.php:2346
 msgid "Insert additional text on top of the menu."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2541
+#: core/theme-options/assets/theme-mode/theme-options.php:2547
 #, php-format
 msgid "Create here all the %s details label that you need."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2550
+#: core/theme-options/assets/theme-mode/theme-options.php:2556
 #, php-format
 msgid "Unique %s detail ID"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2599
+#: core/theme-options/assets/theme-mode/theme-options.php:2605
 msgid "Specify the sidebar text skin color."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2620
+#: core/theme-options/assets/theme-mode/theme-options.php:2626
 msgid "Sidebar color"
 msgstr "Culoare Bară Laterală"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2941
+#: core/theme-options/assets/theme-mode/theme-options.php:2947
 msgid "Site sidebars"
 msgstr "Bară Laterală site"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2942
+#: core/theme-options/assets/theme-mode/theme-options.php:2948
 msgid ""
 "Define here all the sidebars you will need. A default sidebar is already "
 "defined."
@@ -4194,239 +4243,239 @@ msgstr ""
 "Definiți aici toate barele laterale de care aveți nevoie . O bara laterală "
 "implicită este deja definită."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2952
+#: core/theme-options/assets/theme-mode/theme-options.php:2958
 msgid "Unique sidebar ID"
 msgstr "ID bară laterală unic"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2959
+#: core/theme-options/assets/theme-mode/theme-options.php:2965
 msgid "Custom fonts"
 msgstr "Fonturi personalizate"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2960
+#: core/theme-options/assets/theme-mode/theme-options.php:2966
 msgid "Define here all the fonts you will need."
 msgstr "Definiți aici toate fonturile de care aveți nevoie."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2981
+#: core/theme-options/assets/theme-mode/theme-options.php:2987
 msgid "Unique font ID"
 msgstr "ID font unic"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2986
+#: core/theme-options/assets/theme-mode/theme-options.php:2992
 msgid "Uncode font"
 msgstr "Font Uncode"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2987
+#: core/theme-options/assets/theme-mode/theme-options.php:2993
 msgid "Specify a font."
 msgstr "Specifică font."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2993
+#: core/theme-options/assets/theme-mode/theme-options.php:2999
 msgid "Font family"
 msgstr "Familie font"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:2994
+#: core/theme-options/assets/theme-mode/theme-options.php:3000
 msgid "Enter a font family."
 msgstr "Introdu familie fon"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3003
+#: core/theme-options/assets/theme-mode/theme-options.php:3009
 msgid "Default font size"
 msgstr "Mărime fon implicit"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3004
+#: core/theme-options/assets/theme-mode/theme-options.php:3010
 msgid "Font size for p,li,dt,dd,dl,address,label,small,pre in <b>px</b>."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3011
+#: core/theme-options/assets/theme-mode/theme-options.php:3017
 msgid "Font size H1"
 msgstr "Mărime Font H1 "
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3012
+#: core/theme-options/assets/theme-mode/theme-options.php:3018
 msgid "Font size for H1 in <b>px</b>."
 msgstr "Mărime font pentru H1 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3019
+#: core/theme-options/assets/theme-mode/theme-options.php:3025
 msgid "Font size H2"
 msgstr "Mărime Font H2 "
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3020
+#: core/theme-options/assets/theme-mode/theme-options.php:3026
 msgid "Font size for H2 in <b>px</b>."
 msgstr "Mărime font pentru H2 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3027
+#: core/theme-options/assets/theme-mode/theme-options.php:3033
 msgid "Font size H3"
 msgstr "Mărime Font H3"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3028
+#: core/theme-options/assets/theme-mode/theme-options.php:3034
 msgid "Font size for H3 in <b>px</b>."
 msgstr "Mărime font pentru H3 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3035
+#: core/theme-options/assets/theme-mode/theme-options.php:3041
 msgid "Font size H4"
 msgstr "Mărime Font H4"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3036
+#: core/theme-options/assets/theme-mode/theme-options.php:3042
 msgid "Font size for H4 in <b>px</b>."
 msgstr "Mărime font pentru H4 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3043
+#: core/theme-options/assets/theme-mode/theme-options.php:3049
 msgid "Font size H5"
 msgstr "Mărime Font H5"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3044
+#: core/theme-options/assets/theme-mode/theme-options.php:3050
 msgid "Font size for H5 in <b>px</b>."
 msgstr "Mărime font pentru H5 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3051
+#: core/theme-options/assets/theme-mode/theme-options.php:3057
 msgid "Font size H6"
 msgstr "Mărime Font H6"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3052
+#: core/theme-options/assets/theme-mode/theme-options.php:3058
 msgid "Font size for H6 in <b>px</b>."
 msgstr "Mărime font pentru H6 în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3059
+#: core/theme-options/assets/theme-mode/theme-options.php:3065
 msgid "Custom font size"
 msgstr "Personalizează mărime font"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3060
+#: core/theme-options/assets/theme-mode/theme-options.php:3066
 msgid "Define here all the additional font sizes you will need."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3070
+#: core/theme-options/assets/theme-mode/theme-options.php:3076
 msgid "Unique font size ID"
 msgstr "Mărime font ID unic"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3075
+#: core/theme-options/assets/theme-mode/theme-options.php:3081
 msgid "Font size"
 msgstr "Mărime Font"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3076
+#: core/theme-options/assets/theme-mode/theme-options.php:3082
 msgid "Font size in <b>px</b>."
 msgstr "Mărime font în <b>px</b>."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3084
+#: core/theme-options/assets/theme-mode/theme-options.php:3090
 msgid "Custom line height"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3085
+#: core/theme-options/assets/theme-mode/theme-options.php:3091
 msgid "Define here all the additional font line heights you will need."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3095
+#: core/theme-options/assets/theme-mode/theme-options.php:3101
 msgid "Unique font height ID"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3100
+#: core/theme-options/assets/theme-mode/theme-options.php:3106
 msgid "Font line height"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3101
+#: core/theme-options/assets/theme-mode/theme-options.php:3107
 msgid "Insert a line height."
 msgstr "Introdu o linie de înalțime."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3109
+#: core/theme-options/assets/theme-mode/theme-options.php:3115
 msgid "Custom letter spacing"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3110
+#: core/theme-options/assets/theme-mode/theme-options.php:3116
 msgid "Define here all the letter spacings you will need."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3120
+#: core/theme-options/assets/theme-mode/theme-options.php:3126
 msgid "Unique letter spacing ID"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3125
+#: core/theme-options/assets/theme-mode/theme-options.php:3131
 msgid "Letter spacing"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3126
+#: core/theme-options/assets/theme-mode/theme-options.php:3132
 msgid "Letter spacing with the unit (em or px). Ex. 0.2em"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3134
+#: core/theme-options/assets/theme-mode/theme-options.php:3140
 msgid "Color palettes"
 msgstr "Palete de culori"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3135
+#: core/theme-options/assets/theme-mode/theme-options.php:3141
 msgid "Define all the colors you will need."
 msgstr "Definiți toate culorile de care veți avea nevoie."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3138
+#: core/theme-options/assets/theme-mode/theme-options.php:3144
 msgid "Black"
 msgstr "Negru"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3143
+#: core/theme-options/assets/theme-mode/theme-options.php:3149
 msgid "Dark 1"
 msgstr "Înghis 1"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3148
+#: core/theme-options/assets/theme-mode/theme-options.php:3154
 msgid "Dark 2"
 msgstr "Înghis 2"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3153
+#: core/theme-options/assets/theme-mode/theme-options.php:3159
 msgid "Dark 3"
 msgstr "Înghis 3"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3158
+#: core/theme-options/assets/theme-mode/theme-options.php:3164
 msgid "Dark 4"
 msgstr "Înghis 4"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3163
+#: core/theme-options/assets/theme-mode/theme-options.php:3169
 msgid "White"
 msgstr "Alb"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3168
+#: core/theme-options/assets/theme-mode/theme-options.php:3174
 msgid "Light 1"
 msgstr "Deschis 1"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3173
+#: core/theme-options/assets/theme-mode/theme-options.php:3179
 msgid "Light 2"
 msgstr "Deschis 2"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3178
+#: core/theme-options/assets/theme-mode/theme-options.php:3184
 msgid "Light 3"
 msgstr "Deschis 3"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3183
+#: core/theme-options/assets/theme-mode/theme-options.php:3189
 msgid "Light 4"
 msgstr "Deschis 4"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3188
+#: core/theme-options/assets/theme-mode/theme-options.php:3194
 msgid "Cerulean"
 msgstr "Albastru ca cerul"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3193
+#: core/theme-options/assets/theme-mode/theme-options.php:3199
 msgid "International Orange"
 msgstr "Portocaliu Internațional"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3198
+#: core/theme-options/assets/theme-mode/theme-options.php:3204
 msgid "Malachite"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3203
+#: core/theme-options/assets/theme-mode/theme-options.php:3209
 msgid "Sunglow"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3217
+#: core/theme-options/assets/theme-mode/theme-options.php:3223
 msgid "Unique color ID"
 msgstr "ID-ul unic de culoare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3222
+#: core/theme-options/assets/theme-mode/theme-options.php:3228
 msgid "Monochrome"
 msgstr "Monocrom"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3223
+#: core/theme-options/assets/theme-mode/theme-options.php:3229
 msgid ""
 "Activate to assign a monochromatic color, otherwise a gradient will be used."
 msgstr ""
 "Activează pentru a atribui o culoare monocromatică , altfel un gradient va "
 "fi utilizat ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3230
+#: core/theme-options/assets/theme-mode/theme-options.php:3236
 #: core/theme-options/includes/ot-functions-admin.php:2417
 msgid "Colorpicker"
 msgstr "Selector de culoare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3231
+#: core/theme-options/assets/theme-mode/theme-options.php:3237
 msgid ""
 "Specify the color for this palette. You can also define a color with the "
 "alpha value."
@@ -4434,490 +4483,540 @@ msgstr ""
 "Specificați culoarea pentru această paletă . Puteți defini, de asemenea, o "
 "culoare cu valoarea alfa ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3238
+#: core/theme-options/assets/theme-mode/theme-options.php:3244
 msgid "Gradient"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3239
+#: core/theme-options/assets/theme-mode/theme-options.php:3245
 msgid ""
 "Specify the gradient color for this palette. NB. You can use a gradient "
 "color only as a background color."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3248
+#: core/theme-options/assets/theme-mode/theme-options.php:3254
 msgid "Light skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3255
-#: core/theme-options/assets/theme-mode/theme-options.php:3350
+#: core/theme-options/assets/theme-mode/theme-options.php:3261
+#: core/theme-options/assets/theme-mode/theme-options.php:3356
 msgid "SVG/Text logo color"
 msgstr "SVG/Culoare text logo"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3256
-#: core/theme-options/assets/theme-mode/theme-options.php:3351
+#: core/theme-options/assets/theme-mode/theme-options.php:3262
+#: core/theme-options/assets/theme-mode/theme-options.php:3357
 msgid "Specify the logo color if it's a SVG or textual."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3263
-#: core/theme-options/assets/theme-mode/theme-options.php:3358
+#: core/theme-options/assets/theme-mode/theme-options.php:3269
+#: core/theme-options/assets/theme-mode/theme-options.php:3364
 msgid "Menu text color"
 msgstr "Text culoare meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3264
-#: core/theme-options/assets/theme-mode/theme-options.php:3359
+#: core/theme-options/assets/theme-mode/theme-options.php:3270
+#: core/theme-options/assets/theme-mode/theme-options.php:3365
 msgid "Specify the menu text color."
 msgstr "Specificați culoarea textului meniului ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3271
-#: core/theme-options/assets/theme-mode/theme-options.php:3366
+#: core/theme-options/assets/theme-mode/theme-options.php:3277
+#: core/theme-options/assets/theme-mode/theme-options.php:3372
 msgid "Primary menu background color"
 msgstr "Meniu primar culoare fundal"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3272
-#: core/theme-options/assets/theme-mode/theme-options.php:3367
+#: core/theme-options/assets/theme-mode/theme-options.php:3278
+#: core/theme-options/assets/theme-mode/theme-options.php:3373
 msgid "Specify the primary menu background color."
 msgstr "Specificați culoare de fundal pentru meniul primar."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3279
-#: core/theme-options/assets/theme-mode/theme-options.php:3374
+#: core/theme-options/assets/theme-mode/theme-options.php:3285
+#: core/theme-options/assets/theme-mode/theme-options.php:3380
 msgid "Primary menu background opacity"
 msgstr "Meniu primar opacitate fundal"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3280
-#: core/theme-options/assets/theme-mode/theme-options.php:3375
+#: core/theme-options/assets/theme-mode/theme-options.php:3286
+#: core/theme-options/assets/theme-mode/theme-options.php:3381
 msgid "Adjust the primary menu background transparency."
 msgstr "Ajustează transparență fundal pentru meniul primar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3287
-#: core/theme-options/assets/theme-mode/theme-options.php:3382
+#: core/theme-options/assets/theme-mode/theme-options.php:3293
+#: core/theme-options/assets/theme-mode/theme-options.php:3388
 msgid "Primary submenu background color"
 msgstr "Culoare de fundal pentru submeniul primar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3288
-#: core/theme-options/assets/theme-mode/theme-options.php:3383
+#: core/theme-options/assets/theme-mode/theme-options.php:3294
+#: core/theme-options/assets/theme-mode/theme-options.php:3389
 msgid "Specify the primary submenu text color."
 msgstr "Specifică culoare text pentru  submeniul primar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3295
-#: core/theme-options/assets/theme-mode/theme-options.php:3390
+#: core/theme-options/assets/theme-mode/theme-options.php:3301
+#: core/theme-options/assets/theme-mode/theme-options.php:3396
 msgid "Primary menu border color"
 msgstr "Culoare margine meiu primar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3296
-#: core/theme-options/assets/theme-mode/theme-options.php:3391
+#: core/theme-options/assets/theme-mode/theme-options.php:3302
+#: core/theme-options/assets/theme-mode/theme-options.php:3397
 msgid "Specify the primary menu border color."
 msgstr "Specificați culoare de margine pentru meniul primar."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3303
-#: core/theme-options/assets/theme-mode/theme-options.php:3398
+#: core/theme-options/assets/theme-mode/theme-options.php:3309
+#: core/theme-options/assets/theme-mode/theme-options.php:3404
 msgid "Primary menu border opacity"
 msgstr "Meniu primar opacitate margine"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3304
-#: core/theme-options/assets/theme-mode/theme-options.php:3399
+#: core/theme-options/assets/theme-mode/theme-options.php:3310
+#: core/theme-options/assets/theme-mode/theme-options.php:3405
 msgid "Adjust the primary menu border transparency."
 msgstr "Ajustează transparență margine pentru meniul primar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3311
-#: core/theme-options/assets/theme-mode/theme-options.php:3406
+#: core/theme-options/assets/theme-mode/theme-options.php:3317
+#: core/theme-options/assets/theme-mode/theme-options.php:3412
 msgid "Secondary menu background color"
 msgstr "Culoare fundal pentru meniul secundar"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3312
-#: core/theme-options/assets/theme-mode/theme-options.php:3407
+#: core/theme-options/assets/theme-mode/theme-options.php:3318
+#: core/theme-options/assets/theme-mode/theme-options.php:3413
 msgid "Specify the secondary menu background color."
 msgstr "Specificați culoare de fundal pentru meniul secundar."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3319
-#: core/theme-options/assets/theme-mode/theme-options.php:3414
+#: core/theme-options/assets/theme-mode/theme-options.php:3325
+#: core/theme-options/assets/theme-mode/theme-options.php:3420
 msgid "Headings color"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3320
-#: core/theme-options/assets/theme-mode/theme-options.php:3415
+#: core/theme-options/assets/theme-mode/theme-options.php:3326
+#: core/theme-options/assets/theme-mode/theme-options.php:3421
 msgid "Specify the headings text color."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3327
-#: core/theme-options/assets/theme-mode/theme-options.php:3422
+#: core/theme-options/assets/theme-mode/theme-options.php:3333
+#: core/theme-options/assets/theme-mode/theme-options.php:3428
 msgid "Content text color"
 msgstr "Culoare pentru conținutul text"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3328
-#: core/theme-options/assets/theme-mode/theme-options.php:3423
+#: core/theme-options/assets/theme-mode/theme-options.php:3334
+#: core/theme-options/assets/theme-mode/theme-options.php:3429
 msgid "Specify the content area text color."
 msgstr "Specifică culoare pentu conținutul zonei de text"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3335
-#: core/theme-options/assets/theme-mode/theme-options.php:3430
+#: core/theme-options/assets/theme-mode/theme-options.php:3341
+#: core/theme-options/assets/theme-mode/theme-options.php:3436
 msgid "Content background color"
 msgstr "Culoarea de fundal a conținutului"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3336
-#: core/theme-options/assets/theme-mode/theme-options.php:3431
+#: core/theme-options/assets/theme-mode/theme-options.php:3342
+#: core/theme-options/assets/theme-mode/theme-options.php:3437
 msgid "Specify the content background color."
 msgstr "Specifică culoarea de fundal pentru conținut"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3343
+#: core/theme-options/assets/theme-mode/theme-options.php:3349
 msgid "Dark skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3445
+#: core/theme-options/assets/theme-mode/theme-options.php:3451
 msgid "HTML body background"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3460
+#: core/theme-options/assets/theme-mode/theme-options.php:3466
 msgid "Accent color"
 msgstr "Culoare Accent"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3461
+#: core/theme-options/assets/theme-mode/theme-options.php:3467
 msgid "Specify the accent color."
 msgstr "Specifică culoare accent."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3468
+#: core/theme-options/assets/theme-mode/theme-options.php:3474
 msgid "Body font family"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3469
+#: core/theme-options/assets/theme-mode/theme-options.php:3475
 msgid "Specify the body font family."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3478
+#: core/theme-options/assets/theme-mode/theme-options.php:3484
 msgid "UI font family"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3479
+#: core/theme-options/assets/theme-mode/theme-options.php:3485
 msgid "Specify the UI font family."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3488
+#: core/theme-options/assets/theme-mode/theme-options.php:3494
 msgid "UI font weight"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3489
+#: core/theme-options/assets/theme-mode/theme-options.php:3495
 msgid "Specify the UI font weight."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3498
+#: core/theme-options/assets/theme-mode/theme-options.php:3504
 msgid "Headings font family"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3499
+#: core/theme-options/assets/theme-mode/theme-options.php:3505
 msgid "Specify the headings font family."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3508
+#: core/theme-options/assets/theme-mode/theme-options.php:3514
 msgid "Headings font weight"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3509
+#: core/theme-options/assets/theme-mode/theme-options.php:3515
 msgid "Specify the Headings font weight."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3518
-msgid "Smooth scroller"
-msgstr ""
-
-#: core/theme-options/assets/theme-mode/theme-options.php:3519
-msgid "Activate the enhanced smooth scroller."
-msgstr ""
-
-#: core/theme-options/assets/theme-mode/theme-options.php:3526
+#: core/theme-options/assets/theme-mode/theme-options.php:3524
 msgid "Input text underlined"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3527
+#: core/theme-options/assets/theme-mode/theme-options.php:3525
 #, fuzzy
 msgid "Activate to style all the input text with the underline."
 msgstr "Activați pentru a afișa titlul în zona de conținut ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3541
+#: core/theme-options/assets/theme-mode/theme-options.php:3539
 msgid "Overlay menu skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3542
+#: core/theme-options/assets/theme-mode/theme-options.php:3540
 msgid "Specify the overlay menu skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3551
+#: core/theme-options/assets/theme-mode/theme-options.php:3550
 msgid "Menu highlight color"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3552
+#: core/theme-options/assets/theme-mode/theme-options.php:3551
 msgid ""
 "Specify the menu active and hover effect color (If not specified an opaque "
 "version of the menu color will be used)."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3559
+#: core/theme-options/assets/theme-mode/theme-options.php:3558
 msgid "Primary menu skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3560
+#: core/theme-options/assets/theme-mode/theme-options.php:3559
 msgid "Specify the primary menu skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3568
+#: core/theme-options/assets/theme-mode/theme-options.php:3567
 msgid "Primary submenu skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3569
+#: core/theme-options/assets/theme-mode/theme-options.php:3568
 msgid "Specify the primary submenu skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3577
+#: core/theme-options/assets/theme-mode/theme-options.php:3576
 msgid "Secondary menu skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3578
+#: core/theme-options/assets/theme-mode/theme-options.php:3577
 msgid "Specify the secondary menu skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3588
+#: core/theme-options/assets/theme-mode/theme-options.php:3587
 msgid "Menu font size"
 msgstr "Mărime font meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3589
+#: core/theme-options/assets/theme-mode/theme-options.php:3588
 msgid "Specify the menu font size."
 msgstr "Specifică mărime font meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3596
+#: core/theme-options/assets/theme-mode/theme-options.php:3595
 msgid "Submenu font size"
 msgstr "mătine font pentru submeniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3597
+#: core/theme-options/assets/theme-mode/theme-options.php:3596
 msgid "Specify the submenu font size."
 msgstr "Specifică mărime font pentru submeniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3604
+#: core/theme-options/assets/theme-mode/theme-options.php:3603
 msgid "Mobile menu font size"
 msgstr "Meniu Mobil mărime font"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3605
+#: core/theme-options/assets/theme-mode/theme-options.php:3604
 msgid "Specify the menu font size for mobile."
 msgstr "Specifică mărime font meniu pentru mobil"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3612
+#: core/theme-options/assets/theme-mode/theme-options.php:3611
 msgid "Menu font family"
 msgstr "Familie font meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3613
+#: core/theme-options/assets/theme-mode/theme-options.php:3612
 msgid "Specify the menu font family."
 msgstr "Specofocă familie font meniu"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3622
+#: core/theme-options/assets/theme-mode/theme-options.php:3621
 msgid "Menu font weight"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3623
+#: core/theme-options/assets/theme-mode/theme-options.php:3622
 msgid "Specify the menu font weight."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3640
+#: core/theme-options/assets/theme-mode/theme-options.php:3639
 msgid "Specify the content skin."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3669
+#: core/theme-options/assets/theme-mode/theme-options.php:3668
 msgid "Buttons"
 msgstr "Butoane"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3676
+#: core/theme-options/assets/theme-mode/theme-options.php:3675
 msgid "Buttons font family"
 msgstr "Familie font Butoane"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3677
+#: core/theme-options/assets/theme-mode/theme-options.php:3676
 msgid "Specify the buttons font family."
 msgstr "Specifică familie font pentru Butoane"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3686
+#: core/theme-options/assets/theme-mode/theme-options.php:3685
 msgid "Buttons font weight"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3687
+#: core/theme-options/assets/theme-mode/theme-options.php:3686
 msgid "Specify the buttons font weight."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3696
+#: core/theme-options/assets/theme-mode/theme-options.php:3695
 msgid "Buttons text transform"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3697
+#: core/theme-options/assets/theme-mode/theme-options.php:3696
 msgid "Specify the buttons text transform."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3726
+#: core/theme-options/assets/theme-mode/theme-options.php:3725
 msgid "Copyright area skin"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3727
+#: core/theme-options/assets/theme-mode/theme-options.php:3726
 msgid "Specify the copyright area skin color."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3737
+#: core/theme-options/assets/theme-mode/theme-options.php:3736
 msgid "Copyright area custom background color"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3738
+#: core/theme-options/assets/theme-mode/theme-options.php:3737
 msgid "Specify a custom copyright area background color."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3745
-msgid "CPT"
-msgstr "CPT"
-
-#: core/theme-options/assets/theme-mode/theme-options.php:3752
-msgid "CPT label"
+#: core/theme-options/assets/theme-mode/theme-options.php:3744
+msgid "Extra"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3753
-msgid "Enter a custom portfolio post type label."
+#: core/theme-options/assets/theme-mode/theme-options.php:3751
+msgid "Smooth scroller"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3752
+msgid "Activate the enhanced smooth scroller."
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3759
+msgid "ScrollTo constant speed"
 msgstr ""
 
 #: core/theme-options/assets/theme-mode/theme-options.php:3760
+msgid "Activate this to always have a constant speed when scrolling to point."
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3767
+msgid "ScrollTo constant speed factor"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3768
+msgid "Adjust the constant scroll speed factor. Default 2"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3778
+msgid "ScrollTo speed fixed"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3779
+#, fuzzy
+msgid "Specify the scroll speed time in milliseconds."
+msgstr "Specifica viteza de animaţie intrarea de text titlu în milisecunde."
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3788
+msgid "Parallax speed factor"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3789
+msgid "Adjust the parallax speed factor. Default 2.5"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3797
+msgid "CPT"
+msgstr "CPT"
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3804
+msgid "CPT label"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3805
+msgid "Enter a custom portfolio post type label."
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3812
 msgid "CPT slug"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3761
+#: core/theme-options/assets/theme-mode/theme-options.php:3813
 msgid "Enter a custom portfolio post type slug."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3775
+#: core/theme-options/assets/theme-mode/theme-options.php:3820
+msgid "Admin"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3827
+msgid "Help button in admin bar"
+msgstr ""
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3828
+#, fuzzy
+msgid "Activate to show the Uncode help button in the WP admin bar."
+msgstr "Activază pentru a afișa icoana Woocommerce în bara de meniu."
+
+#: core/theme-options/assets/theme-mode/theme-options.php:3842
 msgid "Footer full width"
 msgstr "Subsol lățime completă"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3776
+#: core/theme-options/assets/theme-mode/theme-options.php:3843
 msgid "Expand the footer to full width."
 msgstr "Extinde subsol la lățime completă ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3785
+#: core/theme-options/assets/theme-mode/theme-options.php:3852
 msgid "Widget area"
 msgstr "Zonă Widget "
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3793
+#: core/theme-options/assets/theme-mode/theme-options.php:3860
 msgid "Specify the Content Block to use as a footer content."
 msgstr ""
 "Specificaţi bloc de conţinut pentru a utiliza ca un subsol de conţinut."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3803
+#: core/theme-options/assets/theme-mode/theme-options.php:3870
 msgid "Copyright area"
 msgstr "Zonă Copyright "
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3810
+#: core/theme-options/assets/theme-mode/theme-options.php:3877
 msgid "Automatic copyright text"
 msgstr "Text automat privind drepturile de autor"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3811
+#: core/theme-options/assets/theme-mode/theme-options.php:3878
 msgid "Activate to use an automatic copyright text."
 msgstr "Activează pentru a folosi text automatic privind dreptulile de autor."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3818
+#: core/theme-options/assets/theme-mode/theme-options.php:3885
 msgid "Custom copyright text"
 msgstr "Persolanizează text privind drepturile de autor"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3819
+#: core/theme-options/assets/theme-mode/theme-options.php:3886
 msgid "Insert a custom text for the footer copyright area."
 msgstr ""
 "Introdu un text personalizat pentru zona de subsol privind drepturile de "
 "autor ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3828
+#: core/theme-options/assets/theme-mode/theme-options.php:3895
 msgid "Specify the footer copyright text alignment."
 msgstr "Specifică alinierea textului de subsol privind drepturile de autor."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3849
+#: core/theme-options/assets/theme-mode/theme-options.php:3916
 msgid "Social links"
 msgstr "Link-uri Sociale"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3850
+#: core/theme-options/assets/theme-mode/theme-options.php:3917
 msgid "Activate to have the social icons in the footer copyright area."
 msgstr ""
 "Activează pentru a avea pictogramele sociale în zona de subsol \"Drepturile "
 "De Autor\" ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3863
+#: core/theme-options/assets/theme-mode/theme-options.php:3930
 msgid "Scroll up button"
 msgstr "Buton de dreulare în sus"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3864
+#: core/theme-options/assets/theme-mode/theme-options.php:3931
 msgid "Activate to add a scroll up button in the footer."
 msgstr "Activează pentru a adăuga un buton de derulare în sus , în subsol ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3871
+#: core/theme-options/assets/theme-mode/theme-options.php:3938
 msgid "Scroll up button on mobile"
 msgstr "Buton de dreulare în sus pentru mobil"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3872
+#: core/theme-options/assets/theme-mode/theme-options.php:3939
 msgid "Activate to add a scroll up button in the footer for mobile devices."
 msgstr ""
 "Activează pentru a adăuga un buton de derulare în sus , în subsol pentru "
 "dispozitive mobile ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3881
+#: core/theme-options/assets/theme-mode/theme-options.php:3948
 msgid "Social Networks"
 msgstr "Re'ele Sociale"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3882
+#: core/theme-options/assets/theme-mode/theme-options.php:3949
 msgid "Define here all the social networks you will need."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3892
+#: core/theme-options/assets/theme-mode/theme-options.php:3959
 msgid "Unique social ID"
 msgstr "ID social unic"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3897
+#: core/theme-options/assets/theme-mode/theme-options.php:3964
 msgid "Social Network Icon"
 msgstr "Icoană Rețea Socială"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3898
+#: core/theme-options/assets/theme-mode/theme-options.php:3965
 msgid "Specify the social network icon."
 msgstr "Specifică icoană pentru rețea socială"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3904
+#: core/theme-options/assets/theme-mode/theme-options.php:3971
 msgid "Social Network Link"
 msgstr "Link Rețea Socială"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3905
+#: core/theme-options/assets/theme-mode/theme-options.php:3972
 msgid "Enter your social network link."
 msgstr "Introdu link-ul rețelei sociale."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3913
+#: core/theme-options/assets/theme-mode/theme-options.php:3980
 msgid "Hide In The Menu"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3914
+#: core/theme-options/assets/theme-mode/theme-options.php:3981
 msgid ""
 "Activate to hide the social icon in the menu (if the social connections in "
 "the menu is active)."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3924
+#: core/theme-options/assets/theme-mode/theme-options.php:3991
 msgid "Google Maps API KEY"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3925
+#: core/theme-options/assets/theme-mode/theme-options.php:3992
 #, php-format
 msgid ""
 "To use Uncode custom styled Google Maps you need to create <a href=\"%s\" "
 "target=\"_blank\">here the Google API KEY</a> and paste it in this field."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3932
+#: core/theme-options/assets/theme-mode/theme-options.php:3999
 msgid "Enter here your custom CSS."
 msgstr "Introduceți aici CSS personalizat"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3942
+#: core/theme-options/assets/theme-mode/theme-options.php:4009
 msgid "Javascript"
 msgstr "Javascript"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3943
+#: core/theme-options/assets/theme-mode/theme-options.php:4010
 msgid "Enter here your custom Javacript code."
 msgstr "Introduceți aici codul personalizat Javacript."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3953
+#: core/theme-options/assets/theme-mode/theme-options.php:4020
 msgid "Adaptive images"
 msgstr "Imagini adaptive"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3954
+#: core/theme-options/assets/theme-mode/theme-options.php:4021
 msgid ""
 "Activate to take advantage of the Adaptive Images system. Adaptive Images "
 "detects your visitor's screen size and automatically delivers device "
@@ -4927,77 +5026,77 @@ msgstr ""
 "adaptive detectează dimensiunea ecranului vizitatorilor dvs. și furnizează "
 "dispozitivul automat imaginile adecvate redimensionate ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3963
+#: core/theme-options/assets/theme-mode/theme-options.php:4030
 msgid "Asynchronous adaptive image system"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3964
+#: core/theme-options/assets/theme-mode/theme-options.php:4031
 msgid ""
 "Activate to load the adaptive images asynchronously, this will improve the "
 "loading performance and it's necessary if using an aggresive caching system."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3973
+#: core/theme-options/assets/theme-mode/theme-options.php:4040
 msgid "Asynchronous loading blur effect"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3974
+#: core/theme-options/assets/theme-mode/theme-options.php:4041
 msgid "Activate to use a bluring effect when loading the images."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3983
+#: core/theme-options/assets/theme-mode/theme-options.php:4050
 msgid "Image quality"
 msgstr "Calitate imagine"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3984
+#: core/theme-options/assets/theme-mode/theme-options.php:4051
 msgid "Adjust the images compression quality."
 msgstr "Ajustează calitatea imaginilor de compresie."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3994
+#: core/theme-options/assets/theme-mode/theme-options.php:4061
 msgid "Image sizes range"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:3995
+#: core/theme-options/assets/theme-mode/theme-options.php:4062
 msgid ""
 "Enter all the image sizes you want use for the Adaptive Images system. NB. "
 "The values needs to be comma separated."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4004
+#: core/theme-options/assets/theme-mode/theme-options.php:4071
 msgid "Apache Server Configs"
 msgstr "Apache Server Configurări"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4005
+#: core/theme-options/assets/theme-mode/theme-options.php:4072
 msgid ""
 "Activate the enhanced .htaccess, this will improve the web site's "
 "performance and security."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4014
+#: core/theme-options/assets/theme-mode/theme-options.php:4081
 msgid "Production mode"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4015
+#: core/theme-options/assets/theme-mode/theme-options.php:4082
 msgid ""
 "Activate this to switch to production mode, the CSS and JS will be cached by "
 "the browser and the JS minified."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4024
+#: core/theme-options/assets/theme-mode/theme-options.php:4091
 msgid "Activate page redirect"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4025
+#: core/theme-options/assets/theme-mode/theme-options.php:4092
 msgid ""
 "Activate to redirect all the website calls to a specific page. NB. This can "
 "only be visible when the user is not logged in."
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4032
+#: core/theme-options/assets/theme-mode/theme-options.php:4099
 msgid "Redirect page"
 msgstr "Pagină de redirecționare"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4033
+#: core/theme-options/assets/theme-mode/theme-options.php:4100
 msgid ""
 "Specify the redirect page. NB. This page will be presented without menu and "
 "footer."
@@ -5005,54 +5104,54 @@ msgstr ""
 "Specifică pagina de redirecționare . NB . Această pagină va fi prezentată "
 "fără meniu și subsol ."
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4055
+#: core/theme-options/assets/theme-mode/theme-options.php:4122
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4059
+#: core/theme-options/assets/theme-mode/theme-options.php:4126
 #: woocommerce/order/order-details.php:33
 #: woocommerce/single-product-reviews.php:24
 msgid "Product"
 msgstr "Produs"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4063
+#: core/theme-options/assets/theme-mode/theme-options.php:4130
 msgid "Products"
 msgstr "Produse"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4084
+#: core/theme-options/assets/theme-mode/theme-options.php:4151
 msgid "Social Menu"
 msgstr "Meniu Social"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4089
+#: core/theme-options/assets/theme-mode/theme-options.php:4156
 msgid "Cart icon"
 msgstr "Icoană Coș Magazin"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4090
+#: core/theme-options/assets/theme-mode/theme-options.php:4157
 msgid "Specify the cart icon"
 msgstr "Specifică icoană coș magazin"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4250
+#: core/theme-options/assets/theme-mode/theme-options.php:4318
 msgid "Justify"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4265
+#: core/theme-options/assets/theme-mode/theme-options.php:4333
 #, fuzzy
-msgid "Center Splitted"
+msgid "Center Split"
 msgstr "Aliniere la centru"
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4270
+#: core/theme-options/assets/theme-mode/theme-options.php:4338
 msgid "Lateral"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4275
+#: core/theme-options/assets/theme-mode/theme-options.php:4343
 msgid "Offcanvas"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4280
+#: core/theme-options/assets/theme-mode/theme-options.php:4348
 msgid "Overlay"
 msgstr ""
 
-#: core/theme-options/assets/theme-mode/theme-options.php:4285
+#: core/theme-options/assets/theme-mode/theme-options.php:4353
 #, fuzzy
 msgid "Overlay Center"
 msgstr "Centru Centru"
@@ -5229,8 +5328,14 @@ msgid "Creating Options"
 msgstr ""
 
 #: core/theme-options/includes/ot-functions-admin.php:231
+#, fuzzy
 msgid "Option Types"
 msgstr ""
+"<strong>Standard</strong>: Setarea valorii standard pentru opțiunea "
+"dumneavoastră funcționează numai pentru anumite tipuri de opțiuni. Citește "
+"<code>OptionTree->\n"
+"Documentație</code> pentru mai multe informații cu privire la care dintre "
+"ele ."
 
 #: core/theme-options/includes/ot-functions-admin.php:235
 msgid "Function References"
@@ -5538,8 +5643,9 @@ msgid "Spacing"
 msgstr "Spațiere"
 
 #: core/theme-options/includes/ot-functions-admin.php:2445
+#, fuzzy
 msgid "Tab"
-msgstr ""
+msgstr "Filă goală. Editare pagină pentru a adăuga conținut aici."
 
 #: core/theme-options/includes/ot-functions-admin.php:2446
 msgid "Tag Checkbox"
@@ -5842,7 +5948,8 @@ msgstr ""
 
 #: core/theme-options/includes/ot-functions-admin.php:5623
 #: core/theme-options/includes/ot-functions-admin.php:5662
-msgid "Wordpress Codex"
+#, fuzzy
+msgid "WordPress Codex"
 msgstr "Codex Wordpress"
 
 #: core/theme-options/includes/ot-functions-admin.php:5653
@@ -5989,14 +6096,6 @@ msgstr "Bară implicită"
 #: core/theme-options/includes/ot-functions-option-types.php:2255
 msgid "No Sidebars"
 msgstr "Nu există Bară Laterală"
-
-#: core/theme-options/includes/ot-functions-option-types.php:2363
-msgid "Facebook"
-msgstr "Facebook"
-
-#: core/theme-options/includes/ot-functions-option-types.php:2368
-msgid "Twitter"
-msgstr "Twitter"
 
 #: core/theme-options/includes/ot-functions-option-types.php:2373
 msgid "Google+"
@@ -6349,7 +6448,7 @@ msgstr ""
 "tema curentă. Vă rugăm să dezactivați plugin-ul pentru a încărca versiunea "
 "tema dependentă de opțiunea Arbore și elimina acest avertisment."
 
-#: footer.php:86 partials/menus.php:666
+#: footer.php:75 partials/menus.php:679
 msgid "All rights reserved"
 msgstr "Toate drepturile rezervate"
 
@@ -6361,24 +6460,25 @@ msgstr "Versiune PHP învechită"
 msgid "Ooops, obsolete PHP version"
 msgstr "Hopa, PHP versiunea învechită"
 
-#: page.php:293 partials/elements.php:869 single.php:327
+#: page.php:291 partials/elements.php:893 single.php:312
 msgid "Pages:"
 msgstr "Pagini:"
 
-#: partials/elements.php:789
+#: partials/elements.php:806
 msgid "Sticky"
 msgstr ""
 
-#: partials/elements.php:906 partials/elements.php:907
+#: partials/elements.php:932 partials/elements.php:933
 #: woocommerce/single-product/add-to-cart/simple.php:59
 msgid "Read More"
 msgstr "Citește mai mult"
 
-#: partials/elements.php:915 partials/elements.php:916
-msgid "by "
+#: partials/elements.php:941 partials/elements.php:942
+#, fuzzy
+msgid "by"
 msgstr "de"
 
-#: partials/elements.php:937
+#: partials/elements.php:963
 msgctxt "comments"
 msgid "Comment"
 msgid_plural "Comments"
@@ -6386,56 +6486,62 @@ msgstr[0] "Comentariu"
 msgstr[1] "Comentarii"
 msgstr[2] "Comentarii"
 
-#: partials/elements.php:1168
+#: partials/elements.php:1211
 msgid "Sale!"
 msgstr "Vânzare!"
 
-#: partials/elements.php:1170
+#: partials/elements.php:1213
 msgid "Sold Out"
 msgstr ""
 
-#: partials/elements.php:1279 partials/elements.php:1303
+#: partials/elements.php:1336 partials/elements.php:1360
 #, php-format
 msgid "View all posts in %s"
 msgstr "Vizualizează toate mesajele în %s"
 
-#: partials/elements.php:1281 partials/elements.php:1305
-msgid "In "
+#: partials/elements.php:1338 partials/elements.php:1362
+#, fuzzy
+msgid "In"
 msgstr "În"
 
-#: partials/elements.php:1284
-msgid "By "
+#: partials/elements.php:1341
+#, fuzzy
+msgid "By"
 msgstr "De"
 
-#: partials/elements.php:1319
+#: partials/elements.php:1376
 msgid "Home"
 msgstr "Acasă"
 
-#: partials/elements.php:1322
-msgid "Archive by Category "
+#: partials/elements.php:1379
+#, fuzzy
+msgid "Archive by Category"
 msgstr "Arhivă de Categorii"
 
-#: partials/elements.php:1325
-msgid "Search Results for "
+#: partials/elements.php:1382
+#, fuzzy
+msgid "Search Results for"
 msgstr "Caută rezultate pentru"
 
-#: partials/elements.php:1328
-msgid "Posts Tagged "
+#: partials/elements.php:1385
+#, fuzzy
+msgid "Posts Tagged"
 msgstr "Postări Etighetate"
 
-#: partials/elements.php:1331
-msgid "Articles Posted by "
+#: partials/elements.php:1388
+#, fuzzy
+msgid "Articles Posted by"
 msgstr "Articole Postat de"
 
-#: partials/elements.php:1334
+#: partials/elements.php:1391
 msgid "Error 404"
 msgstr "Eroare 404"
 
-#: partials/menus.php:327 searchform.php:6
+#: partials/menus.php:340 searchform.php:6
 msgid "Search…"
 msgstr "Caută…"
 
-#: search.php:90
+#: search.php:85
 msgid "Results for:"
 msgstr "Rezultate pentru:"
 
@@ -6443,23 +6549,23 @@ msgstr "Rezultate pentru:"
 msgid "Search for:"
 msgstr "Caută după:"
 
-#: single-portfolio.php:431 woocommerce/single-product/share.php:20
+#: single-portfolio.php:414 woocommerce/single-product/share.php:32
 msgid "Share"
 msgstr "Distribuie"
 
-#: vc_templates/uncode_index.php:392 vc_templates/vc_gallery.php:296
+#: vc_templates/uncode_index.php:401 vc_templates/vc_gallery.php:296
 msgid "Show all"
 msgstr "Arată tot"
 
-#: vc_templates/uncode_index.php:771
+#: vc_templates/uncode_index.php:784
 msgid "Nothing found."
 msgstr "Nimic gasit."
 
-#: vc_templates/uncode_index.php:789
+#: vc_templates/uncode_index.php:802
 msgid "Load more"
 msgstr "Încarcă mai mult"
 
-#: vc_templates/uncode_index.php:789
+#: vc_templates/uncode_index.php:802
 msgid "Loading…"
 msgstr "Se încarcă…"
 
@@ -6646,7 +6752,7 @@ msgstr "Tag"
 msgid "Tags"
 msgstr "Tags"
 
-#: woocommerce/single-product/product-image.php:59
+#: woocommerce/single-product/product-image.php:60
 msgid "Placeholder"
 msgstr "Placeholder"
 
@@ -6738,6 +6844,60 @@ msgstr "Undsgn"
 #. Author URI of the plugin/theme
 msgid "http://www.undsgn.com"
 msgstr "http://www.undsgn.com"
+
+#~ msgid "Welcome"
+#~ msgstr "Bine ati venit"
+
+#~ msgid ""
+#~ "Sorry, but you do not have the correct permissions to install the %1$s "
+#~ "plugin."
+#~ msgid_plural ""
+#~ "Sorry, but you do not have the correct permissions to install the %1$s "
+#~ "plugins."
+#~ msgstr[0] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin"
+#~ "%1$s."
+#~ msgstr[1] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin"
+#~ "%1$s."
+#~ msgstr[2] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a instala plugin"
+#~ "%1$s."
+
+#~ msgid ""
+#~ "Sorry, but you do not have the correct permissions to update the %1$s "
+#~ "plugin."
+#~ msgid_plural ""
+#~ "Sorry, but you do not have the correct permissions to update the %1$s "
+#~ "plugins."
+#~ msgstr[0] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza plugin"
+#~ "%1$s."
+#~ msgstr[1] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza "
+#~ "pluginurile%1$s."
+#~ msgstr[2] ""
+#~ "Ne pare rău, dar nu aveți permisiunile corecte pentru a actualiza "
+#~ "pluginurile%1$s."
+
+#~ msgid ""
+#~ "Sorry, but you do not have the correct permissions to activate the %1$s "
+#~ "plugin."
+#~ msgid_plural ""
+#~ "Sorry, but you do not have the correct permissions to activate the %1$s "
+#~ "plugins."
+#~ msgstr[0] ""
+#~ "Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s "
+#~ "plugin."
+#~ msgstr[1] ""
+#~ "Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s "
+#~ "plugin-uri."
+#~ msgstr[2] ""
+#~ "Ne pare rău, dar nu aveți perimisiunea corectă pentru a activa %1$s "
+#~ "plugin-uri."
+
+#~ msgid "Return to the dashboard"
+#~ msgstr "Înapoi la Panoul de Control"
 
 #~ msgid "To allow the correct style to work, make <code>%s</code> writable."
 #~ msgstr ""

@@ -12,6 +12,10 @@
 */
 .compat-item .compat-attachment-fields .label {
   margin-right: 0px;
+  min-width: 30%;
+}
+.compat-item .field {
+  width: 64%;
 }
 .compat-item .field span {
   vertical-align: bottom;
@@ -1714,10 +1718,13 @@
   width: 100%;
 }
 #option-tree-settings-api > .ui-tabs {
+  font-family: inherit;
+  font-size: 1em;
   background: #fff;
   border: 1px solid #ddd;
   border-top: none;
   margin: 0px 5px 0 2px;
+  padding: 0;
   min-width: 533px;
   padding-bottom: 0px;
   position: relative;
@@ -2000,13 +2007,26 @@
   margin: 0 0 0 0px;
   padding: 0px;
   width: 160px;
-  background-color: #f1f1f1;
+  background: #f1f1f1;
+  -webkit-border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 0;
+  -moz-background-clip: padding;
+  border-radius: 0;
+  background-clip: padding-box;
+  border: none;
 }
 .wrap.settings-wrap .ui-tabs-nav li {
-  border-bottom: 1px solid #ddd;
+  float: none;
+  background: inherit;
+  border-bottom: 1px solid #ddd !important;
+  border-top-width: 0px;
   border-right-width: 0px;
   border-left-width: 0px;
+  border-radius: 0;
   display: block;
+  clear: both;
+  position: initial;
   margin: 0;
 }
 .wrap.settings-wrap .ui-tabs-nav li.ui-state-active {
@@ -2017,6 +2037,7 @@
 .wrap.settings-wrap .ui-tabs-nav li a {
   color: #21759b;
   display: block;
+  float: none;
   line-height: 18px;
   padding: 12px 20px;
   text-decoration: none;
@@ -2850,16 +2871,17 @@ select.option-tree-ui-select option {
   cursor: pointer;
   display: block;
   margin: -6px -5px;
-  outline: 0;
+  top: -5px;
+  coutline: 0;
   position: absolute;
   background: #f1f1f1;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.04);
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  border-radius: 10px;
+  border-radius: 3px;
   border: 1px solid #ddd;
   width: 14px;
-  height: 14px;
+  height: 23px;
 }
 /* default */
 .ot-numeric-slider.ui-slider .ui-slider-handle:hover,
@@ -2949,7 +2971,7 @@ select.option-tree-ui-select option {
 .option-tree-ui-colorpicker-input-wrap .wp-picker-default,
 .option-tree-ui-colorpicker-input-wrap .wp-picker-clear {
   border-color: #ddd;
-  height: 29px !important;
+  height: 28px !important;
   line-height: 27px !important;
   margin-top: 0px;
   -webkit-border-radius: 2px;
@@ -2985,7 +3007,7 @@ select.option-tree-ui-select option {
   float: left;
   font-size: 12px !important;
   line-height: 27px !important;
-  height: 29px !important;
+  height: 28px !important;
   margin: 5px !important;
   min-width: 32px;
   padding: 0 5px !important;
@@ -4246,6 +4268,14 @@ a.ui-datepicker-next {
 .wp-core-ui .attachment .landscape img:not(.icon) {
   min-width: 100%;
 }
+.wp-core-ui .attachment .subtype-twitter .thumbnail .centered .oembed,
+.wp-core-ui .attachment .subtype-facebook .thumbnail .centered .oembed {
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 /* --------------------------------------------------
   :: Upload
   ---------------------------------------------------*/
@@ -5117,8 +5147,7 @@ div.option-tree-ui-media-wrap {
   margin: 0;
   width: 100%;
 }
-body.post-type-page #setting__uncode_specific_share,
-body.post-type-product #setting__uncode_specific_share {
+body.post-type-page #setting__uncode_specific_share {
   display: none;
 }
 .media-modal-content .media-frame select.attachment-filters {
@@ -6014,6 +6043,9 @@ License: MIT
 .rs-update-notice-wrap,
 .rp4wp-box-upgrade {
   display: none;
+}
+#wp-admin-bar-uncode-help {
+  background-color: #1080d0 !important;
 }
 /*
 ----------------------------------------------------------

@@ -1913,7 +1913,7 @@ textarea,
 }
 @media (max-width: 959px) {
   .font-size-menu-mobile,
-  .menu-container ul.menu-smart a {
+  .menu-container:not(.isotope-filters) ul.menu-smart a {
     font-size: <?php echo esc_html($menu_mobile_font_size); ?>px !important;
   }
 }
@@ -2249,14 +2249,14 @@ textarea,
 }
 /* Menu transparent backgrounds colors */
 @media (min-width: 960px) {
-  body:not(.menu-overlay) .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-light-original {
+  body:not(.menu-overlay):not(.hmenu-center) .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-light-original {
     opacity: 0;
   }
   .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-light-original > * {
     background: transparent;
     background-color: <?php echo esc_html($color_menu_background_alpha_light); ?>;
   }
-  body:not(.menu-overlay) .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-dark-original {
+  body:not(.menu-overlay):not(.hmenu-center) .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-dark-original {
     opacity: 0;
   }
   .menu-wrapper:not(.no-header) .menu-transparent:not(.is_stuck).menu-transparent.style-dark-original > * {

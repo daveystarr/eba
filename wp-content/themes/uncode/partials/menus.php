@@ -46,7 +46,7 @@ if (!class_exists('unmenu')) {
 
 		function __construct($type, $param)
 		{
-			global $LOGO, $metabox_data, $post, $menutype;
+			global $LOGO, $metabox_data, $post, $menutype, $adaptive_images, $adaptive_images_async, $ai_width;
 
 			$general_style = ot_get_option( '_uncode_general_style');
 			$stylemain = ot_get_option( '_uncode_primary_menu_style');
@@ -67,7 +67,10 @@ if (!class_exists('unmenu')) {
 			if (isset($LOGO->logo_id)) {
 				if (!is_array($LOGO->logo_id)) $LOGO->logo_id = array($LOGO->logo_id);
 				foreach ($LOGO->logo_id as $key => $value) {
+					$logo_alt = get_post_meta($value, '_wp_attachment_image_alt', true);
+					if ( empty($logo_alt) ) $logo_alt = 'logo';
 					$logo_info = uncode_get_media_info($value);
+					$media_metavalues = (isset($logo_info->metadata)) ? unserialize($logo_info->metadata) : '';
 					if (!empty($logo_info)) {
 						if (count($LOGO->logo_id) === 2) {
 							if ($key === 0 && $stylemain === 'light') $logo_hide = '';
@@ -77,7 +80,6 @@ if (!class_exists('unmenu')) {
 						} else $logoSkinClass = ' logo-skinnable';
 						if ($logo_info->post_mime_type === 'oembed/svg') {
 							$media_code = $logo_info->post_content;
-							$media_metavalues = unserialize($logo_info->metadata);
 							$logo_ratio = $media_metavalues['width'] / $media_metavalues['height'];
 							$media_code = preg_replace('#\s(id)="([^"]+)"#', ' $1="$2-' .rand() .'"', $media_code);
 							$media_code = preg_replace('#\s(xmlns)="([^"]+)"#', '', $media_code);
@@ -97,15 +99,15 @@ if (!class_exists('unmenu')) {
 							}
 							if ($menutype === 'menu-overlay' || $menutype === 'menu-overlay-center' || $type === 'offcanvas_head') {
 								$vmenu_position = ot_get_option('_uncode_vmenu_position');
-								if ($vmenu_position === 'left') $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMaxYMin" ', $media_code);
-								else $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMinYMin" ', $media_code);
+								if ($vmenu_position === 'left') $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMaxYMin" ', $media_code);
+								else $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMinYMin" ', $media_code);
 							} else if ($vertical) {
 								$vmenu_position = ot_get_option('_uncode_vmenu_position');
-								if ($vmenu_position === 'right') $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMaxYMin" ', $media_code);
-								else $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMinYMin" ', $media_code);
+								if ($vmenu_position === 'right') $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMaxYMin" ', $media_code);
+								else $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMinYMin" ', $media_code);
 							} else {
-								if ($menutype === 'hmenu-center-split') $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMidYMid" ', $media_code);
-								else $media_code = str_replace('<svg ', '<svg preserveAspectRatio="xMinYMin" ', $media_code);
+								if ($menutype === 'hmenu-center-split') $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMidYMid" ', $media_code);
+								else $media_code = str_replace('<svg ', '<svg alt="'.$logo_alt.'" preserveAspectRatio="xMinYMin" ', $media_code);
 							}
 							$logoDivInner .= '<div class="html-code'.$logoSkinClass.'" data-maxheight="'.$logo_height.'" style="height: '.$logo_height.'px;'.$logo_hide.'">';
 							$logoDivInner .= '<canvas class="logo-canvas" height="'.round($logo_height).'" width="'.round($logo_ratio * $logo_height) .'"></canvas>';
@@ -117,17 +119,28 @@ if (!class_exists('unmenu')) {
 							if (empty($logo_metavalues)) {
 								$logo_metavalues['width'] = $logo_metavalues['height'] = 1;
 							}
-							$logo_resized = uncode_resize_image($logo_info->guid, $logo_info->path, $logo_metavalues['width'], $logo_metavalues['height'], round(($logo_metavalues['width'] * $logo_height) / $logo_metavalues['height']), $logo_height, false, true);
+
 							$logoDivInner .= '<div class="logo-image'.$logoSkinClass.'" data-maxheight="'.$logo_height.'" style="height: '.$logo_height.'px;'.$logo_hide.'">';
-							if ($logo_info->animated_svg && $logo_info->post_mime_type === 'image/svg+xml') {
-								if (isset($logo_metavalues['width']) && $logo_metavalues['width'] !== '1') $icon_width = ' style="width:'.$logo_metavalues['width'].'px"';
-								else $icon_width = '';
-								$id_icon = 'icon-' . big_rand();
-								$icon_time = (isset($logo_info->animated_svg_time) && $logo_info->animated_svg_time !== '') ? $logo_info->animated_svg_time : 100;
-								$logoDivInner .= '<div id="'.$id_icon.'"'.$icon_width.' class="icon-media"></div>';
-								$logoDivInner .= "<script>new Vivus('".$id_icon."', {type: 'delayed', pathTimingFunction: Vivus.EASE_OUT, animTimingFunction: Vivus.LINEAR, duration: ".$icon_time.", file: '".$logo_info->guid."'});</script>";
+							if ($logo_info->post_mime_type === 'image/svg+xml') {
+								if ($logo_info->animated_svg) {
+									if (isset($logo_metavalues['width']) && $logo_metavalues['width'] !== '1') $icon_width = ' style="width:'.$logo_metavalues['width'].'px"';
+									else $icon_width = '';
+									$id_icon = 'icon-' . big_rand();
+									$icon_time = (isset($logo_info->animated_svg_time) && $logo_info->animated_svg_time !== '') ? $logo_info->animated_svg_time : 100;
+									$logoDivInner .= '<div id="'.$id_icon.'"'.$icon_width.' class="icon-media"></div>';
+									$logoDivInner .= "<script>new Vivus('".$id_icon."', {type: 'delayed', pathTimingFunction: Vivus.EASE_OUT, animTimingFunction: Vivus.LINEAR, duration: ".$icon_time.", file: '".$logo_info->guid."'});</script>";
+								}
+								$logoDivInner .= '<img src="'.$logo_info->guid.'" alt="logo" width="'.round($logo_metavalues['width']).'" height="'.round($logo_metavalues['height']).'" class="img-responsive" />';
 							} else {
-								$logoDivInner .= '<img src="'.$logo_resized['url'].'" alt="logo" width="'.round($logo_resized['width']).'" height="'.round($logo_resized['height']).'" class="img-responsive" />';
+								$logo_resized = uncode_resize_image($logo_info->guid, $logo_info->path, $logo_metavalues['width'], $logo_metavalues['height'], 'null', $logo_height, false, 'height');
+								$single_width = $logo_resized['single_width'];
+								$logo_class = ' class="img-responsive"';
+								$logo_data = '';
+								if ($adaptive_images === 'on' && $adaptive_images_async === 'on') {
+									$logo_class = ' class="img-responsive adaptive-async"';
+									$logo_data = ' data-uniqueid="'.$value.'-'.big_rand().'" data-guid="'.$logo_info->guid.'" data-path="'.$logo_info->path.'" data-width="'.$media_metavalues['width'].'" data-height="'.$media_metavalues['height'].'" data-singlew="'.$single_width.'" data-singleh="null" data-crop="" data-fixed="height"';
+								}
+								$logoDivInner .= '<img src="'.$logo_resized['url'].'" alt="'.$logo_alt.'" width="'.round($logo_resized['width']).'" height="'.round($logo_resized['height']).'"'.$logo_class.$logo_data.' />';
 							}
 							$logoDivInner .= '</div>';
 						}
@@ -181,8 +194,8 @@ if (!class_exists('unmenu')) {
 			$menu_sticky = (ot_get_option( (wp_is_mobile() ? '_uncode_menu_sticky_mobile' : '_uncode_menu_sticky')) === 'on') ? ' menu-sticky' : (($get_menu_hide === 'on') ? ' menu-hide-only' : '');
 			$menu_no_arrow = (ot_get_option( '_uncode_menu_no_arrows') === 'on')  ? ' menu-no-arrows' : '';
 			if ($type === 'vmenu') {
-				$menu_hide .= '-vertical';
-				$menu_sticky .= '-vertical';
+				if ($menu_sticky !== '') $menu_hide .= '-vertical';
+				if ($menu_sticky !== '') $menu_sticky .= '-vertical';
 			}
 
 			$effects = '';
@@ -274,7 +287,7 @@ if (!class_exists('unmenu')) {
 							$woo_cart_class_mobile = '';
 						}
 						global $woocommerce;
-						$checkout_url = $woocommerce->cart->get_checkout_url();
+						$checkout_url = $woocommerce->cart->get_cart_url();
 						$tot_articles = $woocommerce->cart->cart_contents_count;
 						$icon_badge = (( $tot_articles !== 0 ) ? '<span class="badge">'.$tot_articles.'</span>' : '<span class="badge" style="display: none;"></span>');
 						$woo_icon_mobile = '<a class="'.$woo_cart_class_mobile.'mobile-shopping-cart" href="'.$checkout_url.'"><span class="cart-icon-container"><i class="'.$woo_icon.'"></i>'.$icon_badge.'</span></a>';

@@ -49,7 +49,10 @@ foreach ( $graph_lines_data as $line ) {
 	$bar_color = isset($line['bar_color']) ? ' style-' . $line['bar_color'] . '-bg' : ' style-accent-bg';
 	$back_color = isset($line['back_color']) ? ' style-' . $line['back_color'] . '-bg style-override' : '';
 	$unit = ( $units != '' ) ? ' <span class="vc_label_units">' . $line['value'] . $units . '</span>' : '';
-	$output .= '<div class="'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'>' . $line['label'] . '<small class="vc_label">' . $unit . '</small></div>';
+
+	$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+	$output .= '<div class="'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', $div_data_attributes).'>' . $line['label'] . '<small class="vc_label">' . $unit . '</small></div>';
 	$output .= '<div class="vc_single_bar'.$back_color.'">';
 	if ( $line['value'] !== false ) {
 		$percentage_value = $line['value'];

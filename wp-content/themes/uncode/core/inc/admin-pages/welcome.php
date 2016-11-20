@@ -130,8 +130,8 @@ function uncode_let_to_num( $size ) {
 				<td><?php
 					$memory = uncode_let_to_num( WP_MEMORY_LIMIT );
 
-					if ( $memory < 67108864 ) {
-						echo '<mark class="error">' . sprintf( wp_kses(__( '%s - We recommend setting memory to at least 64MB. See: <a href="%s" target="_blank">Increasing memory allocated to PHP</a>', 'uncode' ), array( 'a' => array( 'href' => array(),'target' => array() ) ) ), size_format( $memory ), 'http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP' ) . '</mark>';
+					if ( $memory < 100663296 ) {
+						echo '<mark class="error">' . sprintf( wp_kses(__( '%s - We recommend setting memory to at least 96MB. See: <a href="%s" target="_blank">Increasing memory allocated to PHP</a>', 'uncode' ), array( 'a' => array( 'href' => array(),'target' => array() ) ) ), size_format( $memory ), 'http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP' ) . '</mark>';
 					} else {
 						echo '<mark class="yes">' . size_format( $memory ) . '</mark>';
 					}
@@ -143,8 +143,20 @@ function uncode_let_to_num( $size ) {
 				<td class="real-memory">
 					<span class="calculating"><?php esc_html_e( 'Calculating…', 'uncode' ); ?></span>
 					<mark class="yes" style="display: none;">%d% MB</mark>
-					<mark class="error" style="display: none;"><?php esc_html_e( 'You only have %d% MB available and it\'s not enough to run the system. If you have already increased the memory limit please check with your hosting provider for increase it (at least 64MB is required).','uncode' ); ?></mark>
+					<mark class="error" style="display: none;"><?php esc_html_e( 'You only have %d% MB available and it\'s not enough to run the system. If you have already increased the memory limit please check with your hosting provider for increase it (at least 96MB is required).','uncode' ); ?></mark>
 				</td>
+			</tr>
+			<tr>
+				<td data-export-label="PHP Max Input Vars"><?php esc_html_e( 'PHP Max Input Vars', 'uncode' ); ?>:</td>
+				<td class="help"><?php echo '<a href="#" class="help_tip" data-tip="' . esc_attr__( 'The maximum number of variables your server can use for a single function to avoid overloads.', 'uncode' ) . '">[?]</a>'; ?></td>
+				<td><?php
+					$max_input = ini_get('max_input_vars');
+					if ( $max_input < 3000 ) {
+						echo '<mark class="error">' . sprintf( wp_kses(__( '%s - We recommend setting PHP max_input_vars to at least 3000. See: <a href="%s" target="_blank">Increasing the PHP max vars limit</a>', 'uncode' ), array( 'a' => array( 'href' => array(),'target' => array() ) ) ), $max_input, 'https://undsgn.com/uncode/documentation/max-input-vars/' ) . '</mark>';
+					} else {
+						echo '<mark class="yes">' . $max_input . '</mark>';
+					}
+				?></td>
 			</tr>
 			<tr>
 				<td data-export-label="WP Debug Mode"><?php esc_html_e( 'WP Debug Mode', 'uncode' ); ?>:</td>
@@ -182,7 +194,7 @@ function uncode_let_to_num( $size ) {
 					if ('%'+temp_memory == el) get_memory = temp_memory;
 				});
 				var	memory_string;
-				if (get_memory < 64) {
+				if (get_memory < 96) {
 					memory_string = $('.real-memory .error');
 				} else {
 					memory_string = $('.real-memory .yes');
@@ -199,7 +211,7 @@ function uncode_let_to_num( $size ) {
 					if ('%'+temp_memory == el) get_memory = temp_memory;
 				});
 				var	memory_string;
-				if (get_memory < 64) {
+				if (get_memory < 96) {
 					memory_string = $('.real-memory .error');
 				} else {
 					memory_string = $('.real-memory .yes');

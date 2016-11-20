@@ -59,8 +59,10 @@ if ($icon !== '') {
     $classes[] = "separator-no-padding";
 }
 
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
 ?>
-<div class="divider-wrapper<?php echo esc_attr($css_class); ?>"<?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
+<div class="divider-wrapper<?php echo esc_attr($css_class); ?>"<?php echo implode(' ', $div_data_attributes); ?>>
 <?php if ($icon === '') : ?>
     <hr class="<?php echo esc_attr(trim(implode(' ' , $classes))); ?>" <?php if ($inline_css !== '') echo ' style="' . esc_attr($inline_css) .'"'; ?> />
 <?php else : ?>

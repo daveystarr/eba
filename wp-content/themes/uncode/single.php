@@ -17,7 +17,7 @@ get_header();
 $limit_width = $limit_content_width = $the_content = $main_content = $layout = $bg_color = $sidebar_style = $sidebar_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $title_content = $media_content = $navigation_content = $page_custom_width = $row_classes = $main_classes = $footer_content = $footer_classes = $content_after_body = '';
 $with_builder = false;
 
-$post_type = 'post';
+$post_type = $post->post_type;
 
 /** Get general datas **/
 if (isset($metabox_data['_uncode_specific_style'][0]) && $metabox_data['_uncode_specific_style'][0] !== '') {
@@ -37,52 +37,37 @@ $bg_color = ($bg_color == '') ? ' style-'.$style.'-bg' : ' style-'.$bg_color.'-b
 /** Get page width info **/
 $boxed = ot_get_option('_uncode_boxed');
 
-if ($boxed !== 'on')
-{
-	$page_content_full = (isset($metabox_data['_uncode_specific_layout_width'][0])) ? $metabox_data['_uncode_specific_layout_width'][0] : '';
-	if ($page_content_full === '')
-	{
+$page_content_full = (isset($metabox_data['_uncode_specific_layout_width'][0])) ? $metabox_data['_uncode_specific_layout_width'][0] : '';
+if ($page_content_full === '') {
 
-		/** Use generic page width **/
-		$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
-		if ($generic_content_full === '')
-		{
-			$main_content_full = ot_get_option('_uncode_body_full');
-			if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
-		}
-		else
-		{
-			if ($generic_content_full === 'limit')
-			{
-				$generic_custom_width = ot_get_option('_uncode_' . $post_type . '_layout_width_custom');
-				if ($generic_custom_width[1] === 'px')
-				{
-					$generic_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
-				}
-				if (is_array($generic_custom_width) && !empty($generic_custom_width))
-				{
-					$page_custom_width = ' style="max-width: ' . implode("", $generic_custom_width) . '; margin: auto;"';
-				}
+	/** Use generic page width **/
+	$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
+	if ($generic_content_full === '') {
+		$main_content_full = ot_get_option('_uncode_body_full');
+		if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
+	} else {
+		if ($generic_content_full === 'limit') {
+			$generic_custom_width = ot_get_option('_uncode_' . $post_type . '_layout_width_custom');
+			if ($generic_custom_width[1] === 'px') {
+				$generic_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
+			}
+			if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
+				$page_custom_width = ' style="max-width: ' . implode("", $generic_custom_width) . '; margin: auto;"';
 			}
 		}
 	}
-	else
-	{
+} else {
 
-		/** Override page width **/
-		if ($page_content_full === 'limit')
-		{
-			$limit_content_width = ' limit-width';
-			$page_custom_width = (isset($metabox_data['_uncode_specific_layout_width_custom'][0])) ? unserialize($metabox_data['_uncode_specific_layout_width_custom'][0]) : '';
-			if (is_array($page_custom_width) && !empty($page_custom_width) && $page_custom_width[0] !== '')
-			{
-				if ($page_custom_width[1] === 'px')
-				{
-					$page_custom_width[0] = 12 * round(($page_custom_width[0]) / 12);
-				}
-				$page_custom_width = ' style="max-width: ' . implode("", $page_custom_width) . '; margin: auto;"';
-			} else $page_custom_width = '';
-		}
+	/** Override page width **/
+	if ($page_content_full === 'limit') {
+		$limit_content_width = ' limit-width';
+		$page_custom_width = (isset($metabox_data['_uncode_specific_layout_width_custom'][0])) ? unserialize($metabox_data['_uncode_specific_layout_width_custom'][0]) : '';
+		if (is_array($page_custom_width) && !empty($page_custom_width) && $page_custom_width[0] !== '') {
+			if ($page_custom_width[1] === 'px') {
+				$page_custom_width[0] = 12 * round(($page_custom_width[0]) / 12);
+			}
+			$page_custom_width = ' style="max-width: ' . implode("", $page_custom_width) . '; margin: auto;"';
+		} else $page_custom_width = '';
 	}
 }
 
@@ -554,7 +539,10 @@ while (have_posts()):
 
 		/** Create html with sidebar **/
 
-		if ($footer_content !== '') $footer_content = '<div class="post-footer post-footer-' . $style . ' style-' . $style . $footer_classes . '">' . $footer_content . '</div>';
+		if ($footer_content !== '') {
+			if ($limit_content_width === '') $footer_content = uncode_get_row_template($footer_content, $limit_width, $limit_content_width, $style, '', false, true, '');
+			$footer_content = '<div class="post-footer post-footer-' . $style . ' style-' . $style . $footer_classes . '">' . $footer_content . '</div>';
+		}
 
 		$the_content = '<div class="post-content style-' . $style . $main_classes . '">' . $the_content . '</div>';
 

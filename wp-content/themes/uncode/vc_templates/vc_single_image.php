@@ -1,6 +1,6 @@
 <?php
 
-$title = $title = $media = $col_width = $media_width_use_pixel = $media_width_percent = $media_width_pixel = $media_ratio = $media_lightbox = $media_poster = $media_link = $advanced = $media_items = $media_text = $media_style = $media_back_color = $media_overlay_color = $media_overlay_coloration = $media_overlay_opacity = $media_text_visible = $media_text_anim = $media_text_anim_type = $media_overlay_visible = $media_overlay_anim = $media_image_coloration = $media_image_color_anim = $media_image_anim = $media_h_align = $media_v_position = $media_reduced = $media_h_position = $media_padding = $media_text_reduced = $media_title_transform = $media_title_dimension = $media_title_family = $media_title_weight = $media_title_height = $media_title_space = $media_icon = $media_elements_click = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $lbox_connected = $link = $alignment = $el_class = $css_animation = $animation_delay = $animation_speed = $shape = $caption = $border = $shadow = $output = $single_width = $single_height = $style_preset = $css = $div_data = $lightbox_classes = $dummy_oembed = $carousel_textual = $media_code = '';
+$title = $title = $media = $col_width = $media_width_use_pixel = $media_width_percent = $media_width_pixel = $media_ratio = $media_lightbox = $media_poster = $media_link = $advanced = $media_items = $media_text = $media_style = $media_back_color = $media_overlay_color = $media_overlay_coloration = $media_overlay_opacity = $media_text_visible = $media_text_anim = $media_text_anim_type = $media_overlay_visible = $media_overlay_anim = $media_image_coloration = $media_image_color_anim = $media_image_anim = $media_h_align = $media_v_position = $media_reduced = $media_h_position = $media_padding = $media_text_reduced = $media_title_transform = $media_title_dimension = $media_title_family = $media_title_weight = $media_title_height = $media_title_space = $media_icon = $media_elements_click = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $lbox_connected = $link = $alignment = $el_class = $css_animation = $animation_delay = $animation_speed = $shape = $caption = $border = $shadow = $output = $single_width = $single_height = $single_fixed = $style_preset = $css = $div_data = $lightbox_classes = $dummy_oembed = $carousel_textual = $media_code = '';
 
 extract(shortcode_atts(array(
 	'title' => '',
@@ -92,15 +92,12 @@ $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'uncode-single-me
 
 $css_class .= $alignment;
 
-if ($media_width_use_pixel === 'yes' && $media_width_pixel !== '')
-{
+if ($media_width_use_pixel === 'yes' && $media_width_pixel !== '') {
 	$media_width = preg_replace("/[^0-9,.]/", "", $media_width_pixel);
 	$single_width = $media_width;
 	$actual_width = $media_width_pixel. 'px';
-	$fixed_width = $single_width;
-}
-else
-{
+	$single_fixed = 'width';
+} else {
 	$single_width = ($col_width * $media_width_percent) / 100;
 	$actual_width = $media_width_percent . '%';
 }
@@ -190,6 +187,7 @@ $block_data['overlay_opacity'] = $media_overlay_opacity;
 $block_data['single_back_color'] = $media_back_color;
 $block_data['single_width'] = $single_width;
 $block_data['single_height'] = $single_height;
+$block_data['single_fixed'] = $single_fixed;
 $block_data['single_icon'] = $media_icon;
 $block_data['title_classes'] = $title_classes;
 
@@ -232,7 +230,7 @@ if ($media_lightbox === 'yes') {
 	if ($lbox_connected === 'yes') {
 		if (!isset($lightbox_id) || $lightbox_id === '') $lightbox_id = big_rand();
 		$lbox_id = $lightbox_id;
-	} else $lbox_id = $media_lightbox;
+	} else $lbox_id = $media;
 } else $lbox_id = $media;
 
 if ($advanced === 'yes') {
@@ -294,7 +292,7 @@ if ($advanced === 'yes') {
 			libxml_use_internal_errors(true);
 			if (function_exists('mb_convert_encoding')) $media_html = mb_convert_encoding($media_html, 'HTML-ENTITIES', 'UTF-8');
 			$dom = new DOMDocument();
-			@$dom->loadHTML($media_htm);
+			@$dom->loadHTML($media_html);
 			if (class_exists('DomXpath')) {
 				$xpath = new DomXpath($dom);
 				foreach($xpath->query('//div[@class="t-entry-visual-overlay"]') as $e ) {

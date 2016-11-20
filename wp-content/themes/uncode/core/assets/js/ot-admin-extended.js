@@ -49,9 +49,11 @@
 				}
 				if ($(this).hasClass('uncode-color-select')) {
 					$(this).closest('.select-wrapper').addClass('select-uncode-colors');
-					$(this).easyDropDown({
-						cutOff: 10
-					});
+					if (window.navigator.userAgent.indexOf("Windows NT 10.0") == -1) {
+						$(this).easyDropDown({
+							cutOff: 10
+						});
+					}
 				}
 			});
 			$(document).on({

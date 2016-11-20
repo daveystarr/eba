@@ -248,13 +248,23 @@ add_filter( 'woocommerce_available_variation', 'uncode_woocommerce_available_var
 
 function uncode_woocommerce_available_variation( $variations ) {
 	global $wpdb;
+
+	$shop_single = wc_get_image_size( 'shop_single' );
+	$crop = false;
+	if (isset($shop_single['crop']) && $shop_single['crop'] === 1) {
+		$crop = true;
+		$thumb_ratio = $shop_single['width'] / $shop_single['height'];
+	}
+
 	if (isset($variations['image_link'])) {
 		$the_media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE guid = %s", $variations['image_link'] ) );
 		if (isset($the_media->ID)) {
 			$image_attributes = uncode_get_media_info($the_media->ID);
 			$image_metavalues = unserialize($image_attributes->metadata);
-			$image_resized = uncode_resize_image($image_attributes->guid, $image_attributes->path, $image_metavalues['width'], $image_metavalues['height'], 5, null, false);
+			if ($image_attributes->post_mime_type === 'image/gif' || $image_attributes->post_mime_type === 'image/url') $crop = false;
+			$image_resized = uncode_resize_image($image_attributes->guid, $image_attributes->path, $image_metavalues['width'], $image_metavalues['height'], 5, ($crop ? 5 / $thumb_ratio : null), $crop);
 			$variations['image_src'] = $image_resized['url'];
+			$variations['uncode_image_path'] = $image_attributes->path;
 		}
 	}
 	$variations['image_srcset'] = $variations['image_sizes'] = '';

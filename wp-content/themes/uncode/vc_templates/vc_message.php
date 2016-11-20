@@ -22,7 +22,10 @@ if ($css_animation !== '') {
 	if ($animation_delay !== '') $div_data['data-delay'] = $animation_delay;
 	if ($animation_speed !== '') $div_data['data-speed'] = $animation_speed;
 }
+
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
 ?>
-<div class="<?php echo esc_attr($css_class); ?>" <?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
+<div class="<?php echo esc_attr($css_class); ?>" <?php echo implode(' ', $div_data_attributes); ?>>
 	<div class="messagebox_text<?php echo esc_attr($message_color); ?>"><?php echo uncode_remove_wpautop($content, true); ?></div>
 </div>

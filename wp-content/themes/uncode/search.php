@@ -13,7 +13,7 @@ get_header();
  */
 
 /** Init variables **/
-$limit_width = $limit_content_width = $the_content = $main_content = $layout = $sidebar_style = $sidebar_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $navigation_content = $page_custom_width = $row_classes = $main_classes = $footer_classes = '';
+$limit_width = $limit_content_width = $the_content = $main_content = $layout = $sidebar_style = $sidebar_bg_color = $sidebar = $sidebar_size = $sidebar_sticky = $sidebar_padding = $sidebar_inner_padding = $sidebar_content = $navigation_content = $page_custom_width = $row_classes = $main_classes = $footer_classes = $generic_body_content_block = '';
 
 $post_type = 'search_index';
 
@@ -23,25 +23,20 @@ $bg_color = ot_get_option('_uncode_general_bg_color');
 $bg_color = ($bg_color == '') ? ' style-'.$style.'-bg' : ' style-'.$bg_color.'-bg';
 
 /** Get page width info **/
-$boxed = ot_get_option('_uncode_boxed');
-
-if ($boxed !== 'on')
+$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
+if ($generic_content_full === '')
 {
-	$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
-	if ($generic_content_full === '')
+	$main_content_full = ot_get_option('_uncode_body_full');
+	if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
+}
+else
+{
+	if ($generic_content_full === 'limit')
 	{
-		$main_content_full = ot_get_option('_uncode_body_full');
-		if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
-	}
-	else
-	{
-		if ($generic_content_full === 'limit')
+		$generic_custom_width = ot_get_option('_uncode_' . $post_type . '_layout_width_custom');
+		if (is_array($generic_custom_width) && !empty($generic_custom_width))
 		{
-			$generic_custom_width = ot_get_option('_uncode_' . $post_type . '_layout_width_custom');
-			if (is_array($generic_custom_width) && !empty($generic_custom_width))
-			{
-				$page_custom_width = ' style="max-width: ' . implode("", $generic_custom_width) . ';"';
-			}
+			$page_custom_width = ' style="max-width: ' . implode("", $generic_custom_width) . ';"';
 		}
 	}
 }
@@ -121,56 +116,61 @@ if (have_posts()):
 	} else {
 		$generic_body_content_block = apply_filters( 'wpml_object_id', $generic_body_content_block, 'post' );
 		$uncode_block = get_post_field('post_content', $generic_body_content_block);
-		$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:relevance|search:' . get_search_query() . '"';
-		$regex = '/\[uncode_index(.*?)\]/';
-		$regex_attr = '/(.*?)=\"(.*?)\"/';
-		preg_match_all($regex, $uncode_block, $matches, PREG_SET_ORDER);
-		foreach ($matches as $key => $value) {
-			$index_found = false;
-			$index_pagination = false;
-			$index_infinite = false;
-			if (isset($value[1])) {
-				preg_match_all($regex_attr, trim($value[1]), $matches_attr, PREG_SET_ORDER);
-				foreach ($matches_attr as $key_attr => $value_attr) {
-					switch (trim($value_attr[1])) {
-						case 'auto_query':
-							if ($value_attr[2] === 'yes') $index_found = true;
-							break;
-						case 'pagination':
-							if ($value_attr[2] === 'yes') $index_pagination = true;
-							break;
-						case 'infinite':
-							if ($value_attr[2] === 'yes') $index_infinite = true;
-							break;
+		if (function_exists('is_plugin_active') && is_plugin_active( 'relevanssi/relevanssi.php' )) {
+		  $uncode_block = str_replace('[uncode_index','[uncode_index using_plugin="yes"', $uncode_block);
+		} else {
+			$archive_query = ' loop="size:'.get_option('posts_per_page').'|order_by:relevance|search:' . get_search_query() . '"';
+			$regex = '/\[uncode_index(.*?)\]/';
+			$regex_attr = '/(.*?)=\"(.*?)\"/';
+			preg_match_all($regex, $uncode_block, $matches, PREG_SET_ORDER);
+			foreach ($matches as $key => $value) {
+				$index_found = false;
+				$index_pagination = false;
+				$index_infinite = false;
+				if (isset($value[1])) {
+					preg_match_all($regex_attr, trim($value[1]), $matches_attr, PREG_SET_ORDER);
+					foreach ($matches_attr as $key_attr => $value_attr) {
+						switch (trim($value_attr[1])) {
+							case 'auto_query':
+								if ($value_attr[2] === 'yes') $index_found = true;
+								break;
+							case 'pagination':
+								if ($value_attr[2] === 'yes') $index_pagination = true;
+								break;
+							case 'infinite':
+								if ($value_attr[2] === 'yes') $index_infinite = true;
+								break;
+						}
 					}
 				}
-			}
-			if ($index_found) {
-				preg_match('#\s(loop)="([^"]+)"#', $value[1], $loop_match);
-				if (isset($loop_match[2])) {
-					$loop_array = explode('|', $loop_match[2]);
-					$rebuild_array = array();
-					foreach($loop_array as $k=>$v){
-						$loop_array[$k] = explode(':', $v);
-						if ($loop_array[$k][0] === 'order_by') $rebuild_array['order_by'] = $v;
-						if ($loop_array[$k][0] === 'order') $rebuild_array['order'] = $v;
-						if ($loop_array[$k][0] === 'size') $rebuild_array['size'] = $v;
+				if ($index_found) {
+					preg_match('#\s(loop)="([^"]+)"#', $value[1], $loop_match);
+					if (isset($loop_match[2])) {
+						$loop_array = explode('|', $loop_match[2]);
+						$rebuild_array = array();
+						foreach($loop_array as $k=>$v){
+							$loop_array[$k] = explode(':', $v);
+							if ($loop_array[$k][0] === 'order_by') $rebuild_array['order_by'] = $v;
+							if ($loop_array[$k][0] === 'order') $rebuild_array['order'] = $v;
+							if ($loop_array[$k][0] === 'size') $rebuild_array['size'] = $v;
+						}
+						if (!isset($rebuild_array['order_by'])) $rebuild_array['order_by'] = 'order_by:relevance';
+						if (!isset($rebuild_array['order'])) $rebuild_array['order'] = 'order:ASC';
+						if (!isset($rebuild_array['size'])) $rebuild_array['size'] = 'size:'.get_option('posts_per_page');
+						$rebuild_array['search'] = 'search:' . get_search_query();
+						$archive_query = ' loop="'.implode('|', $rebuild_array).'"';
 					}
-					if (!isset($rebuild_array['order_by'])) $rebuild_array['order_by'] = 'order_by:relevance';
-					if (!isset($rebuild_array['order'])) $rebuild_array['order'] = 'order:ASC';
-					if (!isset($rebuild_array['size'])) $rebuild_array['size'] = 'size:'.get_option('posts_per_page');
-					$rebuild_array['search'] = 'search:' . get_search_query();
-					$archive_query = ' loop="'.implode('|', $rebuild_array).'"';
+					$value[1] = preg_replace('#\s(loop)="([^"]+)"#', $archive_query, $value[1], -1, $index_count);
+					if ($index_count === 0) {
+						$value[1] .= $archive_query;
+					}
+					$replacement = '[uncode_index' . $value[1] . ']';
+					$uncode_block = str_replace($value[0], $replacement, $uncode_block);
+					if ($index_pagination || $index_infinite) $index_has_navigation = true;
 				}
-				$value[1] = preg_replace('#\s(loop)="([^"]+)"#', $archive_query, $value[1], -1, $index_count);
-				if ($index_count === 0) {
-					$value[1] .= $archive_query;
-				}
-				$replacement = '[uncode_index' . $value[1] . ']';
-				$uncode_block = str_replace($value[0], $replacement, $uncode_block);
-				if ($index_pagination || $index_infinite) $index_has_navigation = true;
 			}
 		}
+
 		$the_content .= $uncode_block;
 	}
 

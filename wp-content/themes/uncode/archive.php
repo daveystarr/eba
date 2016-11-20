@@ -40,30 +40,25 @@ $bg_color = ot_get_option('_uncode_general_bg_color');
 $bg_color = ($bg_color == '') ? ' style-'.$style.'-bg' : ' style-'.$bg_color.'-bg';
 
 /** Get page width info **/
-$boxed = ot_get_option('_uncode_boxed');
-
-if ($boxed !== 'on')
+$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
+if ($generic_content_full === '')
 {
-	$generic_content_full = ot_get_option('_uncode_' . $post_type . '_layout_width');
-	if ($generic_content_full === '')
-	{
-		$main_content_full = ot_get_option('_uncode_body_full');
-		if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
-	}
-	else
-	{
-		if ($generic_content_full === 'limit') {
-			$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
-			if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
-				if ($generic_custom_width[1] === 'px') {
-					$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
-				}
-				if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
-					$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
-				}
-			} else {
-				$limit_content_width = ' limit-width';
+	$main_content_full = ot_get_option('_uncode_body_full');
+	if ($main_content_full === '' || $main_content_full === 'off') $limit_content_width = ' limit-width';
+}
+else
+{
+	if ($generic_content_full === 'limit') {
+		$generic_custom_width = ot_get_option('_uncode_'.$post_type.'_layout_width_custom');
+		if (isset($generic_custom_width[0]) && isset($generic_custom_width[1])) {
+			if ($generic_custom_width[1] === 'px') {
+				$page_custom_width[0] = 12 * round(($generic_custom_width[0]) / 12);
 			}
+			if (is_array($generic_custom_width) && !empty($generic_custom_width)) {
+				$page_custom_width = ' style="max-width: '.implode('', $generic_custom_width).'; margin: auto;"';
+			}
+		} else {
+			$limit_content_width = ' limit-width';
 		}
 	}
 }

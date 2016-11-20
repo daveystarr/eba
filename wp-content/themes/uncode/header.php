@@ -96,8 +96,19 @@ if (is_admin_bar_showing()) $html_class .= ' admin-mode';
 ?>
 <body <?php body_class($background_color_css); echo $body_attr; ?>>
 	<?php echo uncode_remove_wpautop( $background_div ) ; ?>
-	<?php do_action( 'before' ); ?>
+	<?php do_action( 'before' );
 
+	$body_border = ot_get_option('_uncode_body_border');
+	if ($body_border !== '' && $body_border !== 0) {
+		$general_style = ot_get_option('_uncode_general_style');
+		$body_border_color = ot_get_option('_uncode_body_border_color');
+		if ($body_border_color === '') $body_border_color = ' style-' . $general_style . '-bg';
+		else $body_border_color = ' style-' . $body_border_color . '-bg';
+		$body_border_frame ='<div class="body-borders" data-border="'.$body_border.'"><div class="top-border body-border-shadow"></div><div class="right-border body-border-shadow"></div><div class="bottom-border body-border-shadow"></div><div class="left-border body-border-shadow"></div><div class="top-border'.$body_border_color.'"></div><div class="right-border'.$body_border_color.'"></div><div class="bottom-border'.$body_border_color.'"></div><div class="left-border'.$body_border_color.'"></div></div>';
+		echo $body_border_frame;
+	}
+
+	?>
 	<div class="box-wrapper<?php echo esc_html($back_class); ?>"<?php echo wp_kses_post($background_style); ?>>
 		<div class="box-container<?php echo esc_attr($boxed_width); ?>">
 		<script type="text/javascript">UNCODE.initBox();</script>

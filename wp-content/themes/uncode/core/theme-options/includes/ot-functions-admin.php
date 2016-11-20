@@ -5620,7 +5620,7 @@ function ot_meta_box_post_format_video( $pages = 'post' ) {
       array(
         'id'      => '_format_video_embed',
         'label'   => '',
-        'desc'    => sprintf( wp_kses(__( 'Embed video from services like Youtube, Vimeo, or Hulu. You can find a list of supported oEmbed sites in the %1$s. Alternatively, you could use the built-in %2$s shortcode.', 'option-tree' ), array( 'code' => array(), 'a' => array( 'href' => array() , 'target' => array()) ) ), '<a href="http://codex.wordpress.org/Embeds" target="_blank">' . esc_html__( 'Wordpress Codex', 'option-tree' ) .'</a>', '<code>[video]</code>' ),
+        'desc'    => sprintf( wp_kses(__( 'Embed video from services like Youtube, Vimeo, or Hulu. You can find a list of supported oEmbed sites in the %1$s. Alternatively, you could use the built-in %2$s shortcode.', 'option-tree' ), array( 'code' => array(), 'a' => array( 'href' => array() , 'target' => array()) ) ), '<a href="http://codex.wordpress.org/Embeds" target="_blank">' . esc_html__( 'WordPress Codex', 'option-tree' ) .'</a>', '<code>[video]</code>' ),
         'std'     => '',
         'type'    => 'textarea'
       )
@@ -5659,7 +5659,7 @@ function ot_meta_box_post_format_audio( $pages = 'post' ) {
       array(
         'id'      => '_format_audio_embed',
         'label'   => '',
-        'desc'    => sprintf( wp_kses(__( 'Embed audio from services like SoundCloud and Rdio. You can find a list of supported oEmbed sites in the %1$s. Alternatively, you could use the built-in %2$s shortcode.', 'option-tree' ), array( 'code' => array(), 'a' => array( 'href' => array() , 'target' => array()) ) ), '<a href="http://codex.wordpress.org/Embeds" target="_blank">' . esc_html__( 'Wordpress Codex', 'option-tree' ) .'</a>', '<code>[audio]</code>' ),
+        'desc'    => sprintf( wp_kses(__( 'Embed audio from services like SoundCloud and Rdio. You can find a list of supported oEmbed sites in the %1$s. Alternatively, you could use the built-in %2$s shortcode.', 'option-tree' ), array( 'code' => array(), 'a' => array( 'href' => array() , 'target' => array()) ) ), '<a href="http://codex.wordpress.org/Embeds" target="_blank">' . esc_html__( 'WordPress Codex', 'option-tree' ) .'</a>', '<code>[audio]</code>' ),
         'std'     => '',
         'type'    => 'textarea'
       )

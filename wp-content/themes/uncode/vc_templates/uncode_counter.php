@@ -37,7 +37,9 @@ if ($css_animation !== '') {
 	if ($animation_speed !== '') $div_data['data-speed'] = $animation_speed;
 }
 
-$output .= '<div class="uncode-wrapper '.$css_class.'" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'>';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+$output .= '<div class="uncode-wrapper '.$css_class.'" '.implode(' ', $div_data_attributes).'>';
 $output .= '<p class="' . esc_attr(trim(implode(' ', $counter_class))) . '">';
 if ($prefix !== '') $output .= '<span class="counter-prefix'.$counter_color.'">'.$prefix.'</span>';
 $output .= '<span class="counter'.$counter_color.'">'.$value.'</span>';

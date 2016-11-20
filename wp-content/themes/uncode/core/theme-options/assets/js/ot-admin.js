@@ -345,7 +345,7 @@
             return;
           }
 
-          var v1 = targetEl.length ? targetEl.val().toString() : '';
+          var v1 = (targetEl != null && targetEl.length) ? targetEl.val().toString() : '';
           var v2 = condition.value.toString();
           var result;
 

@@ -118,6 +118,8 @@ if ($media_lightbox !== '') {
 	}
 	if (isset($media_attributes->post_mime_type) && strpos($media_attributes->post_mime_type, 'video/') !== false) {
 		$video_src .= 'html5video:{preload:\'true\',';
+		$video_autoplay = get_post_meta($media_lightbox, "_uncode_video_autoplay", true);
+		if ($video_autoplay) $video_src .= 'autoplay:\'true\',';
 		$alt_videos = get_post_meta($media_lightbox, "_uncode_video_alternative", true);
 		if (!empty($alt_videos)) {
 			foreach ($alt_videos as $key => $value) {
@@ -185,7 +187,9 @@ else {
 $output_icon .=	'</'.$tag_end.'>';
 $output_icon .='</div>';
 
-$output ='<div class="'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'>';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+$output ='<div class="'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', $div_data_attributes).'>';
 switch ($position) {
 	case 'bottom':
 	case 'right':

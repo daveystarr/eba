@@ -1573,7 +1573,9 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
 		 * @return string|boolean Plugin slug if found, false otherwise.
 		 */
 		public function _get_plugin_data_from_name( $name, $data = 'slug' ) {
+
 			foreach ( $this->plugins as $values ) {
+
 				if ( $name === $values['name'] && isset( $values[ $data ] ) ) {
 					return $values[ $data ];
 				}

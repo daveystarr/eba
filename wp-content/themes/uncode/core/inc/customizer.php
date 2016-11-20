@@ -419,6 +419,26 @@ function uncode_oembed_add_provider() {
 
 add_action('init', 'uncode_oembed_add_provider');
 
+function uncode_oembed_fetch_url($provider, $url, $args) {
+	if (strpos($url, 'facebook') !== false) {
+		$locale = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,5) : get_locale();
+		$locale = str_replace('-','_',$locale);
+		$locale = explode('_', $locale);
+		if (isset($locale[0]) && isset($locale[1])) {
+			$locale = strtolower($locale[0]) . '_' . strtoupper($locale[1]);
+		} else {
+			$locale = 'en_US';
+		}
+
+		$provider = add_query_arg( 'locale', (string)$locale, $provider );
+	}
+
+	return $provider;
+}
+
+add_filter('oembed_fetch_url', 'uncode_oembed_fetch_url', 10 ,3);
+
+
 function uncode_the_content($the_content) {
 	$the_content = wptexturize($the_content);
 	$the_content = convert_smilies($the_content);

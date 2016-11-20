@@ -65,10 +65,15 @@ if ($css_animation !== '') {
 
 $cont_classes[] = trim($this->getExtraClass( $el_class ));
 
-$output .= '<div class="' . esc_attr(trim(implode( ' ', $cont_classes ))) . '" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'>';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+$output .= '<div class="' . esc_attr(trim(implode( ' ', $cont_classes ))) . '" '.implode(' ', $div_data_attributes).'>';
 if ($separator === 'over') $output .= '<hr class="' . esc_attr(trim(implode( ' ', $separator_classes ))) . '" />';
 if ($content !== '') {
-	$output .= '<' . $heading_semantic . ' class="' . esc_attr(trim(implode( ' ', $classes ))) . '" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $data_size, array_keys($data_size))) .'>';
+
+	$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $data_size, array_keys($data_size));
+
+	$output .= '<' . $heading_semantic . ' class="' . esc_attr(trim(implode( ' ', $classes ))) . '" '.implode(' ', $div_data_attributes) .'>';
 	if ($text_italic === 'yes') $output .= '<i>';
 	$output .= '<span>';
 	$content = trim($content);

@@ -1,7 +1,7 @@
 <?php
 
 global $uncode_post_types;
-$title = $index_type = $isotope_mode = $index_back_color = $items = $filtering = $filter_style = $filter_back_color = $filtering_full_width = $filtering_position = $filtering_uppercase = $filter_all_opposite = $filter_mobile = $filter_scroll = $footer_style = $footer_back_color = $footer_full_width = $pagination = $infinite = $infinite_button = $infinite_button_text = $infinite_button_shape = $infinite_button_outline = $infinite_button_color = $style_preset = $images_size = $thumb_size = $single_width = $single_height = $single_back_color = $single_shape = $single_text = $single_elements_click = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_h_align_mobile = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_weight = $single_title_family = $single_title_dimension = $single_title_height = $single_title_space = $single_text_lead = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_height = $carousel_v_align = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $gutter_size = $inner_padding = $post_items = $portfolio_items = $page_items = $product_items = $screen_lg = $screen_md = $screen_sm = $filter = $el_id = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $el_class = $orderby = $order = $custom_order = $order_ids = $css_class = $filter = $filter_background = $filter_sticky = $offset = '';
+$title = $index_type = $isotope_mode = $index_back_color = $items = $filtering = $filter_style = $filter_back_color = $filtering_full_width = $filtering_position = $filtering_uppercase = $filter_all_opposite = $filter_mobile = $filter_scroll = $footer_style = $footer_back_color = $footer_full_width = $pagination = $infinite = $infinite_button = $infinite_button_text = $infinite_button_shape = $infinite_button_outline = $infinite_button_color = $style_preset = $images_size = $thumb_size = $single_width = $single_height = $single_back_color = $single_shape = $single_text = $single_elements_click = $single_text_visible = $single_text_anim = $single_text_anim_type = $single_overlay_visible = $single_overlay_anim = $single_image_coloration = $single_image_color_anim = $single_image_anim = $single_reduced = $single_padding = $single_text_reduced = $single_h_align = $single_h_align_mobile = $single_v_position = $single_h_position = $single_style = $single_overlay_color = $single_overlay_coloration = $single_overlay_opacity = $single_shadow = $single_border = $single_icon = $single_title_transform = $single_title_weight = $single_title_family = $single_title_dimension = $single_title_height = $single_title_space = $single_text_lead = $single_css_animation = $single_animation_delay = $single_animation_speed = $carousel_height = $carousel_v_align = $carousel_type = $carousel_interval = $carousel_navspeed = $carousel_loop = $carousel_nav = $carousel_nav_mobile = $carousel_nav_skin = $carousel_dots = $carousel_dots_mobile = $carousel_dots_inside = $carousel_autoh = $carousel_lg = $carousel_md = $carousel_sm = $gutter_size = $inner_padding = $post_items = $portfolio_items = $page_items = $product_items = $screen_lg = $screen_md = $screen_sm = $filter = $el_id = $lbox_skin = $lbox_dir = $lbox_title = $lbox_caption = $lbox_social = $lbox_deep = $lbox_no_tmb = $lbox_no_arrows = $no_double_tap = $el_class = $orderby = $order = $custom_order = $order_ids = $css_class = $filter = $filter_background = $filter_sticky = $offset = $search_query = $using_plugin = '';
 $post_types = array();
 $wc_filtered = array();
 
@@ -114,6 +114,7 @@ $attributes_first = array(
   'order_ids' => '',
   'loop' => 'size:10|order_by:date|post_type:post',
   'offset' => '',
+  'using_plugin' => '',
   'css_class' => ''
 );
 
@@ -213,6 +214,7 @@ if ( empty( $loop ) ) return;
 $loop_parse = uncode_parse_loop_data($loop);
 
 global $wp_query, $temp_index_id;
+
 $temp_index_id = $el_id;
 $paged = (get_query_var('paged')) ? get_query_var('paged') : (isset($wp_query->query['paged']) ? $wp_query->query['paged'] : 1);
 
@@ -238,8 +240,14 @@ if ($infinite !== 'yes') {
 }
 $loop .= '|paged:' . $paged;
 
+if (function_exists('is_plugin_active') && is_plugin_active( 'relevanssi/relevanssi.php' ) && is_search() && $using_plugin === 'yes') {
+  $search_query = $wp_query;
+}
+
 $this->getLoop( $loop, $offset );
-$my_query = $this->query;
+
+if ($search_query === '') $my_query = $this->query;
+else $my_query = $search_query;
 
 $args = $this->loop_args;
 if (isset($loop_parse['by_id']) && isset($loop_parse['order']) && $loop_parse['order'] === 'none') {
@@ -283,6 +291,7 @@ while ( $my_query->have_posts() ) {
   $post_category = $this->getCategoriesCss( $post->id );
   $post->categories_css = $post_category['cat_css'];
   $post->categories_name = $post_category['cat_name'];
+  $post->tags_name = $post_category['tag'];
   $post->categories_id = $post_category['cat_id'];
   $posts[] = $post;
 }
@@ -448,9 +457,11 @@ $main_container_classes[] = trim($this->getExtraClass( $el_class ));
         break;
     }
 
+    $div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
     ?>
     <div class="<?php echo esc_attr(trim(implode(' ', $parent_container_classes))); ?>">
-      <div<?php if ($index_type === 'carousel') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php if ($posts_counter > 0) echo esc_attr(trim(implode(' ', $container_classes))); ?>" <?php echo implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))); ?>>
+      <div<?php if ($index_type === 'carousel') echo ' id="' . esc_attr($el_id) .'"'; ?> class="<?php if ($posts_counter > 0) echo esc_attr(trim(implode(' ', $container_classes))); ?>" <?php echo implode(' ', $div_data_attributes); ?>>
         <?php if ( $posts_counter > 0 ):
           foreach ( $posts as $post ):
 
@@ -670,7 +681,7 @@ $main_container_classes[] = trim($this->getExtraClass( $el_class ));
                   if ($item_thumb_id === '') $item_thumb_id = get_post_thumbnail_id($post->id);
                 break;
                 case 'custom':
-                  $item_thumb_id = $item_prop['back_image'];
+                  if (isset($item_prop['back_image'])) $item_thumb_id = $item_prop['back_image'];
                 break;
               }
             }
@@ -741,8 +752,10 @@ $main_container_classes[] = trim($this->getExtraClass( $el_class ));
             }
 
             $block_data['title_classes'] = $title_classes;
-            if ($single_text === 'overlay' && $single_elements_click !== 'yes') $block_data['single_categories'] = $post->categories_name;
-            else $block_data['single_categories'] = $this->getCategoriesLink( $post->id );
+            if ($single_text === 'overlay' && $single_elements_click !== 'yes') {
+              $block_data['single_categories'] = $post->categories_name;
+              $block_data['single_tags'] = $post->tags_name;
+            } else $block_data['single_categories'] = $this->getCategoriesLink( $post->id );
 
             $block_data['single_categories_id'] = $post->categories_id;
 

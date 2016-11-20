@@ -35,7 +35,9 @@ if ($icon !== '') $label_value = htmlentities('<i class="' . esc_attr($icon) . '
 $el_class = $this->getExtraClass($el_class);
 $container_class[] = $css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'vc_pie_chart wpb_content_element' . $el_class, $this->settings['base'], $atts);
 
-$output = '<div class= "'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).' data-pie-value="' . esc_attr($value) . '" data-pie-label-value="' . esc_attr($label_value) . '" data-pie-units="' . esc_attr($units) . '" data-pie-color="' . esc_attr($bar_color) . '" data-pie-width="' . esc_attr($arc_width) . '">';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+$output = '<div class= "'.esc_attr(trim(implode(' ', $container_class))).'" '.implode(' ', $div_data_attributes).' data-pie-value="' . esc_attr($value) . '" data-pie-label-value="' . esc_attr($label_value) . '" data-pie-units="' . esc_attr($units) . '" data-pie-color="' . esc_attr($bar_color) . '" data-pie-width="' . esc_attr($arc_width) . '">';
 $output.= '<div class="wpb_wrapper">';
 $output.= '<div class="vc_pie_wrapper">';
 $output.= '<span class="vc_pie_chart_back" style="border-width: ' . ($arc_width + 1) . 'px"></span>';

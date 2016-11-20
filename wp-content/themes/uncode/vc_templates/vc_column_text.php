@@ -30,7 +30,9 @@ if ($css_animation !== '') {
 	if ($animation_speed !== '') $div_data['data-speed'] = $animation_speed;
 }
 
-$output.= '<div class="' . esc_attr(trim($css_class)) . '" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))) . $el_style . '>';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+$output.= '<div class="' . esc_attr(trim($css_class)) . '" '.implode(' ', $div_data_attributes) . $el_style . '>';
 $output.= uncode_the_content($content);
 $output.= '</div>';
 

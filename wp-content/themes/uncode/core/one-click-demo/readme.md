@@ -1,9 +1,9 @@
-One Click Demo Install for Wordpress Developers
+One Click Demo Install for WordPress Developers
 ==========================
 
 This library works by importing wordpress content, widgets  and theme options with just one click.
 
-##Supported Wordpress Options Frameworks
+##Supported WordPress Options Frameworks
 * Radium Framework
 * Option Tree
 * Redux Framework - extension available here https://github.com/Webcreations907/WBC-Importer-extension 

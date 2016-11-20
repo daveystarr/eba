@@ -38,6 +38,7 @@ if (isset($shop_single['crop']) && $shop_single['crop'] === 1) {
 			$image_title = esc_attr( get_the_title( $media_id ) );
 			$image_attributes = uncode_get_media_info($media_id);
 			$image_metavalues = unserialize($image_attributes->metadata);
+			if ($image_attributes->post_mime_type === 'image/gif' || $image_attributes->post_mime_type === 'image/url') $crop = false;
 			$image_resized = uncode_resize_image($image_attributes->guid, $image_attributes->path, $image_metavalues['width'], $image_metavalues['height'], 5, ($crop ? 5 / $thumb_ratio : null), $crop);
 			global $adaptive_images, $adaptive_images_async, $adaptive_images_async_blur;
 			$media_class = '';

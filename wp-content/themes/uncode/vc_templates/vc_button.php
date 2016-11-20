@@ -89,6 +89,8 @@ if ($media_lightbox !== '') {
 
 		if (isset($media_attributes->post_mime_type) && strpos($media_attributes->post_mime_type, 'video/') !== false) {
 			$video_src .= 'html5video:{preload:\'true\',';
+			$video_autoplay = get_post_meta($media_lightbox, "_uncode_video_autoplay", true);
+			if ($video_autoplay) $video_src .= 'autoplay:\'true\',';
 			$alt_videos = get_post_meta($media_lightbox, "_uncode_video_alternative", true);
 			if (!empty($alt_videos)) {
 				foreach ($alt_videos as $key => $value) {
@@ -114,7 +116,9 @@ if ($media_lightbox !== '') {
 			$lbox_id = $lightbox_id;
 		} else $lbox_id = $media_lightbox;
 
-		$lightbox_data = ' ' . implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $lightbox_classes, array_keys($lightbox_classes)));
+		$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $lightbox_classes, array_keys($lightbox_classes));
+
+		$lightbox_data = ' ' . implode(' ', $div_data_attributes);
 		$lightbox_data .= ' data-lbox="ilightbox_single-' . $lbox_id . '"';
 		$lightbox_data .= ' data-options="'.$media_dimensions.$video_src.'"';
 	}
@@ -209,4 +213,6 @@ if ($width !== '') $width = ' style="min-width:' . $width . 'px"';
 $title = ($a_title !== '') ? ' title="' . $a_title . '"' : '';
 $target = (trim($a_target) !== '') ? ' target="' . trim($a_target) . '"' : '';
 
-echo '<span class="' . esc_attr(trim(implode($wrapper_class, ' '))) . '" '.implode(' ', array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data))).'><a href="' . esc_url($a_href) . '" class="custom-link ' . esc_attr(trim(implode($classes, ' '))) . '"' . $title . $target . $onclick . $rel . $lightbox_data . $width . '>' . do_shortcode($content) . '</a></span>';
+$div_data_attributes = array_map(function ($v, $k) { return $k . '="' . $v . '"'; }, $div_data, array_keys($div_data));
+
+echo '<span class="' . esc_attr(trim(implode($wrapper_class, ' '))) . '" '.implode(' ', $div_data_attributes).'><a href="' . esc_url($a_href) . '" class="custom-link ' . esc_attr(trim(implode($classes, ' '))) . '"' . $title . $target . $onclick . $rel . $lightbox_data . $width . '>' . do_shortcode($content) . '</a></span>';
